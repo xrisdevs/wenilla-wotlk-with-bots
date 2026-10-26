@@ -1,0 +1,13 @@
+{
+  "server": {
+    "url": "https://github.com/trickerer/TrinityCore-3.3.5-with-NPCBots.git",
+    "revision": "a296aa6442e169a4ee6f37d162d29c861fe65891",
+    "directory": "server"
+  },
+  "benilla": {
+    "url": "https://github.com/Onixaz/benilla-wotlk",
+    "revision": "ca9f212dcdc5e88e305380ec80e80c62ccd966b5",
+    "directory": "client/benilla-src",
+    "patch": "patches/benilla-browser.patch"
+  }
+}

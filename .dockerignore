@@ -1,0 +1,10 @@
+.git
+server
+client/benilla-src
+.env
+.env.*
+node_modules
+**/__pycache__
+**/*.pyc
+tdb
+artifacts

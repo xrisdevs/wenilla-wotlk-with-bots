@@ -1,0 +1,4 @@
+LoginDatabaseInfo = "db;3306;trinity;@DB_PASSWORD@;auth"
+LogsDir = "/logs"
+Updates.EnableDatabases = 1
+Updates.AutoSetup = 1

@@ -1,0 +1,16 @@
+server/
+client/benilla-src/
+artifacts/
+tdb/*
+!tdb/.gitkeep
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+node_modules/
+*.log
+*.sqlite*
+*.pem
+*.key
+.DS_Store

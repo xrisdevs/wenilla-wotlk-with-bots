@@ -1,0 +1,105 @@
+# TrinityCore 3.3.5 + NPCBots arena stream stack.
+#   docker compose --profile build run --rm build      # compile core (incremental, cached in volume)
+#   docker compose --profile extract run --rm extract  # extract maps/vmaps/mmaps from the client
+#   docker compose up -d db authserver worldserver     # run
+name: wenilla-wotlk
+services:
+  db:
+    image: mysql:8.0
+    command: --max_allowed_packet=256M --innodb_buffer_pool_size=256M --character-set-server=utf8mb4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Run scripts/init-env.py}
+      MYSQL_USER: trinity
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Run scripts/init-env.py}
+      MYSQL_DATABASE: auth
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./docker/sql:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  build:
+    profiles: ["build"]
+    build: ./docker
+    image: wenilla/trinitycore
+    environment:
+      JOBS: ${JOBS:-4}
+      BUILD_TYPE: ${BUILD_TYPE:-Release}
+    volumes:
+      - ./server:/src
+      - tc-build:/build
+      - tc-install:/opt/trinitycore
+      - ./docker/scripts:/scripts:ro
+    command: /scripts/build.sh
+
+  extract:
+    profiles: ["extract"]
+    image: wenilla/trinitycore
+    environment:
+      JOBS: ${JOBS:-8}
+      MMAP_MAPS: ${MMAP_MAPS:-559 562 572 617 618}
+    volumes:
+      - tc-install:/opt/trinitycore:ro
+      - tc-data:/data
+      - ${WOW_CLIENT_DIR:?Set WOW_CLIENT_DIR}:/client:ro
+      - ./docker/scripts:/scripts:ro
+    command: /scripts/extract.sh
+
+  authserver:
+    image: wenilla/trinitycore
+    depends_on:
+      db: { condition: service_healthy }
+    ports: ["127.0.0.1:3724:3724"]
+    volumes:
+      - tc-install:/opt/trinitycore:ro
+      - ./server:/src:ro
+      - ./docker/conf:/conf:ro
+      - logs:/logs
+      - ./docker/scripts:/scripts:ro
+    environment:
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Run scripts/init-env.py}
+    command: /scripts/entrypoint.sh authserver
+    restart: unless-stopped
+
+  worldserver:
+    image: wenilla/trinitycore
+    depends_on:
+      db: { condition: service_healthy }
+    ports: ["127.0.0.1:8085:8085"]
+    volumes:
+      - tc-install:/opt/trinitycore:ro
+      - tc-data:/data:ro
+      - ./server:/src:ro
+      - ./tdb:/tdb:ro
+      - ./docker/conf:/conf:ro
+      - logs:/logs
+      - ./docker/scripts:/scripts:ro
+    environment:
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Run scripts/init-env.py}
+    command: /scripts/entrypoint.sh worldserver
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+  browser:
+    profiles: ["browser"]
+    build:
+      context: .
+      dockerfile: docker/browser.Dockerfile
+    ports: ["127.0.0.1:8090:8090"]
+    volumes:
+      - ${WOW_CLIENT_DIR:?Set WOW_CLIENT_DIR}/Data:/game-data:ro
+    command: ["--bind", "0.0.0.0:8090", "--www", "/www", "--data", "/game-data", "--upstream", "authserver", "--world-upstream", "worldserver"]
+    depends_on: [authserver, worldserver]
+    restart: unless-stopped
+
+volumes:
+  db-data:
+  tc-build:
+  tc-install:
+  tc-data:
+  logs:

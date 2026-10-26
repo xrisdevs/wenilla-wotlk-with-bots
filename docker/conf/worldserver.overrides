@@ -1,0 +1,11 @@
+LoginDatabaseInfo = "db;3306;trinity;@DB_PASSWORD@;auth"
+WorldDatabaseInfo = "db;3306;trinity;@DB_PASSWORD@;world"
+CharacterDatabaseInfo = "db;3306;trinity;@DB_PASSWORD@;characters"
+DataDir = "/data"
+LogsDir = "/logs"
+Updates.EnableDatabases = 7
+Updates.AutoSetup = 1
+Console.Enable = 1
+SOAP.Enabled = 0
+NpcBot.Enable = 1
+Warden.Enabled = 0
