@@ -36,9 +36,15 @@ def summary(project):
 
 
 def snapshot_guests(project, path):
-    code = "import sqlite3,sys; source=sqlite3.connect('/state/guests.sqlite'); target=sqlite3.connect(':memory:'); source.backup(target); sys.stdout.buffer.write(target.serialize())"
+    # The consolidated runtime has no Python interpreter. Use a short-lived helper,
+    # mounting the source state read-only and SQLite's online backup API.
+    container = subprocess.check_output(compose(project)+['ps','-q','browser'], text=True).strip()
+    if not container or '\n' in container:
+        raise RuntimeError('Expected one source browser container')
+    code = "import sqlite3,sys; source=sqlite3.connect('file:/state/guests.sqlite?mode=ro',uri=True); target=sqlite3.connect(':memory:'); source.backup(target); sys.stdout.buffer.write(target.serialize())"
     with path.open('wb') as output:
-        subprocess.run(compose(project)+['exec','-T','browser','/opt/venv/bin/python','-c',code], stdout=output, check=True)
+        subprocess.run(['docker','run','--rm','--volumes-from',container+':ro',
+                        'wenilla/trinitycore','python3','-c',code], stdout=output, check=True)
     os.chmod(path, 0o600)
 
 

@@ -14,3 +14,7 @@ node_modules/
 *.pem
 *.key
 .DS_Store
+
+# Standalone Rust tools/runtimes (sources and Cargo.lock remain tracked).
+/runtime/**/target/
+/tools/**/target/

@@ -63,7 +63,7 @@ export ARENA_SOAP_USER=ARENAOP
 WOW_DATA=/absolute/path/to/WoW_3.3.5a/Data bash client/browser.sh serve
 ```
 
-Stop the Compose browser service first if it occupies port 8090. Setup installs the source tree's pinned Rust toolchain, matching wasm-bindgen, WASI SDK and Binaryen. The Python lobby runs locally on 8090 and its private Rust gateway on 8092. SOAP credentials stay on the server; credentials in query strings are disabled. Display defaults are 1080p/high quality with device-pixel-ratio-aware pointer mapping.
+Stop the Compose browser service first if it occupies port 8090. Setup installs the source tree's pinned Rust toolchain, matching wasm-bindgen, WASI SDK and Binaryen. This legacy local launcher runs the Python lobby on 8090 and its private Rust gateway on 8092. Docker uses the consolidated Rust host; `bash client/browser.sh serve-rust` runs the same host natively when private database access is configured (see [runtime consolidation](docs/RUNTIME.md)). SOAP credentials stay on the server; credentials in query strings are disabled. Display defaults are 1080p/high quality with device-pixel-ratio-aware pointer mapping.
 
 ## Native desktop client (Rust)
 

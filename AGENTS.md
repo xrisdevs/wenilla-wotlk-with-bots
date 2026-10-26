@@ -32,3 +32,7 @@ Validate Python service and tuner tests plus `npm run test:recovery`. Live tests
 ## PvP server profile
 
 `docker/pvp-server.compose.yml` is opt-in and must use a separate `wenilla-pvp-*` project. Never prune the full database or reuse its active install/build volumes writable. `scripts/prepare-pvp-server.py` requires an empty target; source snapshots stay private. `custom/pvp_core_patches.json` is canonical for runtime guards and is also captured in `patches/server.patch`. Keep battleground dependencies and season/holiday handling; do not assume all quests, transports or creatures are world-only. See `docs/PVP-SERVER.md` for update policy and known validation limits.
+
+## Consolidated arena host
+
+`runtime/arena-host/` is the canonical single-process Docker browser backend. It reuses the ignored source's gateway library through path dependencies; restore sources first. Run `cargo test --locked --manifest-path runtime/arena-host/Cargo.toml` for changes here, plus the rendered lobby/recovery checks when changing the API. Keep the existing SQLite schema/cookie contract compatible; raw tokens and credentials must never enter logs. Python remains for the legacy local and Fly entrypoints, not the default Docker browser runtime. Include `runtime/arena-host` in deployment build change detection, but do not enable the disabled local deployment watcher.

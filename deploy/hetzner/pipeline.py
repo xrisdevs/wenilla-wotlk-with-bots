@@ -45,7 +45,7 @@ def main():
             def changed(paths):
                 return bool(output(['git','diff','--name-only',state['deployed'],sha,'--',*paths],cwd=release))
             core=changed(['sources.json','patches/server.patch','custom','docker/Dockerfile','docker/scripts/build.sh'])
-            browser=changed(['sources.json','patches/benilla-browser.patch','client','addons','controller','docker/browser.Dockerfile','docker/scripts/browser.sh'])
+            browser=changed(['sources.json','patches/benilla-browser.patch','client','addons','controller','runtime/arena-host','docker/browser.Dockerfile','docker/scripts/browser.sh'])
             sql=changed(['custom/sql','scripts/init-arena.py'])
             (release/'.env').write_text('WOW_CLIENT_DIR=/unused\nMYSQL_ROOT_PASSWORD=build-only\nMYSQL_PASSWORD=build-only\nARENA_SOAP_PASS=build-only\n')
             (release/'.env').chmod(0o600)
