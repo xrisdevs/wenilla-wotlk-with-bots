@@ -23,7 +23,7 @@ PY
 fi
 # wait for the DB
 for i in $(seq 1 60); do
-  MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin ping -h db -u trinity --silent 2>/dev/null && break; echo "waiting for db ($i)"; sleep 2
+  MYSQL_PWD="$MYSQL_PASSWORD" mysql --protocol=TCP -h db -u trinity -N -e "SELECT 1" >/dev/null 2>&1 && break; echo "waiting for db ($i)"; sleep 2
 done
 # worldserver looks for the TDB_full_world_*.sql base file in its working directory
 WD=/run/trinity/wd; mkdir -p "$WD"; cd "$WD"
