@@ -20,3 +20,5 @@ On `arena-with-bots`, a Python aiohttp service owns guest cookies, ordinary game
 Start from a clean pinned checkout. Apply this branch's patch, make changes, run relevant tests, then generate a binary-safe diff against the pin. Mark new source files with `git add -N` before diffing. Review the diff for generated files and secrets. Do not commit an absolute path or alter the upstream revision without revalidating the full patch. Branches apply different server patches; use separate checkouts when switching branches after sources have been restored.
 
 Prefer a shared fix on main followed by a merge into arena-with-bots. Keep arena modules and UI on that branch. Never silently reuse an ignored server tree from the other branch: setup checks the commit, but a no-patch upstream specification cannot undo arena edits.
+
+The shared MPQ reader supports version-2 high table and file offsets, including standalone archives larger than 4 GiB. This is native gateway/desktop functionality; browser asset requests still use HTTP.
