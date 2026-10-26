@@ -10,10 +10,10 @@ COPY patches ./patches
 COPY client ./client
 RUN python3 scripts/setup-sources.py benilla
 RUN bash client/browser.sh setup
-RUN --mount=type=cache,target=/root/.cargo/registry bash client/browser.sh build
+RUN --mount=type=cache,target=/root/.cargo/registry --mount=type=cache,id=wenilla-client-target,target=/source/client/benilla-src/target,sharing=locked bash client/browser.sh build && install -D client/benilla-src/target/release/wenilla-host /out/wenilla-host
 FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates libssl3t64 && rm -rf /var/lib/apt/lists/*
-COPY --from=build /source/client/benilla-src/target/release/wenilla-host /usr/local/bin/wenilla-host
+COPY --from=build /out/wenilla-host /usr/local/bin/wenilla-host
 COPY --from=build /source/client/benilla-src/web/dist /www
 USER 65534:65534
 EXPOSE 8090
