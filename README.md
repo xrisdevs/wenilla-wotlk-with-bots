@@ -15,7 +15,7 @@ No Blizzard game assets, account databases, credentials or build outputs are inc
 
 ## Requirements
 
-- Docker Engine/Desktop with Compose v2; allow at least 8 GB RAM (more for parallel builds) and ample disk for source builds and your game data.
+- Docker Engine/Desktop with Compose v2; allow at least 8 GB RAM for runtime; browser source builds need additional memory (12 GB or more recommended) and ample disk for source builds and your game data.
 - Git and Python 3.10+ for setup. Rust via rustup and a C compiler only if building the client outside Docker.
 - A WebGPU-capable Chrome/Edge browser. Localhost works over HTTP; remote browser access requires HTTPS.
 - Your own English WoW 3.3.5a game data. You do not need to run the original WoW executable. Docker downloads the pinned TDB335 database from its official release.
@@ -47,7 +47,7 @@ Open **http://localhost:8090**. The game loads first, then shows the custom lobb
 
 Worldserver startup automatically downloads **TDB335.26091**, verifies SHA-256 for both the archive and extracted SQL, and caches it in `tdb-cache`. No separate setup container is created. The worldserver waits for verification and imports the seed only when its world database needs initialization; existing databases are not reset. See [database setup](docs/DATABASE.md).
 
-The extract job generates maps, DBCs, vmaps and arena mmaps. Set `MMAP_MAPS=all` in `.env` and rerun it to generate navigation for the full world (can take hours). The initial C++ and Rust/WASM builds are substantial; later server builds reuse Docker volumes. Startup imports NPCBots base tables through the upstream database updater.
+The extract job generates maps, DBCs, vmaps and arena mmaps. Set `MMAP_MAPS=all` in `.env` and rerun it to generate navigation for the full world (can take hours). If WASM packaging is killed for lack of memory, stop the running game stack before building or raise Docker’s memory allowance. Rust build outputs are cached across retries. The initial C++ and Rust/WASM builds are substantial; later server builds reuse Docker volumes. Startup imports NPCBots base tables through the upstream database updater.
 
 All exposed ports bind to loopback. Database and private operator credentials are generated into ignored `.env`; no shared default password is used. Persistent state lives in Compose volumes. `docker compose down` retains it; **`down -v` deletes it**.
 

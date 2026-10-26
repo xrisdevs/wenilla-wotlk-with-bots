@@ -11,10 +11,10 @@ COPY client ./client
 COPY addons ./addons
 RUN python3 scripts/setup-sources.py benilla
 RUN bash client/browser.sh setup
-RUN --mount=type=cache,target=/root/.cargo/registry bash client/browser.sh build
+RUN --mount=type=cache,target=/root/.cargo/registry --mount=type=cache,id=wenilla-client-target,target=/source/client/benilla-src/target,sharing=locked bash client/browser.sh build && install -D client/benilla-src/target/release/wenilla-host /out/wenilla-host
 FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates libssl3t64 python3 python3-venv mysql-client && rm -rf /var/lib/apt/lists/*
-COPY --from=build /source/client/benilla-src/target/release/wenilla-host /usr/local/bin/wenilla-host
+COPY --from=build /out/wenilla-host /usr/local/bin/wenilla-host
 COPY --from=build /source/client/benilla-src/web/dist /www
 WORKDIR /app
 COPY controller ./controller
