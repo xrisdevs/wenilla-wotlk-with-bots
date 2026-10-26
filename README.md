@@ -11,14 +11,14 @@ This is an experimental development project. It builds on [Benilla-WotLK](https:
 
 This branch includes the full-screen native WoW lobby, drag-to-rotate hero preview, graphical talent trees, equipment/glyph tooltips, Season 8 loadouts, bot-only spectating, human-versus-bot play, separate 2v2/3v3 player queues, and client-crash recovery back to the lobby. Camera selection preserves the view you leave it in. Nagrand, Blade’s Edge and Lordaeron are enabled in the random roster; Dalaran is excluded. Player matchmaking is currently unrated FIFO.
 
-No Blizzard game assets, account databases, credentials or build outputs are included. Supply your own English 3.3.5a `Data` directory and compatible TrinityCore world database. Upstream sources are pinned in `sources.json` and restored with patches; they are intentionally not copied into this Git history.
+No Blizzard game assets, account databases, credentials or build outputs are included. Supply your own English 3.3.5a `Data` directory; Docker fetches the pinned TrinityCore world database automatically. Upstream sources are pinned in `sources.json` and restored with patches; they are intentionally not copied into this Git history.
 
 ## Requirements
 
 - Docker Engine/Desktop with Compose v2; allow at least 8 GB RAM (more for parallel builds) and ample disk for source builds and your game data.
 - Git and Python 3.10+ for setup. Rust via rustup and a C compiler only if building the client outside Docker.
 - A WebGPU-capable Chrome/Edge browser. Localhost works over HTTP; remote browser access requires HTTPS.
-- Your own English WoW 3.3.5a installation and a compatible [TDB335 full world SQL release](https://github.com/TrinityCore/TrinityCore/releases). Check the pinned server's database requirements; do not use another expansion's SQL.
+- Your own English WoW 3.3.5a game data. You do not need to run the original WoW executable. Docker downloads the pinned TDB335 database from its official release.
 
 ## Run everything with Docker
 
@@ -30,8 +30,6 @@ python3 scripts/init-env.py
 # Edit .env: WOW_CLIENT_DIR must be the absolute directory containing Data/.
 python3 scripts/setup-sources.py all
 bash scripts/apply-custom.sh
-mkdir -p tdb
-# Extract your compatible TDB_full_world_*.sql into tdb/.
 docker compose --profile build build build
 docker compose --profile build run --rm build
 docker compose --profile extract run --rm extract
@@ -46,6 +44,8 @@ docker compose --profile browser up -d --build browser
 Open **http://localhost:8090**. The game loads first, then shows the custom lobby. Each browser receives its own guest identity. Choose **Watch**, **Bots**, or **Players**; select a prebuilt hero and an optional name for playable modes. A player-only 2v2/3v3 queue needs four/six humans; it never silently fills with bots.
 
 `init-arena.py` creates/updates a separate private operator using `.env`, and imports the supplied gear preset tables. Run it after initial setup or intentional preset changes, not as an automatic migration against a populated production world. Do not use the operator to play. Guest identity persists in the `lobby-data` volume; clearing browser cookies loses access to that guest's heroes.
+
+The `tdb` setup service automatically downloads **TDB335.26091**, verifies SHA-256 for both the archive and extracted SQL, and caches it in `tdb-cache`. The worldserver waits for verification and imports the seed only when its world database needs initialization; existing databases are not reset. See [database setup](docs/DATABASE.md).
 
 The extract job generates maps, DBCs, vmaps and arena mmaps. Set `MMAP_MAPS=all` in `.env` and rerun it to generate navigation for the full world (can take hours). The initial C++ and Rust/WASM builds are substantial; later server builds reuse Docker volumes. Startup imports NPCBots base tables through the upstream database updater.
 

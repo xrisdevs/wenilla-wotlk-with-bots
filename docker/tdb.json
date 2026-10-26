@@ -1,0 +1,8 @@
+{
+  "release": "TDB335.26091",
+  "url": "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.26091/TDB_full_world_335.26091_2026_09_09.7z",
+  "archive": "TDB_full_world_335.26091_2026_09_09.7z",
+  "archive_sha256": "ed0c50177da912b50c9f386ba8a26254cecfb997ca7fd2e992c25b344e11274f",
+  "sql": "TDB_full_world_335.26091_2026_09_09.sql",
+  "sql_sha256": "1a6cc61f52ae9e5022a8b91758abc23183297ebd0d7ff24f3a30ceb49c72252e"
+}
