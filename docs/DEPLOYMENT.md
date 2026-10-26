@@ -22,3 +22,5 @@ The Compose browser service above builds the WASM client in Docker. For a single
 6. Run `docker run -d --name wenilla-arena --restart unless-stopped --env-file /private/path/runtime.env -v /private/path/persist:/persist -p 127.0.0.1:8090:8090 wenilla-arena`, and proxy HTTPS to 8090 using your chosen reverse proxy. For localhost testing set the public origin to `http://localhost:8090`.
 
 Only 8090 is published; database, SOAP, login/world TCP and the raw gateway stay inside the container. MySQL, guest identity and game data persist under `/persist`. Back this directory up consistently. `/healthz` checks listeners and database access. Queues are in memory and do not survive restart. This is one machine, not a horizontally scalable service.
+
+For the same multi-container stack on Hetzner with automatic HTTPS, see [standalone Linux deployment](../deploy/hetzner/README.md).

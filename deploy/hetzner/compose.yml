@@ -1,0 +1,18 @@
+# Layer onto the root Compose file, keeping game/database ports on loopback.
+services:
+  caddy:
+    image: caddy:2
+    environment:
+      PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME:?Set the public DNS hostname}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/hetzner/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [browser]
+    restart: unless-stopped
+volumes:
+  caddy-data:
+  caddy-config:
