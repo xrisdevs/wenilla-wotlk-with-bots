@@ -1,0 +1,11 @@
+# Use with docker-compose.yml. PVP_MPQ must point to a verified local pack.
+# This replaces the full Data-directory mount; no fallback archives are mounted.
+services:
+  browser:
+    volumes:
+      - type: bind
+        source: ${PVP_MPQ:?Set PVP_MPQ to the absolute path of pvp.MPQ}
+        target: /game-data
+        read_only: true
+        bind:
+          create_host_path: false

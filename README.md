@@ -77,6 +77,10 @@ WOW_DATA=/absolute/path/to/WoW_3.3.5a/Data bash client/benilla.sh
 
 macOS needs Xcode Command Line Tools. Linux also needs ALSA/udev development packages (`libasound2-dev libudev-dev pkg-config` on Ubuntu). Native Windows requires the Rust MSVC toolchain and Visual Studio build tools; run `cargo play` inside the restored source with `WOW_DATA` set in PowerShell. The shell launchers target Linux/macOS. The native desktop path uses ordinary game login and the spectator addon; the browser host owns the custom guest lobby. Native client settings stay under ignored `artifacts/desktop` by default. Optional `WOW_HOST`, `WOW_USER`, `WOW_PASS` and `WOW_CHAR` environment variables configure a server or unattended login; never commit them.
 
+## Smaller PvP asset pack
+
+You can build a standalone MPQ retaining PvP maps and shared gameplay assets while excluding unrelated map terrain. See [PvP asset packing and isolated validation](docs/PVP-ASSETS.md). Original game data stays private and unchanged; the pack is generated locally.
+
 ## Deployment and development
 
 See [deployment](docs/DEPLOYMENT.md), [architecture and branch workflow](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md) and [agent instructions](AGENTS.md). See the [lobby implementation](controller/lobby/README.md) and [optional Fly deployment](deploy/fly/README.md).

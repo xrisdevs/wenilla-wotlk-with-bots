@@ -6,11 +6,21 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 (async()=>{
  const browser=await chromium.launch({channel:'chrome',headless:true,args:['--enable-unsafe-webgpu',...(process.platform==='darwin'?['--use-angle=metal']:[])]});
  const page=await browser.newPage({viewport:{width:Number(process.env.TEST_WIDTH)||1440,height:Number(process.env.TEST_HEIGHT)||1000},deviceScaleFactor:Number(process.env.TEST_DPR)||1});
+ const assetResponses=new Map();
+ if(process.env.ASSET_REPORT)page.on('response',response=>{
+  const url=new URL(response.url());const marker=url.pathname.indexOf('/data/');
+  if(marker>=0)assetResponses.set(decodeURIComponent(url.pathname.slice(marker+6)),response.status());
+ });
  page.on('console',m=>{if(m.text().includes('Arena lobby:'))console.log(m.text());});
+ if(process.env.TEST_DIAGNOSTICS){
+  page.on('pageerror',error=>console.error('Client error:',String(error)));
+  page.on('console',message=>{if(message.type()==='error'||message.text().includes('Arena client recovery:'))console.error('Client console:',message.text());});
+ }
  try{
   await page.goto(process.env.BROWSER_URL||'http://127.0.0.1:8090');
   assert.equal(await page.locator('button,input,select').count(),0,'The host page must not contain lobby controls');
-  await page.waitForTimeout(1000);const frame=page.frames().find(f=>f.url().includes('/game/'));
+  const game=await page.waitForSelector('iframe#game');const frame=await game.contentFrame();
+  await frame.waitForURL(/\/game\//,{timeout:60000});
   await frame.waitForFunction(()=>window.wenilla?.state?.session?.state==='charselect',{}, {timeout:180000});
   async function lua(code){return frame.evaluate(code=>wenilla.lua(code),code);}
   async function until(code,timeout=90000){const start=Date.now();while(Date.now()-start<timeout){try{if((await lua(code))[0])return;}catch{}await page.waitForTimeout(500);}console.log('Display diagnostics',await frame.evaluate(()=>({session:wenilla.state?.session,canvas:[document.querySelector('canvas')?.width,document.querySelector('canvas')?.height],dpr:devicePixelRatio})),await lua('return ArenaWorldMessage,GetCVar("gxResolution")'));throw Error('Timed out: '+code);}
@@ -53,6 +63,10 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
   await page.screenshot({scale:"css",path:path.resolve(__dirname,'../artifacts/lobby/ingame-lobby.png')});
   console.log('Graphical inspection and mouse rotation passed');
   await click('ArenaModeButtons.watch');
+  if(process.env.TEST_ARENA){
+   assert.ok(['na','be','rl'].includes(process.env.TEST_ARENA),'Unsupported test arena');
+   await click('ArenaMapButtons.'+process.env.TEST_ARENA);
+  }
   await until('return ArenaSpectatorSettings:IsShown() and not ArenaHeroModel:IsShown()');
   await page.screenshot({scale:"css",path:path.resolve(__dirname,'../artifacts/lobby/spectator-settings.png')});
   await click('ArenaWatchButton');
@@ -60,6 +74,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
   await until('return ArenaWorldCover and not ArenaWorldCover:IsShown()',120000);
   assert.deepEqual(await lua('return UnitLevel("player"),select(2,UnitClass("player")),select(2,IsInInstance())'),[80,'DRUID','arena']);
   assert.deepEqual(await lua('return not not ArenaLobbyViewReady,not not UIParent:IsShown()'),[true,false]);
+  const combatSeconds=Number(process.env.TEST_COMBAT_SECONDS||0);
+  assert.ok(Number.isFinite(combatSeconds)&&combatSeconds>=0&&combatSeconds<=180,'Invalid combat observation duration');
+  if(combatSeconds){console.log(`Observing the arena for ${combatSeconds}s`);await page.waitForTimeout(combatSeconds*1000);}
   await page.screenshot({scale:"css",path:path.resolve(__dirname,'../artifacts/lobby/ingame-spectating.png')});
   await lua('ArenaReturnButton:Click()');
   await frame.waitForFunction(()=>wenilla?.state?.session?.state==='charselect',{}, {timeout:90000});
@@ -93,5 +110,8 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
   await until('return ArenaLaunchButton ~= nil');
   assert.equal((await lua('return #ArenaLobbyData.characters'))[0],2);
   console.log('PASS game-first Lua lobby, canvas hero selection, gear/talents, S8 preview, spectating, bot participation, human queue cancellation and return without reloading');
- }finally{await browser.close();}
+ }finally{
+  if(process.env.ASSET_REPORT)require('node:fs').writeFileSync(process.env.ASSET_REPORT,JSON.stringify(Object.fromEntries([...assetResponses].sort()),null,2));
+  await browser.close();
+ }
 })().catch(e=>{console.error(e);process.exitCode=1;});
