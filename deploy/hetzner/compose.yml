@@ -1,6 +1,7 @@
 # Layer onto the root Compose file, keeping game/database ports on loopback.
 services:
   caddy:
+    profiles: ["browser"]
     image: caddy:2
     environment:
       PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME:?Set the public DNS hostname}
