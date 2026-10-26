@@ -35,6 +35,8 @@ def main():
         if head != spec["revision"]:
             raise SystemExit(f"{name}: expected {spec['revision']}, found {head}; leaving tree untouched")
         if not spec.get("patch"):
+            if subprocess.check_output([*git, "status", "--porcelain"], text=True).strip():
+                raise SystemExit(f"{name}: unpatched baseline requires a clean source tree; use a separate checkout for each branch")
             print(f"{name}: restored {head} (upstream NPCBots)")
             continue
         patch = str(ROOT / spec["patch"])
