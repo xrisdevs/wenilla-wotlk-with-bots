@@ -25,6 +25,8 @@ fi
 for i in $(seq 1 60); do
   MYSQL_PWD="$MYSQL_PASSWORD" mysql --protocol=TCP -h db -u trinity -N -e "SELECT 1" >/dev/null 2>&1 && break; echo "waiting for db ($i)"; sleep 2
 done
+# Prepare the verified world seed in this container; no separate setup container is needed.
+if [ "$SERVER" = worldserver ]; then python3 /scripts/fetch-tdb.py; fi
 # worldserver looks for the TDB_full_world_*.sql base file in its working directory
 WD=/run/trinity/wd; mkdir -p "$WD"; cd "$WD"
 if [ "$SERVER" = worldserver ]; then for f in /tdb/*.sql; do [ -e "$f" ] && ln -sf "$f" "$WD/"; done; fi

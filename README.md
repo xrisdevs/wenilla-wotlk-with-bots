@@ -45,7 +45,7 @@ Open **http://localhost:8090**. The game loads first, then shows the custom lobb
 
 `init-arena.py` creates/updates a separate private operator using `.env`, and imports the supplied gear preset tables. Run it after initial setup or intentional preset changes, not as an automatic migration against a populated production world. Do not use the operator to play. Guest identity persists in the `lobby-data` volume; clearing browser cookies loses access to that guest's heroes.
 
-The `tdb` setup service automatically downloads **TDB335.26091**, verifies SHA-256 for both the archive and extracted SQL, and caches it in `tdb-cache`. The worldserver waits for verification and imports the seed only when its world database needs initialization; existing databases are not reset. See [database setup](docs/DATABASE.md).
+Worldserver startup automatically downloads **TDB335.26091**, verifies SHA-256 for both the archive and extracted SQL, and caches it in `tdb-cache`. No separate setup container is created. The worldserver waits for verification and imports the seed only when its world database needs initialization; existing databases are not reset. See [database setup](docs/DATABASE.md).
 
 The extract job generates maps, DBCs, vmaps and arena mmaps. Set `MMAP_MAPS=all` in `.env` and rerun it to generate navigation for the full world (can take hours). The initial C++ and Rust/WASM builds are substantial; later server builds reuse Docker volumes. Startup imports NPCBots base tables through the upstream database updater.
 

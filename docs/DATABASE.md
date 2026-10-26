@@ -2,11 +2,11 @@
 
 `docker/tdb.json` pins the official **TDB335.26091** release used by this project, its download URL, and SHA-256 checksums of the compressed archive and extracted SQL. The large database is not stored in Git.
 
-After building the server image, `docker compose up -d db authserver worldserver` starts a one-shot `tdb` service automatically. It downloads the archive from TrinityCore, verifies it, extracts only the expected SQL file, verifies that too, and atomically publishes the file in `tdb-cache`. Interrupted downloads cannot become a valid cached SQL file. An existing cached SQL file is verified before reuse, allowing offline restarts once populated.
+After building the server image, `docker compose up -d db authserver worldserver` prepares the seed inside the worldserver container before launching the game server. No extra setup container is created. The startup script downloads the archive from TrinityCore, verifies it, extracts only the expected SQL file, verifies that too, and atomically publishes the file in `tdb-cache`. Interrupted downloads cannot become a valid cached SQL file. An existing cached SQL file is verified before reuse, allowing offline restarts once populated.
 
 Worldserver waits for successful setup, then uses TrinityCore's normal database initializer/updater. This download step never connects to MySQL and never drops or replaces a populated database. Preserve existing database volumes during upgrades; changing the pin does not automatically reset them.
 
-To fetch explicitly: `docker compose run --rm tdb`. To diagnose failure: `docker compose logs tdb`. A checksum mismatch stops startup; inspect/remove only the corrupt cache file, never the database volume. The archive is roughly 45 MiB and the SQL roughly 279 MiB. Game assets still come from your own 3.3.5a Data directory.
+To fetch explicitly without starting the server: `docker compose --profile setup run --rm tdb`. This optional helper deletes its container automatically when finished. To diagnose failure: `docker compose logs worldserver`. A checksum mismatch stops startup; inspect/remove only the corrupt cache file, never the database volume. The archive is roughly 45 MiB and the SQL roughly 279 MiB. Game assets still come from your own 3.3.5a Data directory.
 
 On `arena-with-bots`, run `python3 scripts/init-arena.py` after the first successful world import, then restart worldserver. This adds our operator and Season 8 gear presets; the upstream NPCBots updater supplies bot tables. Everyone starts from the same pinned world seed plus this branch's customizations, without copying private accounts or characters.
 
