@@ -81,6 +81,10 @@ macOS needs Xcode Command Line Tools. Linux also needs ALSA/udev development pac
 
 You can build a standalone MPQ retaining PvP maps and shared gameplay assets while excluding unrelated map terrain. See [PvP asset packing and isolated validation](docs/PVP-ASSETS.md). Original game data stays private and unchanged; the pack is generated locally.
 
+## PvP-only server profile
+
+An isolated server profile trims world data and collision files, disables unused world systems, and protects the trimmed database from automatic upstream updates. See [build, validation and rollback instructions](docs/PVP-SERVER.md). The full installation remains available alongside it.
+
 ## Deployment and development
 
 See [deployment](docs/DEPLOYMENT.md), [architecture and branch workflow](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md) and [agent instructions](AGENTS.md). See the [lobby implementation](controller/lobby/README.md) and [optional Fly deployment](deploy/fly/README.md).

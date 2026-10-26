@@ -28,3 +28,7 @@ Read README.md and docs/ARCHITECTURE.md before changing setup. Maintain branch-s
 Current implementation: guest ownership checks, full-screen Lua lobby, level-80 Season 8 presets, graphical talent/glyph/gear inspection, spectators attached to a bot, preserved manual camera, three-map roster, player/bot queues, crash recovery. Headless benchmarks and tuning utilities are included; no private benchmark output is published. FIFO queues are not MMR. Native desktop supports stock UI and spectator addon; guest provisioning is hosted by the browser lobby.
 
 Validate Python service and tuner tests plus `npm run test:recovery`. Live tests need dedicated guests, initialized preset SQL and the compiled server/client. Check spawns, gate timing, weapon use and camera behavior in a rendered game before claiming visual fixes. Keep source patches, canonical Lua and generated loadout headers in sync.
+
+## PvP server profile
+
+`docker/pvp-server.compose.yml` is opt-in and must use a separate `wenilla-pvp-*` project. Never prune the full database or reuse its active install/build volumes writable. `scripts/prepare-pvp-server.py` requires an empty target; source snapshots stay private. `custom/pvp_core_patches.json` is canonical for runtime guards and is also captured in `patches/server.patch`. Keep battleground dependencies and season/holiday handling; do not assume all quests, transports or creatures are world-only. See `docs/PVP-SERVER.md` for update policy and known validation limits.

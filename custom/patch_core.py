@@ -214,6 +214,8 @@ PATCHES.append((
 
 PATCHES += json.loads(pathlib.Path(__file__).with_name("benchmark_core_patches.json").read_text())
 
+PATCHES += json.loads(pathlib.Path(__file__).with_name("pvp_core_patches.json").read_text())
+
 def main() -> int:
     applied = skipped = failed = 0
     for rel, old, new in PATCHES:

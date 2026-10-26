@@ -40,3 +40,6 @@ SkipCinematics = 2
 DeathKnightsPerRealm = 10
 
 Warden.Enabled = 0
+
+# The default installation remains a full-world server.
+PvpOnly.Enabled = 0

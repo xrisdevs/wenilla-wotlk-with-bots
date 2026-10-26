@@ -3124,3 +3124,164 @@ index 9e5e9ba..c779574 100644
  {
 +    AddSC_botarena(); //botarena
  }
+diff --git a/src/server/game/World/World.cpp b/src/server/game/World/World.cpp
+index 60a73d6..254d298 100644
+--- a/src/server/game/World/World.cpp
++++ b/src/server/game/World/World.cpp
+@@ -1596,6 +1596,13 @@ void World::LoadConfigSettings(bool reload)
+ }
+ 
+ /// Initialize the World
++// PvP profile settings are fixed for the process lifetime; changing profiles requires restart.
++static bool IsPvpOnlyProfile()
++{
++    static bool const enabled = sConfigMgr->GetBoolDefault("PvpOnly.Enabled", false);
++    return enabled;
++}
++
+ void World::SetInitialWorldSettings()
+ {
+     if (uint32 realmId = sConfigMgr->GetIntDefault("RealmID", 0)) // 0 reserved for auth
+@@ -1727,22 +1734,35 @@ void World::SetInitialWorldSettings()
+ 
+     TC_LOG_INFO("server.loading", "Loading Broadcast texts...");
+     sObjectMgr->LoadBroadcastTexts();
+-    sObjectMgr->LoadBroadcastTextLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadBroadcastTextLocales();
+ 
+     TC_LOG_INFO("server.loading", "Loading Localization strings...");
+     uint32 oldMSTime = getMSTime();
+-    sObjectMgr->LoadCreatureLocales();
+-    sObjectMgr->LoadGameObjectLocales();
+-    sObjectMgr->LoadItemLocales();
+-    sObjectMgr->LoadItemSetNameLocales();
+-    sObjectMgr->LoadQuestLocales();
+-    sObjectMgr->LoadQuestOfferRewardLocale();
+-    sObjectMgr->LoadQuestRequestItemsLocale();
+-    sObjectMgr->LoadNpcTextLocales();
+-    sObjectMgr->LoadPageTextLocales();
+-    sObjectMgr->LoadGossipMenuItemsLocales();
+-    sObjectMgr->LoadPointOfInterestLocales();
+-    sObjectMgr->LoadQuestGreetingLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadCreatureLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadGameObjectLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadItemLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadItemSetNameLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadQuestLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadQuestOfferRewardLocale();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadQuestRequestItemsLocale();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadNpcTextLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadPageTextLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadGossipMenuItemsLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadPointOfInterestLocales();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadQuestGreetingLocales();
+ 
+     sObjectMgr->SetDBCLocaleIndex(GetDefaultDbcLocale());        // Get once for all the locale index of DBC language (console/broadcasts)
+     TC_LOG_INFO("server.loading", ">> Localization strings loaded in {} ms", GetMSTimeDiffToNow(oldMSTime));
+@@ -1886,7 +1906,8 @@ void World::SetInitialWorldSettings()
+     sObjectMgr->LoadLinkedRespawn();                             // must be after LoadCreatures(), LoadGameObjects()
+ 
+     TC_LOG_INFO("server.loading", "Loading Weather Data...");
+-    WeatherMgr::LoadWeatherData();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        WeatherMgr::LoadWeatherData();
+ 
+     TC_LOG_INFO("server.loading", "Loading Quests...");
+     sObjectMgr->LoadQuests();                                    // must be loaded after DBCs, creature_template, item_template, gameobject tables
+@@ -1895,7 +1916,8 @@ void World::SetInitialWorldSettings()
+     DisableMgr::CheckQuestDisables();                           // must be after loading quests
+ 
+     TC_LOG_INFO("server.loading", "Loading Quest POI");
+-    sObjectMgr->LoadQuestPOI();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sObjectMgr->LoadQuestPOI();
+ 
+     TC_LOG_INFO("server.loading", "Loading Quests Starters and Enders...");
+     sObjectMgr->LoadQuestStartersAndEnders();                    // must be after quest load
+@@ -2201,7 +2223,8 @@ void World::SetInitialWorldSettings()
+     Player::DeleteOldCharacters();
+ 
+     TC_LOG_INFO("server.loading", "Initialize AuctionHouseBot...");
+-    sAuctionBot->Initialize();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sAuctionBot->Initialize();
+ 
+     TC_LOG_INFO("server.loading", "Initializing chat channels...");
+     ChannelMgr::LoadFromDB();
+@@ -2221,14 +2244,17 @@ void World::SetInitialWorldSettings()
+ 
+     ///- Initialize outdoor pvp
+     TC_LOG_INFO("server.loading", "Starting Outdoor PvP System");
+-    sOutdoorPvPMgr->InitOutdoorPvP();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sOutdoorPvPMgr->InitOutdoorPvP();
+ 
+     ///- Initialize Battlefield
+     TC_LOG_INFO("server.loading", "Starting Battlefield System");
+-    sBattlefieldMgr->InitBattlefield();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sBattlefieldMgr->InitBattlefield();
+ 
+     TC_LOG_INFO("server.loading", "Loading Transports...");
+-    sTransportMgr->SpawnContinentTransports();
++    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++        sTransportMgr->SpawnContinentTransports();
+ 
+     ///- Initialize Warden
+     TC_LOG_INFO("server.loading", "Loading Warden Checks...");
+@@ -2448,7 +2474,8 @@ void World::Update(uint32 diff)
+     if (m_timers[WUPDATE_AHBOT].Passed())
+     {
+         TC_METRIC_TIMER("world_update_time", TC_METRIC_TAG("type", "Update AHBot"));
+-        sAuctionBot->Update();
++        if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++            sAuctionBot->Update();
+         m_timers[WUPDATE_AHBOT].Reset();
+     }
+ 
+@@ -2527,12 +2554,14 @@ void World::Update(uint32 diff)
+ 
+     {
+         TC_METRIC_TIMER("world_update_time", TC_METRIC_TAG("type", "Update outdoor pvp"));
+-        sOutdoorPvPMgr->Update(diff);
++        if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++            sOutdoorPvPMgr->Update(diff);
+     }
+ 
+     {
+         TC_METRIC_TIMER("world_update_time", TC_METRIC_TAG("type", "Update battlefields"));
+-        sBattlefieldMgr->Update(diff);
++        if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime
++            sBattlefieldMgr->Update(diff);
+     }
+ 
+     ///- Delete all characters which have been deleted X days before
+diff --git a/src/server/game/Maps/MapManager.cpp b/src/server/game/Maps/MapManager.cpp
+index 96c7130..49530dd 100644
+--- a/src/server/game/Maps/MapManager.cpp
++++ b/src/server/game/Maps/MapManager.cpp
+@@ -143,6 +143,11 @@ Map::EnterState MapManager::PlayerCannotEnter(uint32 mapid, Player* player, bool
+     if (!entry)
+         return Map::CANNOT_ENTER_NO_ENTRY;
+ 
++    //botarena: exclude unsupported continents/instances from the trimmed realm.
++    static bool const pvpOnly = sConfigMgr->GetBoolDefault("PvpOnly.Enabled", false);
++    if (pvpOnly && !entry->IsBattlegroundOrArena() && mapid != 0 && mapid != 1 && mapid != 530 && mapid != 609)
++        return Map::CANNOT_ENTER_DIFFICULTY_UNAVAILABLE;
++
+     if (!entry->IsDungeon())
+         return Map::CAN_ENTER;
+ 

@@ -1,0 +1,9 @@
+# Applied last only when PVP_SERVER_PROFILE=1. English-only PvP realm.
+PvpOnly.Enabled = 1
+Updates.EnableDatabases = 0
+Updates.AutoSetup = 0
+GridUnload = 1
+BaseMapLoadAllGrids = 0
+InstanceMapLoadAllGrids = 0
+NpcBot.WanderingBots.Continents.Count = 0
+NpcBot.WanderingBots.Continents.Maps = ""

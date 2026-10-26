@@ -1,0 +1,122 @@
+[
+  [
+    "src/server/game/World/World.cpp",
+    "void World::SetInitialWorldSettings()\n",
+    "// PvP profile settings are fixed for the process lifetime; changing profiles requires restart.\nstatic bool IsPvpOnlyProfile()\n{\n    static bool const enabled = sConfigMgr->GetBoolDefault(\"PvpOnly.Enabled\", false);\n    return enabled;\n}\n\nvoid World::SetInitialWorldSettings()\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadBroadcastTextLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadBroadcastTextLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadCreatureLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadCreatureLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadGameObjectLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadGameObjectLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadItemLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadItemLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadItemSetNameLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadItemSetNameLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadQuestLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadQuestLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadQuestOfferRewardLocale();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadQuestOfferRewardLocale();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadQuestRequestItemsLocale();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadQuestRequestItemsLocale();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadNpcTextLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadNpcTextLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadPageTextLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadPageTextLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadGossipMenuItemsLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadGossipMenuItemsLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadPointOfInterestLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadPointOfInterestLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadQuestGreetingLocales();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadQuestGreetingLocales();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    WeatherMgr::LoadWeatherData();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        WeatherMgr::LoadWeatherData();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sObjectMgr->LoadQuestPOI();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sObjectMgr->LoadQuestPOI();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sAuctionBot->Initialize();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sAuctionBot->Initialize();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "        sAuctionBot->Update();\n",
+    "        if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n            sAuctionBot->Update();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sOutdoorPvPMgr->InitOutdoorPvP();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sOutdoorPvPMgr->InitOutdoorPvP();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "        sOutdoorPvPMgr->Update(diff);\n",
+    "        if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n            sOutdoorPvPMgr->Update(diff);\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sBattlefieldMgr->InitBattlefield();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sBattlefieldMgr->InitBattlefield();\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "        sBattlefieldMgr->Update(diff);\n",
+    "        if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n            sBattlefieldMgr->Update(diff);\n"
+  ],
+  [
+    "src/server/game/World/World.cpp",
+    "    sTransportMgr->SpawnContinentTransports();\n",
+    "    if (!IsPvpOnlyProfile()) //botarena: PvP-only runtime\n        sTransportMgr->SpawnContinentTransports();\n"
+  ],
+  [
+    "src/server/game/Maps/MapManager.cpp",
+    "    if (!entry->IsDungeon())\n        return Map::CAN_ENTER;\n",
+    "    //botarena: exclude unsupported continents/instances from the trimmed realm.\n    static bool const pvpOnly = sConfigMgr->GetBoolDefault(\"PvpOnly.Enabled\", false);\n    if (pvpOnly && !entry->IsBattlegroundOrArena() && mapid != 0 && mapid != 1 && mapid != 530 && mapid != 609)\n        return Map::CANNOT_ENTER_DIFFICULTY_UNAVAILABLE;\n\n    if (!entry->IsDungeon())\n        return Map::CAN_ENTER;\n"
+  ]
+]

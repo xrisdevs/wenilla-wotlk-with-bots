@@ -1,0 +1,19 @@
+# Always use a separate project: docker compose -p wenilla-pvp-server ...
+services:
+  authserver:
+    ports: !override ["127.0.0.1:13724:3724"]
+    environment:
+      PVP_SERVER_PROFILE: "1"
+  worldserver:
+    ports: !override ["127.0.0.1:18085:8085", "127.0.0.1:17878:7878"]
+    environment:
+      PVP_SERVER_PROFILE: "1"
+    volumes:
+      - empty-tdb:/tdb:ro
+  browser:
+    image: ${PVP_BROWSER_IMAGE:-wenilla-wotlk-browser:latest}
+    ports: !override ["127.0.0.1:8096:8090"]
+    environment:
+      ARENA_PUBLIC_ORIGIN: http://localhost:8096
+volumes:
+  empty-tdb:
