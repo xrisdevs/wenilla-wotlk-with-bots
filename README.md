@@ -9,14 +9,14 @@ This is an experimental development project. It builds on [Benilla-WotLK](https:
 | **main** | Standard game login/UI, browser + native clients, upstream NPCBots server. Shared rendering, protocol and model-preview fixes live here. |
 | [arena-with-bots](https://github.com/xrisdevs/wenilla-wotlk-with-bots/tree/arena-with-bots) | Custom in-game lobby, guest accounts, Season 8 presets, spectating, bot/human arenas, matchmaking and PvP bot experiments. |
 
-No Blizzard game assets, account databases, credentials or build outputs are included. Supply your own English 3.3.5a `Data` directory and compatible TrinityCore world database. Upstream sources are pinned in `sources.json` and restored with patches; they are intentionally not copied into this Git history.
+No Blizzard game assets, account databases, credentials or build outputs are included. Supply your own English 3.3.5a `Data` directory; Docker fetches the pinned TrinityCore world database automatically. Upstream sources are pinned in `sources.json` and restored with patches; they are intentionally not copied into this Git history.
 
 ## Requirements
 
 - Docker Engine/Desktop with Compose v2; allow at least 8 GB RAM (more for parallel builds) and ample disk for source builds and your game data.
 - Git and Python 3.10+ for setup. Rust via rustup and a C compiler only if building the client outside Docker.
 - A WebGPU-capable Chrome/Edge browser. Localhost works over HTTP; remote browser access requires HTTPS.
-- Your own English WoW 3.3.5a installation and a compatible [TDB335 full world SQL release](https://github.com/TrinityCore/TrinityCore/releases). Check the pinned server's database requirements; do not use another expansion's SQL.
+- Your own English WoW 3.3.5a game data. You do not need to run the original WoW executable. Docker downloads the pinned TDB335 database from its official release.
 
 ## Run everything with Docker
 
@@ -26,8 +26,6 @@ cd wenilla-wotlk-with-bots
 python3 scripts/init-env.py
 # Edit .env: WOW_CLIENT_DIR must be the absolute directory containing Data/.
 python3 scripts/setup-sources.py all
-mkdir -p tdb
-# Extract your compatible TDB_full_world_*.sql into tdb/.
 docker compose --profile build build build
 docker compose --profile build run --rm build
 docker compose --profile extract run --rm extract
@@ -38,6 +36,8 @@ docker compose --profile browser up -d --build browser
 ```
 
 Open **http://localhost:8090**. The standard game login screen appears. Create a normal account through the worldserver console: `docker compose attach worldserver`, then enter `account create YOURNAME YOURPASSWORD`. Detach using Ctrl-P, Ctrl-Q; Ctrl-C stops the server. Keep operator accounts separate from ordinary players. Default realm address is loopback, suitable for local desktop use; browser world connections are routed through the gateway.
+
+The `tdb` setup service automatically downloads **TDB335.26091**, verifies SHA-256 for both the archive and extracted SQL, and caches it in `tdb-cache`. The worldserver waits for verification and imports the seed only when its world database needs initialization; existing databases are not reset. See [database setup](docs/DATABASE.md).
 
 The extract job generates maps, DBCs, vmaps and arena mmaps. Set `MMAP_MAPS=all` in `.env` and rerun it to generate navigation for the full world (can take hours). The initial C++ and Rust/WASM builds are substantial; later server builds reuse Docker volumes. Startup imports NPCBots base tables through the upstream database updater.
 
