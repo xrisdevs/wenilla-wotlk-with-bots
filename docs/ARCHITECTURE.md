@@ -24,3 +24,5 @@ Prefer a shared fix on main followed by a merge into arena-with-bots. Keep arena
 The shared MPQ reader supports version-2 high table and file offsets, including standalone archives larger than 4 GiB. This is native gateway/desktop functionality; browser asset requests still use HTTP.
 
 See [runtime consolidation](RUNTIME.md) for configuration, rollback and remaining service boundaries.
+
+The [embedded-engine and storage proposal](EMBEDDED-RUNTIME.md) describes a possible Rust/C++ engine worker and staged SQLite migration. It is research, not the current runtime architecture.
