@@ -1,7 +1,7 @@
 import unittest, tempfile, pathlib, time, sys
 from unittest.mock import patch
 sys.path.insert(0,str(pathlib.Path(__file__).parent))
-from service import Lobby, make_app, BUILDS
+from service import Lobby, make_app, BUILDS, random_character_name
 from aiohttp import web, CookieJar
 from aiohttp.test_utils import TestClient, TestServer
 
@@ -131,3 +131,26 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
         for b in BUILDS:self.assertEqual(len(b['talents']),71);self.assertEqual(len(b['glyphs']),6);self.assertEqual(sum(g['minor'] for g in b['glyphs']),3)
 
 if __name__=='__main__':unittest.main()
+
+
+class NameTests(unittest.IsolatedAsyncioTestCase):
+    def test_generated_names_avoid_triples_at_prefix_boundary(self):
+        def pick(choices):
+            if 'Zen' in choices: return 'Zen'
+            return 'a' if choices == 'aeiou' else 'n'
+        with patch('service.secrets.choice', side_effect=pick):
+            name = random_character_name()
+        self.assertEqual(name, 'Zenananan')
+        self.assertNotRegex(name.lower(), r'(.)\1\1')
+
+    async def test_typed_triples_are_rejected_before_character_reservation(self):
+        lobby = Lobby(':memory:')
+        lobby.guest = lambda request: {'account': 1}
+        class Request:
+            async def json(self): return {'build': BUILDS[0]['id'], 'name': 'Zennnatei'}
+        try:
+            with self.assertRaises(web.HTTPBadRequest):
+                await lobby.reserve(Request())
+            self.assertEqual(lobby.db.execute('SELECT COUNT(*) FROM characters').fetchone()[0], 0)
+        finally:
+            lobby.db.close()

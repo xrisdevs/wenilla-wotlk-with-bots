@@ -12,6 +12,11 @@ COOKIE = 'arena_guest'
 LOADOUT_VERSION = 2
 NAME = re.compile(r'^[A-Za-z]{2,12}$')
 
+def random_character_name():
+    # Alternating suffix letters cannot form a forbidden triple, even after the prefix.
+    return secrets.choice(['Ash','Val','Thal','Nor','Zen','Kae','Rav']) + ''.join(
+        secrets.choice('aeiou' if i % 2 == 0 else 'rstnl') for i in range(6))
+
 def public_origin(req):
     # Configure the external origin explicitly: do not trust arbitrary forwarded headers.
     return os.environ.get('ARENA_PUBLIC_ORIGIN', f'{req.scheme}://{req.host}').rstrip('/')
@@ -74,8 +79,9 @@ class Lobby:
         async with self.lock:
             name=data.get('name','').strip().capitalize()
             if not name:
-                name=secrets.choice(['Ash','Val','Thal','Nor','Zen','Kae','Rav'])+''.join(secrets.choice('aeiourstnl') for _ in range(6))
+                name=random_character_name()
             if not NAME.fullmatch(name): raise web.HTTPBadRequest(text='Use 2–12 letters, without spaces or numbers.')
+            if re.search(r'(.)\1\1', name, re.I): raise web.HTTPBadRequest(text='Names cannot contain three identical letters in a row.')
             old=self.db.execute('SELECT * FROM characters WHERE name=? COLLATE NOCASE',(name,)).fetchone()
             if old and old['account']==g['account'] and old['build']==build['id']:
                 return web.json_response(dict(old))
