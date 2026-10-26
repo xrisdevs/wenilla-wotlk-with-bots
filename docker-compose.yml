@@ -66,6 +66,7 @@ services:
     restart: unless-stopped
 
   tdb:
+    profiles: ["setup"]
     image: wenilla/trinitycore
     volumes:
       - tdb-cache:/tdb
@@ -78,13 +79,13 @@ services:
     image: wenilla/trinitycore
     depends_on:
       db: { condition: service_healthy }
-      tdb: { condition: service_completed_successfully }
     ports: ["127.0.0.1:8085:8085"]
     volumes:
       - tc-install:/opt/trinitycore:ro
       - tc-data:/data:ro
       - ./server:/src:ro
-      - tdb-cache:/tdb:ro
+      - tdb-cache:/tdb
+      - ./docker/tdb.json:/tdb-release.json:ro
       - ./docker/conf:/conf:ro
       - logs:/logs
       - ./docker/scripts:/scripts:ro

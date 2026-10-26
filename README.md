@@ -37,7 +37,7 @@ docker compose --profile browser up -d --build browser
 
 Open **http://localhost:8090**. The standard game login screen appears. Create a normal account through the worldserver console: `docker compose attach worldserver`, then enter `account create YOURNAME YOURPASSWORD`. Detach using Ctrl-P, Ctrl-Q; Ctrl-C stops the server. Keep operator accounts separate from ordinary players. Default realm address is loopback, suitable for local desktop use; browser world connections are routed through the gateway.
 
-The `tdb` setup service automatically downloads **TDB335.26091**, verifies SHA-256 for both the archive and extracted SQL, and caches it in `tdb-cache`. The worldserver waits for verification and imports the seed only when its world database needs initialization; existing databases are not reset. See [database setup](docs/DATABASE.md).
+Worldserver startup automatically downloads **TDB335.26091**, verifies SHA-256 for both the archive and extracted SQL, and caches it in `tdb-cache`. No separate setup container is created. The worldserver waits for verification and imports the seed only when its world database needs initialization; existing databases are not reset. See [database setup](docs/DATABASE.md).
 
 The extract job generates maps, DBCs, vmaps and arena mmaps. Set `MMAP_MAPS=all` in `.env` and rerun it to generate navigation for the full world (can take hours). The initial C++ and Rust/WASM builds are substantial; later server builds reuse Docker volumes. Startup imports NPCBots base tables through the upstream database updater.
 
