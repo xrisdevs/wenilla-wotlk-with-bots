@@ -36,3 +36,7 @@ Validate Python service and tuner tests plus `npm run test:recovery`. Live tests
 ## Consolidated arena host
 
 `runtime/arena-host/` is the canonical single-process Docker browser backend. It reuses the ignored source's gateway library through path dependencies; restore sources first. Run `cargo test --locked --manifest-path runtime/arena-host/Cargo.toml` for changes here, plus the rendered lobby/recovery checks when changing the API. Keep the existing SQLite schema/cookie contract compatible; raw tokens and credentials must never enter logs. Python remains for the legacy local and Fly entrypoints, not the default Docker browser runtime. Include `runtime/arena-host` in deployment build change detection, but do not enable the disabled local deployment watcher.
+
+## Dependency-aware PvP assets
+
+`tools/pvp-pack/dependency-profile.json` is opt-in; `profile.json` remains the conservative baseline. `dependencies.rs` owns scenery/audio dependency closure. Keep dynamic character/item/creature/spell families until their runtime filename rules have explicit coverage. Validate every packed byte, run `scripts/check-pvp-closure.py` against the previous pack and rendered request reports, and test all presets (`TEST_ALL_PRESETS=1`) and the three supported arena maps before switching the local preview. Retain the original and prior pack. Do not describe static battleground asset coverage as full battleground gameplay validation.

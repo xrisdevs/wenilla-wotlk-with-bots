@@ -35,6 +35,26 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
    const [x,y,w,h]=await lua(`local x,y=${expr}:GetCenter();return x,y,GetScreenWidth(),GetScreenHeight()`);
    const r=await frame.locator('canvas').boundingBox();await page.mouse.move(r.x+x/w*r.width,r.y+(1-y/h)*r.height);
   }
+  if(process.env.TEST_ALL_PRESETS){
+   const [total]=await lua('return #ArenaLobbyData.builds');
+   for(let i=1;i<=total;i++){
+    const [id,label]=await lua(`return ArenaLobbyData.builds[${i}].id,ArenaLobbyData.builds[${i}].name`);
+    await click(`ArenaHeroButtons[${i}]`);
+    await until(`return ArenaSelectedBuild == ${id}`);
+    await page.waitForTimeout(2500);
+    await click('ArenaTalentButton');
+    await until('return ArenaTalentModal:IsShown() and #ArenaTalentTrees == 3 and #ArenaTalentNodes > 60');
+    await hover('ArenaTalentNodes[1]');
+    await until('return ArenaInspectTooltip:NumLines() >= 3');
+    await lua('ArenaTalentModal:Hide()');
+    await lua('if not ArenaGearSlots[1]:IsShown() then ArenaGearButton:Click() end');
+    await until('return #ArenaGearSlots >= 16');
+    await hover('ArenaGearSlots[1]');
+    await until('return ArenaInspectTooltip:IsOwned(ArenaGearSlots[1]) and ArenaInspectTooltip:NumLines() >= 3');
+    await page.screenshot({scale:'css',path:path.resolve(__dirname,`../artifacts/lobby/preset-${id}.png`)});
+    console.log('Preset inspection passed:',label);
+   }
+  }
   await click('ArenaHeroButtons[10]');
   await until('return ArenaSelectedBuild == 30');
   await click('ArenaTalentButton');

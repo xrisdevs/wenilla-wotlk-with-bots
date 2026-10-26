@@ -79,7 +79,7 @@ macOS needs Xcode Command Line Tools. Linux also needs ALSA/udev development pac
 
 ## Smaller PvP asset pack
 
-You can build a standalone MPQ retaining PvP maps and shared gameplay assets while excluding unrelated map terrain. See [PvP asset packing and isolated validation](docs/PVP-ASSETS.md). Original game data stays private and unchanged; the pack is generated locally.
+You can build a standalone MPQ retaining PvP maps and shared gameplay assets while excluding unrelated map terrain. An optional dependency-aware profile also trims unreferenced scenery and environmental audio while preserving dynamic character, gear, pet and spell families. See [PvP asset packing and isolated validation](docs/PVP-ASSETS.md). Original game data stays private and unchanged; the pack is generated locally.
 
 ## PvP-only server profile
 

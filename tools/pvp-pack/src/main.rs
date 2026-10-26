@@ -1,4 +1,5 @@
 //! Conservative PvP pack: retain shared assets, trim map terrain, preserve patch precedence.
+mod dependencies;
 use anyhow::{Context, Result, ensure};
 use benilla_formats::Chain;
 use serde::{Deserialize, Serialize};
@@ -45,15 +46,36 @@ impl Writer {
         Ok(Self(handle))
     }
     fn add(&self, name: &str, bytes: &[u8]) -> Result<()> {
+        // MP3/OGG payloads are already compressed. Store their original bytes directly;
+        // zlib adds substantial rebuild CPU for negligible storage savings.
+        let compressed = !name.to_ascii_lowercase().ends_with(".mp3")
+            && !name.to_ascii_lowercase().ends_with(".ogg");
         let name = CString::new(name)?;
         let size = u32::try_from(bytes.len())?;
         let mut file = std::ptr::null_mut();
         ensure!(
-            unsafe { SFileCreateFile(self.0, name.as_ptr(), 0, size, 0, 0x200, &mut file) },
+            unsafe {
+                SFileCreateFile(
+                    self.0,
+                    name.as_ptr(),
+                    0,
+                    size,
+                    0,
+                    if compressed { 0x200 } else { 0 },
+                    &mut file,
+                )
+            },
             "StormLib create file failed"
         );
-        let wrote =
-            bytes.is_empty() || unsafe { SFileWriteFile(file, bytes.as_ptr().cast(), size, 2) };
+        let wrote = bytes.is_empty()
+            || unsafe {
+                SFileWriteFile(
+                    file,
+                    bytes.as_ptr().cast(),
+                    size,
+                    if compressed { 2 } else { 0 },
+                )
+            };
         let finished = unsafe { SFileFinishFile(file) };
         ensure!(wrote && finished, "StormLib write failed");
         Ok(())
@@ -78,6 +100,10 @@ impl Drop for Writer {
 }
 #[derive(Deserialize)]
 struct Profile {
+    #[serde(default)]
+    dependency_closure: bool,
+    #[serde(default)]
+    request_reports: Vec<String>,
     staging: Vec<Staging>,
     #[serde(default)]
     extra_maps: Vec<String>,
@@ -217,7 +243,7 @@ fn main() -> Result<()> {
     let args: Vec<_> = std::env::args().collect();
     ensure!(
         args.len() >= 3,
-        "usage: wenilla-pvp-pack inventory DATA | build DATA PROFILE OUTPUT_DIR | verify MPQ MANIFEST"
+        "usage: wenilla-pvp-pack inventory DATA | build DATA PROFILE OUTPUT_DIR | plan DATA PROFILE OUTPUT_DIR | verify MPQ MANIFEST"
     );
     if args[1] == "verify" {
         let manifest: Manifest =
@@ -251,8 +277,8 @@ fn main() -> Result<()> {
         return Ok(());
     }
     ensure!(
-        args[1] == "build" && args.len() == 5,
-        "build DATA PROFILE OUTPUT_DIR"
+        matches!(args[1].as_str(), "build" | "plan") && args.len() == 5,
+        "build|plan DATA PROFILE OUTPUT_DIR"
     );
     let profile: Profile = serde_json::from_slice(&fs::read(&args[3])?)?;
     ensure!(
@@ -298,9 +324,42 @@ fn main() -> Result<()> {
     for archive in chain.archive_paths() {
         manifest.source_archive_bytes += fs::metadata(archive)?.len();
     }
+    let dependency_plan = if profile.dependency_closure {
+        let listed = entries
+            .iter()
+            .map(|e| (e.name.clone(), e.size))
+            .collect::<Vec<_>>();
+        let plan = dependencies::plan(&chain, &profile, &maps, &listed)?;
+        manifest.policy = plan.policy.into();
+        fs::write(
+            output.join("dependencies.json"),
+            serde_json::to_vec_pretty(&plan)?,
+        )?;
+        eprintln!(
+            "Dependency closure: {} files, {:.2} GiB retained, {:.2} GiB excluded (uncompressed)",
+            plan.kept.len(),
+            plan.kept_bytes as f64 / 1073741824.0,
+            plan.excluded_bytes as f64 / 1073741824.0
+        );
+        Some(plan)
+    } else {
+        None
+    };
+    if args[1] == "plan" {
+        ensure!(
+            dependency_plan.is_some(),
+            "plan requires dependency_closure"
+        );
+        return Ok(());
+    }
     let mut kept: Vec<_> = entries
         .into_iter()
-        .filter(|e| selected(&e.name, &maps, &profile))
+        .filter(|e| {
+            dependency_plan.as_ref().map_or_else(
+                || selected(&e.name, &maps, &profile),
+                |p| p.kept.contains_key(&norm(&e.name)),
+            )
+        })
         .collect();
     kept.sort_by_key(|e| norm(&e.name));
     manifest.excluded_files = manifest.listed_files - kept.len();
@@ -360,6 +419,8 @@ mod tests {
     #[test]
     fn selects_only_pvp_and_staging_terrain() {
         let profile = Profile {
+            dependency_closure: false,
+            request_reports: vec![],
             staging: vec![Staging {
                 map: "Azeroth".into(),
                 x: -8949.95,
@@ -425,8 +486,10 @@ mod tests {
         w.add("Interface\\Test.txt", &chain.read("Interface\\Test.txt")?)?;
         w.add("Empty", b"")?;
         w.add("Large", &large)?;
+        w.add("Sound\\Music\\roundtrip.mp3", &large)?;
         w.finish()?;
         let packed = Chain::open(&dir.join("pvp.MPQ"))?;
+        assert_eq!(packed.read("Sound/Music/roundtrip.mp3")?, large);
         assert_eq!(packed.read("interface/test.txt")?, b"patched");
         assert!(packed.read("Empty")?.is_empty());
         assert_eq!(packed.read("Large")?, large);

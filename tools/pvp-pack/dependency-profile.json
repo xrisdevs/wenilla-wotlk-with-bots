@@ -1,0 +1,32 @@
+{
+  "extra_maps": [
+    "DeathKnightStart"
+  ],
+  "staging": [
+    {
+      "map": "Azeroth",
+      "x": -8949.95,
+      "y": -132.493,
+      "radius": 5
+    },
+    {
+      "map": "Azeroth",
+      "x": -6240.32,
+      "y": 331.033,
+      "radius": 5
+    },
+    {
+      "map": "Kalimdor",
+      "x": 10311.3,
+      "y": 831.463,
+      "radius": 5
+    },
+    {
+      "map": "Expansion01",
+      "x": -3961.64,
+      "y": -13931.2,
+      "radius": 5
+    }
+  ],
+  "dependency_closure": true
+}
