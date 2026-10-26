@@ -1,5 +1,5 @@
-server/
-client/benilla-src/
+/server
+/client/benilla-src
 artifacts/
 tdb/*
 !tdb/.gitkeep

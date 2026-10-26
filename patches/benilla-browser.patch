@@ -1,5 +1,5 @@
 diff --git a/Cargo.lock b/Cargo.lock
-index fc78028..3235926 100644
+index fc78028c..3235926a 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
 @@ -103,6 +103,21 @@ dependencies = [
@@ -1319,7 +1319,7 @@ index fc78028..3235926 100644
  
  [[package]]
 diff --git a/Cargo.toml b/Cargo.toml
-index ce4c919..cea496f 100644
+index ce4c919e..cea496fd 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -42,6 +42,8 @@ sha1 = "0.10.6"
@@ -1332,7 +1332,7 @@ index ce4c919..cea496f 100644
  # interpolate them, not per sample frame (`third_party/kira/BENILLA.md`).
  kira = { path = "third_party/kira" }
 diff --git a/crates/benilla-app/Cargo.toml b/crates/benilla-app/Cargo.toml
-index 0df4af6..1691b5b 100644
+index 0df4af60..1691b5b1 100644
 --- a/crates/benilla-app/Cargo.toml
 +++ b/crates/benilla-app/Cargo.toml
 @@ -16,11 +16,16 @@ dev = ["benilla-assets/dev", "benilla-formats/dev", "benilla-world/dev"]
@@ -1445,7 +1445,7 @@ index 0df4af6..1691b5b 100644
 +# the 0978 decision to keep serde_json out of the shipped app stands.
 +serde_json = "1"
 diff --git a/crates/benilla-app/src/area.rs b/crates/benilla-app/src/area.rs
-index 1ef44b3..cdcecef 100644
+index 1ef44b3c..cdcecef5 100644
 --- a/crates/benilla-app/src/area.rs
 +++ b/crates/benilla-app/src/area.rs
 @@ -84,6 +84,35 @@ struct ZoneSignal {
@@ -1530,7 +1530,7 @@ index 1ef44b3..cdcecef 100644
                      .after(benilla_world::terrain_stream::AreaAuthoritySet),
              );
 diff --git a/crates/benilla-app/src/bindings.rs b/crates/benilla-app/src/bindings.rs
-index 157383d..90f44df 100644
+index 157383de..90f44df7 100644
 --- a/crates/benilla-app/src/bindings.rs
 +++ b/crates/benilla-app/src/bindings.rs
 @@ -101,6 +101,7 @@ pub(crate) struct BindingsState {
@@ -1717,7 +1717,7 @@ index 157383d..90f44df 100644
 +    }
  }
 diff --git a/crates/benilla-app/src/camera_shake.rs b/crates/benilla-app/src/camera_shake.rs
-index 493fbb0..35133a4 100644
+index 493fbb00..35133a40 100644
 --- a/crates/benilla-app/src/camera_shake.rs
 +++ b/crates/benilla-app/src/camera_shake.rs
 @@ -664,8 +664,8 @@ mod tests {
@@ -1732,7 +1732,7 @@ index 493fbb0..35133a4 100644
              grounded,
              run_mode: true,
 diff --git a/crates/benilla-app/src/capture/mod.rs b/crates/benilla-app/src/capture/mod.rs
-index e55ef8d..093cfee 100644
+index e55ef8d0..093cfee9 100644
 --- a/crates/benilla-app/src/capture/mod.rs
 +++ b/crates/benilla-app/src/capture/mod.rs
 @@ -30,8 +30,9 @@
@@ -1747,7 +1747,7 @@ index e55ef8d..093cfee 100644
  use bevy::prelude::*;
  use bevy::render::view::screenshot::{save_to_disk, Capturing, Screenshot, ScreenshotCaptured};
 diff --git a/crates/benilla-app/src/capture/probe_auction.rs b/crates/benilla-app/src/capture/probe_auction.rs
-index 5c24678..0eacce2 100644
+index 5c246786..0eacce2f 100644
 --- a/crates/benilla-app/src/capture/probe_auction.rs
 +++ b/crates/benilla-app/src/capture/probe_auction.rs
 @@ -966,7 +966,7 @@ fn auction_probe(
@@ -1760,7 +1760,7 @@ index 5c24678..0eacce2 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_bank.rs b/crates/benilla-app/src/capture/probe_bank.rs
-index 6b0b0b1..b486b20 100644
+index 6b0b0b1c..b486b20f 100644
 --- a/crates/benilla-app/src/capture/probe_bank.rs
 +++ b/crates/benilla-app/src/capture/probe_bank.rs
 @@ -539,7 +539,7 @@ fn bank_probe(
@@ -1773,7 +1773,7 @@ index 6b0b0b1..b486b20 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_bg.rs b/crates/benilla-app/src/capture/probe_bg.rs
-index 3eab4f0..39a03df 100644
+index 3eab4f08..39a03df8 100644
 --- a/crates/benilla-app/src/capture/probe_bg.rs
 +++ b/crates/benilla-app/src/capture/probe_bg.rs
 @@ -380,7 +380,7 @@ fn bg_probe(
@@ -1795,7 +1795,7 @@ index 3eab4f0..39a03df 100644
          std::process::exit(0);
      });
 diff --git a/crates/benilla-app/src/capture/probe_binder.rs b/crates/benilla-app/src/capture/probe_binder.rs
-index e861a61..2f240b2 100644
+index e861a616..2f240b2a 100644
 --- a/crates/benilla-app/src/capture/probe_binder.rs
 +++ b/crates/benilla-app/src/capture/probe_binder.rs
 @@ -420,7 +420,7 @@ fn binder_probe(
@@ -1808,7 +1808,7 @@ index e861a61..2f240b2 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_book.rs b/crates/benilla-app/src/capture/probe_book.rs
-index d48f429..9003074 100644
+index d48f429c..9003074b 100644
 --- a/crates/benilla-app/src/capture/probe_book.rs
 +++ b/crates/benilla-app/src/capture/probe_book.rs
 @@ -313,7 +313,7 @@ fn book_probe(
@@ -1821,7 +1821,7 @@ index d48f429..9003074 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_charcreate.rs b/crates/benilla-app/src/capture/probe_charcreate.rs
-index 6edb260..cd51334 100644
+index 6edb2605..cd513347 100644
 --- a/crates/benilla-app/src/capture/probe_charcreate.rs
 +++ b/crates/benilla-app/src/capture/probe_charcreate.rs
 @@ -15,8 +15,7 @@ pub(crate) struct ProbeCharCreatePlugin;
@@ -1835,7 +1835,7 @@ index 6edb260..cd51334 100644
              .and_then(parse_req)
          else {
 diff --git a/crates/benilla-app/src/capture/probe_charter.rs b/crates/benilla-app/src/capture/probe_charter.rs
-index 79e8e24..62881e0 100644
+index 79e8e244..62881e0e 100644
 --- a/crates/benilla-app/src/capture/probe_charter.rs
 +++ b/crates/benilla-app/src/capture/probe_charter.rs
 @@ -316,8 +316,8 @@ fn lua_bag_pos(bag_index: u8, slot: u8) -> Option<(i64, u32)> {
@@ -1859,7 +1859,7 @@ index 79e8e24..62881e0 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_chest.rs b/crates/benilla-app/src/capture/probe_chest.rs
-index 523968b..a8c5304 100644
+index 523968b5..a8c5304f 100644
 --- a/crates/benilla-app/src/capture/probe_chest.rs
 +++ b/crates/benilla-app/src/capture/probe_chest.rs
 @@ -332,7 +332,7 @@ fn chest_probe(
@@ -1872,7 +1872,7 @@ index 523968b..a8c5304 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_clam.rs b/crates/benilla-app/src/capture/probe_clam.rs
-index e7639a5..47b420e 100644
+index e7639a55..47b420e2 100644
 --- a/crates/benilla-app/src/capture/probe_clam.rs
 +++ b/crates/benilla-app/src/capture/probe_clam.rs
 @@ -314,7 +314,7 @@ fn clam_probe(
@@ -1885,7 +1885,7 @@ index e7639a5..47b420e 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_gm_ticket.rs b/crates/benilla-app/src/capture/probe_gm_ticket.rs
-index 21efc67..f31da25 100644
+index 21efc67d..f31da25d 100644
 --- a/crates/benilla-app/src/capture/probe_gm_ticket.rs
 +++ b/crates/benilla-app/src/capture/probe_gm_ticket.rs
 @@ -188,8 +188,8 @@ fn matching<T>(answers: &[T], baseline: usize, want: impl Fn(&T) -> bool) -> Opt
@@ -1909,7 +1909,7 @@ index 21efc67..f31da25 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_goquest.rs b/crates/benilla-app/src/capture/probe_goquest.rs
-index a3a4f85..db6298a 100644
+index a3a4f85d..db6298a0 100644
 --- a/crates/benilla-app/src/capture/probe_goquest.rs
 +++ b/crates/benilla-app/src/capture/probe_goquest.rs
 @@ -383,7 +383,7 @@ fn goquest_probe(
@@ -1922,7 +1922,7 @@ index a3a4f85..db6298a 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_mail.rs b/crates/benilla-app/src/capture/probe_mail.rs
-index 2a4ec39..86616a8 100644
+index 2a4ec39f..86616a80 100644
 --- a/crates/benilla-app/src/capture/probe_mail.rs
 +++ b/crates/benilla-app/src/capture/probe_mail.rs
 @@ -964,7 +964,7 @@ fn mail_probe(
@@ -1935,7 +1935,7 @@ index 2a4ec39..86616a8 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_model_camera.rs b/crates/benilla-app/src/capture/probe_model_camera.rs
-index aff08f0..14b9016 100644
+index aff08f0d..14b90161 100644
 --- a/crates/benilla-app/src/capture/probe_model_camera.rs
 +++ b/crates/benilla-app/src/capture/probe_model_camera.rs
 @@ -309,7 +309,7 @@ fn model_camera_probe(
@@ -1948,7 +1948,7 @@ index aff08f0..14b9016 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_rig.rs b/crates/benilla-app/src/capture/probe_rig.rs
-index 978fe8e..d016a85 100644
+index 978fe8ee..d016a85e 100644
 --- a/crates/benilla-app/src/capture/probe_rig.rs
 +++ b/crates/benilla-app/src/capture/probe_rig.rs
 @@ -62,8 +62,7 @@ pub(crate) struct ProbeRigPlugin;
@@ -1962,7 +1962,7 @@ index 978fe8e..d016a85 100644
              .and_then(RigSpec::parse)
          else {
 diff --git a/crates/benilla-app/src/capture/probe_service.rs b/crates/benilla-app/src/capture/probe_service.rs
-index 70a012e..b5edf85 100644
+index 70a012e8..b5edf858 100644
 --- a/crates/benilla-app/src/capture/probe_service.rs
 +++ b/crates/benilla-app/src/capture/probe_service.rs
 @@ -790,7 +790,7 @@ fn service_probe(
@@ -1975,7 +1975,7 @@ index 70a012e..b5edf85 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_stone.rs b/crates/benilla-app/src/capture/probe_stone.rs
-index 50573cc..67b2e84 100644
+index 50573cc8..67b2e84e 100644
 --- a/crates/benilla-app/src/capture/probe_stone.rs
 +++ b/crates/benilla-app/src/capture/probe_stone.rs
 @@ -388,7 +388,7 @@ fn stone_probe(
@@ -1988,7 +1988,7 @@ index 50573cc..67b2e84 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probe_vendor_swap.rs b/crates/benilla-app/src/capture/probe_vendor_swap.rs
-index a7b1655..79ae4c8 100644
+index a7b16552..79ae4c80 100644
 --- a/crates/benilla-app/src/capture/probe_vendor_swap.rs
 +++ b/crates/benilla-app/src/capture/probe_vendor_swap.rs
 @@ -387,7 +387,7 @@ fn vendor_swap_probe(
@@ -2001,7 +2001,7 @@ index a7b1655..79ae4c8 100644
                  std::process::exit(0);
              });
 diff --git a/crates/benilla-app/src/capture/probes/run.rs b/crates/benilla-app/src/capture/probes/run.rs
-index e0ff1eb..f9b3291 100644
+index e0ff1eb0..f9b32919 100644
 --- a/crates/benilla-app/src/capture/probes/run.rs
 +++ b/crates/benilla-app/src/capture/probes/run.rs
 @@ -132,7 +132,7 @@ fn fire_probe_exit(
@@ -2014,7 +2014,7 @@ index e0ff1eb..f9b3291 100644
              std::process::exit(0);
          });
 diff --git a/crates/benilla-app/src/capture/probes/stall.rs b/crates/benilla-app/src/capture/probes/stall.rs
-index a00e13b..e451009 100644
+index a00e13b0..e4510093 100644
 --- a/crates/benilla-app/src/capture/probes/stall.rs
 +++ b/crates/benilla-app/src/capture/probes/stall.rs
 @@ -13,7 +13,7 @@
@@ -2027,7 +2027,7 @@ index a00e13b..e451009 100644
  use bevy::prelude::*;
  use bevy::time::Virtual;
 diff --git a/crates/benilla-app/src/cinematic.rs b/crates/benilla-app/src/cinematic.rs
-index 16b7ccd..69468d5 100644
+index 16b7ccd8..69468d5d 100644
 --- a/crates/benilla-app/src/cinematic.rs
 +++ b/crates/benilla-app/src/cinematic.rs
 @@ -24,7 +24,7 @@
@@ -2040,7 +2040,7 @@ index 16b7ccd..69468d5 100644
  use benilla_assets::{AssetSet, LockRecover, WorldAssets};
  use benilla_formats::{CinematicCatalog, CinematicPath};
 diff --git a/crates/benilla-app/src/combat_log/entries.rs b/crates/benilla-app/src/combat_log/entries.rs
-index 6d3ee48..2ac66f4 100644
+index 6d3ee481..2ac66f4c 100644
 --- a/crates/benilla-app/src/combat_log/entries.rs
 +++ b/crates/benilla-app/src/combat_log/entries.rs
 @@ -455,8 +455,8 @@ pub(crate) fn on_world_entry(
@@ -2055,7 +2055,7 @@ index 6d3ee48..2ac66f4 100644
      *clock = CombatLogClock { epoch_secs, at_ms };
      pending.0.clear();
 diff --git a/crates/benilla-app/src/crash.rs b/crates/benilla-app/src/crash.rs
-index 685439d..5a1612b 100644
+index 685439d8..5a1612b9 100644
 --- a/crates/benilla-app/src/crash.rs
 +++ b/crates/benilla-app/src/crash.rs
 @@ -12,7 +12,7 @@ use std::fmt::Write as _;
@@ -2068,7 +2068,7 @@ index 685439d..5a1612b 100644
  use crate::BuildId;
  
 diff --git a/crates/benilla-app/src/creature_anim.rs b/crates/benilla-app/src/creature_anim.rs
-index ef0bc8a..9951925 100644
+index ef0bc8a4..99519259 100644
 --- a/crates/benilla-app/src/creature_anim.rs
 +++ b/crates/benilla-app/src/creature_anim.rs
 @@ -5,7 +5,7 @@
@@ -2081,7 +2081,7 @@ index ef0bc8a..9951925 100644
  use benilla_assets::{AnimClip, ModelAnimations};
  use benilla_formats::AnimDataCatalog;
 diff --git a/crates/benilla-app/src/creature_anim/driver.rs b/crates/benilla-app/src/creature_anim/driver.rs
-index 6b69085..ce1735f 100644
+index 6b690857..ce1735fc 100644
 --- a/crates/benilla-app/src/creature_anim/driver.rs
 +++ b/crates/benilla-app/src/creature_anim/driver.rs
 @@ -7,7 +7,7 @@
@@ -2094,7 +2094,7 @@ index 6b69085..ce1735f 100644
  use benilla_assets::ModelAnimations;
  use benilla_formats::AnimDataCatalog;
 diff --git a/crates/benilla-app/src/creature_anim/driver/play.rs b/crates/benilla-app/src/creature_anim/driver/play.rs
-index ee9add2..3ae9bdd 100644
+index ee9add2c..3ae9bdd5 100644
 --- a/crates/benilla-app/src/creature_anim/driver/play.rs
 +++ b/crates/benilla-app/src/creature_anim/driver/play.rs
 @@ -1,6 +1,6 @@
@@ -2106,7 +2106,7 @@ index ee9add2..3ae9bdd 100644
  use benilla_assets::{AnimClip, ModelAnimations};
  use benilla_formats::AnimDataCatalog;
 diff --git a/crates/benilla-app/src/creature_anim/driver/tests.rs b/crates/benilla-app/src/creature_anim/driver/tests.rs
-index 4edf2b2..1a24ce7 100644
+index 4edf2b2e..1a24ce79 100644
 --- a/crates/benilla-app/src/creature_anim/driver/tests.rs
 +++ b/crates/benilla-app/src/creature_anim/driver/tests.rs
 @@ -103,12 +103,12 @@ fn catalog() -> AnimData {
@@ -2134,7 +2134,7 @@ index 4edf2b2..1a24ce7 100644
  }
  
 diff --git a/crates/benilla-app/src/creature_anim/lod.rs b/crates/benilla-app/src/creature_anim/lod.rs
-index 3ba06f9..1ab6653 100644
+index 3ba06f9c..1ab6653f 100644
 --- a/crates/benilla-app/src/creature_anim/lod.rs
 +++ b/crates/benilla-app/src/creature_anim/lod.rs
 @@ -293,7 +293,7 @@ mod tests {
@@ -2165,7 +2165,7 @@ index 3ba06f9..1ab6653 100644
              let messages = app.world().resource::<Messages<AnimSoundEvent>>();
              fired += cursor
 diff --git a/crates/benilla-app/src/creature_anim/select/tests.rs b/crates/benilla-app/src/creature_anim/select/tests.rs
-index b357f53..11be850 100644
+index b357f538..11be8503 100644
 --- a/crates/benilla-app/src/creature_anim/select/tests.rs
 +++ b/crates/benilla-app/src/creature_anim/select/tests.rs
 @@ -941,7 +941,8 @@ fn a_flying_spline_is_fly_before_backward_and_speed() {
@@ -2188,7 +2188,7 @@ index b357f53..11be850 100644
      let rooted = UnitMoveModes(move_flags::ROOT);
      let walking = UnitMoveModes(move_flags::WALK_MODE);
 diff --git a/crates/benilla-app/src/creature_anim/spell_visual.rs b/crates/benilla-app/src/creature_anim/spell_visual.rs
-index 25c5740..dd021c7 100644
+index 25c57404..dd021c7c 100644
 --- a/crates/benilla-app/src/creature_anim/spell_visual.rs
 +++ b/crates/benilla-app/src/creature_anim/spell_visual.rs
 @@ -238,7 +238,11 @@ impl WeaponVisualSrc<'_, '_> {
@@ -2206,7 +2206,7 @@ index 25c5740..dd021c7 100644
                  .player_visible_item_entry(17)
 diff --git a/crates/benilla-app/src/cvars/browser.rs b/crates/benilla-app/src/cvars/browser.rs
 new file mode 100644
-index 0000000..fe1201b
+index 00000000..fe1201bb
 --- /dev/null
 +++ b/crates/benilla-app/src/cvars/browser.rs
 @@ -0,0 +1,64 @@
@@ -2275,7 +2275,7 @@ index 0000000..fe1201b
 +    }
 +}
 diff --git a/crates/benilla-app/src/cvars/mod.rs b/crates/benilla-app/src/cvars/mod.rs
-index d78ab63..e2451b4 100644
+index d78ab63c..e2451b4e 100644
 --- a/crates/benilla-app/src/cvars/mod.rs
 +++ b/crates/benilla-app/src/cvars/mod.rs
 @@ -20,13 +20,16 @@
@@ -2356,7 +2356,7 @@ index d78ab63..e2451b4 100644
          apply(&mut app, "autoLootDefault", "1");
          assert!(res::<LootConfig>(&app).auto_loot);
 diff --git a/crates/benilla-app/src/entities/attach/arrival_tests.rs b/crates/benilla-app/src/entities/attach/arrival_tests.rs
-index d8457ed..cf9782a 100644
+index d8457edf..cf9782ae 100644
 --- a/crates/benilla-app/src/entities/attach/arrival_tests.rs
 +++ b/crates/benilla-app/src/entities/attach/arrival_tests.rs
 @@ -4,7 +4,7 @@
@@ -2369,7 +2369,7 @@ index d8457ed..cf9782a 100644
  use benilla_formats::{load_item_display_catalog, open_chain, CharSections, NpcAppearance};
  use benilla_protocol::ObjectFields;
 diff --git a/crates/benilla-app/src/entities/attach/char_skin.rs b/crates/benilla-app/src/entities/attach/char_skin.rs
-index cf963c0..a67eead 100644
+index cf963c0f..a67eead3 100644
 --- a/crates/benilla-app/src/entities/attach/char_skin.rs
 +++ b/crates/benilla-app/src/entities/attach/char_skin.rs
 @@ -5,6 +5,7 @@ use benilla_formats::{CharSkinSlot, ModelBlend};
@@ -2429,7 +2429,7 @@ index cf963c0..a67eead 100644
          // 9 are the armor slots, 0 the helm, and there is no cloak column.
          EntityKind::Unit => dm
 diff --git a/crates/benilla-app/src/entities/attach/mod.rs b/crates/benilla-app/src/entities/attach/mod.rs
-index 755b9d0..534d768 100644
+index 755b9d03..534d768a 100644
 --- a/crates/benilla-app/src/entities/attach/mod.rs
 +++ b/crates/benilla-app/src/entities/attach/mod.rs
 @@ -170,7 +170,7 @@ fn arm_sequence_clock(
@@ -2468,7 +2468,7 @@ index 755b9d0..534d768 100644
          // included, until it can draw dressed, as the reference's ShouldRender answers the
          // composite driver's 0 (`0x607e7c` → `0x481749`). Retried each frame, with the look of
 diff --git a/crates/benilla-app/src/entities/attach/redress.rs b/crates/benilla-app/src/entities/attach/redress.rs
-index 6f7527d..f06316e 100644
+index 6f7527da..f06316e7 100644
 --- a/crates/benilla-app/src/entities/attach/redress.rs
 +++ b/crates/benilla-app/src/entities/attach/redress.rs
 @@ -119,7 +119,8 @@ pub(in crate::entities) fn redress_player_looks(
@@ -2482,7 +2482,7 @@ index 6f7527d..f06316e 100644
          // geosets apply at once and the atlas composites that frame when its sections are
          // resident, never gated or withheld. So it composites here, in the frame, taking over a
 diff --git a/crates/benilla-app/src/entities/corpse.rs b/crates/benilla-app/src/entities/corpse.rs
-index d1c3645..f745fbd 100644
+index d1c3645e..f745fbd0 100644
 --- a/crates/benilla-app/src/entities/corpse.rs
 +++ b/crates/benilla-app/src/entities/corpse.rs
 @@ -163,7 +163,7 @@ fn arm_settled(
@@ -2495,7 +2495,7 @@ index d1c3645..f745fbd 100644
          active.repeat();
      } else {
 diff --git a/crates/benilla-app/src/entities/equipment/resolve.rs b/crates/benilla-app/src/entities/equipment/resolve.rs
-index 055f617..1cc6c80 100644
+index 055f6175..1cc6c805 100644
 --- a/crates/benilla-app/src/entities/equipment/resolve.rs
 +++ b/crates/benilla-app/src/entities/equipment/resolve.rs
 @@ -7,6 +7,7 @@ use crate::creature_anim::{
@@ -2677,7 +2677,7 @@ index 055f617..1cc6c80 100644
      fn corpse_dresses_from_its_own_snapshot() {
          use benilla_protocol::messages::ObjectType;
 diff --git a/crates/benilla-app/src/entities/live_display.rs b/crates/benilla-app/src/entities/live_display.rs
-index d801982..5bd5988 100644
+index d8019829..5bd5988c 100644
 --- a/crates/benilla-app/src/entities/live_display.rs
 +++ b/crates/benilla-app/src/entities/live_display.rs
 @@ -81,6 +81,8 @@ pub(super) fn refresh_live_display(
@@ -2738,7 +2738,7 @@ index d801982..5bd5988 100644
                  net.display_id = Some(live);
                  swapped.write(DisplaySwapped { entity });
 diff --git a/crates/benilla-app/src/entities/missile.rs b/crates/benilla-app/src/entities/missile.rs
-index 2f52ac2..6937c60 100644
+index 2f52ac25..6937c60c 100644
 --- a/crates/benilla-app/src/entities/missile.rs
 +++ b/crates/benilla-app/src/entities/missile.rs
 @@ -699,7 +699,7 @@ pub(super) fn move_missiles(
@@ -2751,7 +2751,7 @@ index 2f52ac2..6937c60 100644
      use bevy::asset::AssetPlugin;
  
 diff --git a/crates/benilla-app/src/entities/mount/tests.rs b/crates/benilla-app/src/entities/mount/tests.rs
-index 2f65aae..d9f7195 100644
+index 2f65aae4..d9f71959 100644
 --- a/crates/benilla-app/src/entities/mount/tests.rs
 +++ b/crates/benilla-app/src/entities/mount/tests.rs
 @@ -300,7 +300,7 @@ fn a_mount_child_carries_its_riders_arrival() {
@@ -2764,7 +2764,7 @@ index 2f65aae..d9f7195 100644
          .world_mut()
          .spawn((Transform::default(), Visibility::default(), Arrival(1.0)))
 diff --git a/crates/benilla-app/src/entities/skin_composite.rs b/crates/benilla-app/src/entities/skin_composite.rs
-index 5a2c2e8..247dda1 100644
+index 5a2c2e84..247dda1a 100644
 --- a/crates/benilla-app/src/entities/skin_composite.rs
 +++ b/crates/benilla-app/src/entities/skin_composite.rs
 @@ -261,9 +261,18 @@ fn work(plan: CompositePlan, chain: Arc<Mutex<Chain>>) -> Work {
@@ -2810,7 +2810,7 @@ index 5a2c2e8..247dda1 100644
              std::thread::yield_now();
          }
 diff --git a/crates/benilla-app/src/game_plugins.rs b/crates/benilla-app/src/game_plugins.rs
-index 74b955f..0cd38b2 100644
+index 74b955f3..0cd38b28 100644
 --- a/crates/benilla-app/src/game_plugins.rs
 +++ b/crates/benilla-app/src/game_plugins.rs
 @@ -1241,6 +1241,12 @@ pub(crate) mod schedule_tests {
@@ -2827,7 +2827,7 @@ index 74b955f..0cd38b2 100644
           "`seen_generation` is a `VmMemo`: a new VM reads `None`, rebuilds and re-fires UPDATE_BINDINGS"),
          ("capture/probe_bg.rs", "bg_probe", Because::SelfHealing,
 diff --git a/crates/benilla-app/src/go_anim.rs b/crates/benilla-app/src/go_anim.rs
-index 1edd12f..6f1f36f 100644
+index 1edd12f1..6f1f36f3 100644
 --- a/crates/benilla-app/src/go_anim.rs
 +++ b/crates/benilla-app/src/go_anim.rs
 @@ -21,7 +21,7 @@ use benilla_assets::ModelAnimations;
@@ -2840,7 +2840,7 @@ index 1edd12f..6f1f36f 100644
  use crate::creature_anim::{advance_track, scan_events, AnimSoundEvent};
  use crate::net::{GuidIndex, ObjectStore};
 diff --git a/crates/benilla-app/src/items.rs b/crates/benilla-app/src/items.rs
-index e9d2cbc..5e8f8e5 100644
+index e9d2cbc2..5e8f8e50 100644
 --- a/crates/benilla-app/src/items.rs
 +++ b/crates/benilla-app/src/items.rs
 @@ -3,7 +3,10 @@
@@ -2856,7 +2856,7 @@ index e9d2cbc..5e8f8e5 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/lib.rs b/crates/benilla-app/src/lib.rs
-index 7f0d7e6..b4a5d72 100644
+index 7f0d7e6f..b4a5d721 100644
 --- a/crates/benilla-app/src/lib.rs
 +++ b/crates/benilla-app/src/lib.rs
 @@ -23,7 +23,7 @@ static ALLOC: assert_no_alloc::AllocDisabler = assert_no_alloc::AllocDisabler;
@@ -2929,7 +2929,7 @@ index 7f0d7e6..b4a5d72 100644
      if let Some(extend) = extend {
          extend(&mut app);
 diff --git a/crates/benilla-app/src/local_state.rs b/crates/benilla-app/src/local_state.rs
-index 88b1f77..c3c7f8c 100644
+index 88b1f77a..c3c7f8cb 100644
 --- a/crates/benilla-app/src/local_state.rs
 +++ b/crates/benilla-app/src/local_state.rs
 @@ -11,6 +11,7 @@
@@ -3055,7 +3055,7 @@ index 88b1f77..c3c7f8c 100644
  /// takes [`ENV_LOCK`] and scopes its overrides in [`EnvGuard`]s.
  #[cfg(test)]
 diff --git a/crates/benilla-app/src/login/mod.rs b/crates/benilla-app/src/login/mod.rs
-index d5e1738..a63e63b 100644
+index d5e1738b..a63e63b6 100644
 --- a/crates/benilla-app/src/login/mod.rs
 +++ b/crates/benilla-app/src/login/mod.rs
 @@ -122,7 +122,7 @@ impl Attempt<'_> {
@@ -3080,7 +3080,7 @@ index d5e1738..a63e63b 100644
              .init_resource::<LoginIntent>()
 diff --git a/crates/benilla-app/src/mirror_image.rs b/crates/benilla-app/src/mirror_image.rs
 new file mode 100644
-index 0000000..293933b
+index 00000000..293933b0
 --- /dev/null
 +++ b/crates/benilla-app/src/mirror_image.rs
 @@ -0,0 +1,154 @@
@@ -3239,7 +3239,7 @@ index 0000000..293933b
 +    }
 +}
 diff --git a/crates/benilla-app/src/name_persist.rs b/crates/benilla-app/src/name_persist.rs
-index 1c8a550..099d532 100644
+index 1c8a5501..099d5320 100644
 --- a/crates/benilla-app/src/name_persist.rs
 +++ b/crates/benilla-app/src/name_persist.rs
 @@ -66,7 +66,7 @@ fn load_name_cache(
@@ -3266,7 +3266,7 @@ index 1c8a550..099d532 100644
          Ok(()) => {
              file.saved_generation = names.generation();
 diff --git a/crates/benilla-app/src/net.rs b/crates/benilla-app/src/net.rs
-index cb868cf..0123008 100644
+index cb868cf7..01230080 100644
 --- a/crates/benilla-app/src/net.rs
 +++ b/crates/benilla-app/src/net.rs
 @@ -6,8 +6,9 @@
@@ -3475,7 +3475,7 @@ index cb868cf..0123008 100644
      TeleportAck {
          guid: u64,
 diff --git a/crates/benilla-app/src/net/io.rs b/crates/benilla-app/src/net/io.rs
-index ddf0a26..20fa64f 100644
+index ddf0a265..20fa64f8 100644
 --- a/crates/benilla-app/src/net/io.rs
 +++ b/crates/benilla-app/src/net/io.rs
 @@ -19,8 +19,14 @@
@@ -5450,7 +5450,7 @@ index ddf0a26..20fa64f 100644
 +    }
 +}
 diff --git a/crates/benilla-app/src/net/io/cycle_tests.rs b/crates/benilla-app/src/net/io/cycle_tests.rs
-index e9b36f0..a9b018a 100644
+index e9b36f02..a9b018a6 100644
 --- a/crates/benilla-app/src/net/io/cycle_tests.rs
 +++ b/crates/benilla-app/src/net/io/cycle_tests.rs
 @@ -62,27 +62,27 @@ fn an_empty_account_parks_at_select_without_creating_a_character() {
@@ -5599,7 +5599,7 @@ index e9b36f0..a9b018a 100644
          "the park sent a roster the stock screen did not ask for"
      );
 diff --git a/crates/benilla-app/src/net/io/fake.rs b/crates/benilla-app/src/net/io/fake.rs
-index 1cb9048..ae782b1 100644
+index 1cb90484..ae782b1c 100644
 --- a/crates/benilla-app/src/net/io/fake.rs
 +++ b/crates/benilla-app/src/net/io/fake.rs
 @@ -7,7 +7,7 @@ use std::net::{TcpListener, TcpStream};
@@ -5658,7 +5658,7 @@ index 1cb9048..ae782b1 100644
              pass: PASS.into(),
              host: host.into(),
 diff --git a/crates/benilla-app/src/net/motion/remote.rs b/crates/benilla-app/src/net/motion/remote.rs
-index 1d214d4..a6f708c 100644
+index 1d214d48..a6f708cd 100644
 --- a/crates/benilla-app/src/net/motion/remote.rs
 +++ b/crates/benilla-app/src/net/motion/remote.rs
 @@ -679,7 +679,7 @@ mod under_floor {
@@ -5671,7 +5671,7 @@ index 1d214d4..a6f708c 100644
      use super::{extrapolate_remote_units, RelayChain, RemoteMotion};
      use crate::creature_anim::move_flags;
 diff --git a/crates/benilla-app/src/net/motion/spline.rs b/crates/benilla-app/src/net/motion/spline.rs
-index f937445..b849a33 100644
+index f9374458..b849a338 100644
 --- a/crates/benilla-app/src/net/motion/spline.rs
 +++ b/crates/benilla-app/src/net/motion/spline.rs
 @@ -2,7 +2,7 @@
@@ -5720,7 +5720,7 @@ index f937445..b849a33 100644
      use avian3d::prelude::*;
      use benilla_protocol::EntityKind;
 diff --git a/crates/benilla-app/src/net/motion/tests.rs b/crates/benilla-app/src/net/motion/tests.rs
-index e150835..8a062d3 100644
+index e150835a..8a062d36 100644
 --- a/crates/benilla-app/src/net/motion/tests.rs
 +++ b/crates/benilla-app/src/net/motion/tests.rs
 @@ -1,7 +1,8 @@
@@ -5734,7 +5734,7 @@ index e150835..8a062d3 100644
  use benilla_protocol::{JumpInfo, MonsterMoveFacing, MoveSpeeds};
  use bevy::prelude::Quat;
 diff --git a/crates/benilla-app/src/net/objects.rs b/crates/benilla-app/src/net/objects.rs
-index 7985ab6..8f04e94 100644
+index 7985ab6e..8f04e949 100644
 --- a/crates/benilla-app/src/net/objects.rs
 +++ b/crates/benilla-app/src/net/objects.rs
 @@ -473,7 +473,7 @@ fn object_create(
@@ -5747,7 +5747,7 @@ index 7985ab6..8f04e94 100644
      // The placement, and on a type-11 lift the basis its keyframe offsets rotate through.
      let go_quat = (kind == EntityKind::GameObject)
 diff --git a/crates/benilla-app/src/net/session.rs b/crates/benilla-app/src/net/session.rs
-index d03cc04..4b2f1ba 100644
+index d03cc044..4b2f1ba8 100644
 --- a/crates/benilla-app/src/net/session.rs
 +++ b/crates/benilla-app/src/net/session.rs
 @@ -675,8 +675,8 @@ fn time_speed(
@@ -5762,7 +5762,7 @@ index d03cc04..4b2f1ba 100644
              .unwrap_or(0);
          info!(
 diff --git a/crates/benilla-app/src/perf/journal.rs b/crates/benilla-app/src/perf/journal.rs
-index 381f1e0..29420ae 100644
+index 381f1e02..29420aef 100644
 --- a/crates/benilla-app/src/perf/journal.rs
 +++ b/crates/benilla-app/src/perf/journal.rs
 @@ -10,7 +10,9 @@
@@ -5869,7 +5869,7 @@ index 381f1e0..29420ae 100644
      fn buckets_name_every_pass_we_draw_and_skip_what_is_not_a_gpu_span() {
 diff --git a/crates/benilla-app/src/perf/journal_web.rs b/crates/benilla-app/src/perf/journal_web.rs
 new file mode 100644
-index 0000000..78ec882
+index 00000000..78ec882b
 --- /dev/null
 +++ b/crates/benilla-app/src/perf/journal_web.rs
 @@ -0,0 +1,47 @@
@@ -5921,7 +5921,7 @@ index 0000000..78ec882
 +    pub(super) fn append(row: &str);
 +}
 diff --git a/crates/benilla-app/src/perf/phases.rs b/crates/benilla-app/src/perf/phases.rs
-index 55e1ac8..e000703 100644
+index 55e1ac86..e000703c 100644
 --- a/crates/benilla-app/src/perf/phases.rs
 +++ b/crates/benilla-app/src/perf/phases.rs
 @@ -17,7 +17,7 @@
@@ -5934,7 +5934,7 @@ index 55e1ac8..e000703 100644
  use bevy::app::{First, Last, MainScheduleOrder, PostUpdate, PreUpdate, Update};
  use bevy::ecs::schedule::ScheduleLabel;
 diff --git a/crates/benilla-app/src/perf/stall.rs b/crates/benilla-app/src/perf/stall.rs
-index 8761b5d..e0b9429 100644
+index 8761b5db..e0b94292 100644
 --- a/crates/benilla-app/src/perf/stall.rs
 +++ b/crates/benilla-app/src/perf/stall.rs
 @@ -18,7 +18,7 @@
@@ -5947,7 +5947,7 @@ index 8761b5d..e0b9429 100644
  use bevy::prelude::*;
  use bevy::time::Real;
 diff --git a/crates/benilla-app/src/player/approach.rs b/crates/benilla-app/src/player/approach.rs
-index 566cfaf..d389475 100644
+index 566cfafa..d3894753 100644
 --- a/crates/benilla-app/src/player/approach.rs
 +++ b/crates/benilla-app/src/player/approach.rs
 @@ -643,7 +643,7 @@ mod tests {
@@ -5960,7 +5960,7 @@ index 566cfaf..d389475 100644
          let mut player = app.world_mut().resource_mut::<Player>();
          if walks && player.auto_forward {
 diff --git a/crates/benilla-app/src/player/camera_saved.rs b/crates/benilla-app/src/player/camera_saved.rs
-index 7f9dd3c..b07d0fc 100644
+index 7f9dd3ca..b07d0fcb 100644
 --- a/crates/benilla-app/src/player/camera_saved.rs
 +++ b/crates/benilla-app/src/player/camera_saved.rs
 @@ -116,7 +116,7 @@ fn load_camera_pose(
@@ -5973,7 +5973,7 @@ index 7f9dd3c..b07d0fc 100644
          Err(e) if e.kind() == std::io::ErrorKind::NotFound => return,
          Err(e) => {
 diff --git a/crates/benilla-app/src/player/camera_zoom.rs b/crates/benilla-app/src/player/camera_zoom.rs
-index b4cc644..0d1d6ac 100644
+index b4cc6440..0ae08970 100644
 --- a/crates/benilla-app/src/player/camera_zoom.rs
 +++ b/crates/benilla-app/src/player/camera_zoom.rs
 @@ -1,5 +1,5 @@
@@ -5988,7 +5988,7 @@ index b4cc644..0d1d6ac 100644
  /// The zoom ceiling, yd (`ds:0x8089a4` = 50.0): the cap on [`ZoomLimit`] (`0x511309`) and the top
  /// of the distance validator `0x50b310`; also the clamp for a distance read back off disk.
 -pub(super) const CAM_DIST_MAX: f32 = 50.0;
-+pub(super) const CAM_DIST_MAX: f32 = 50.0; // Standard game camera limit
++pub(super) const CAM_DIST_MAX: f32 = 150.0; // botarena: reference is 50.0; raised for the spectator camera
  pub(super) const CAM_DIST_DEFAULT: f32 = 15.0;
  /// `cameraDistanceMax`'s registered default, "15.0" (`0x84fbd0`).
  const CAM_DISTANCE_MAX_DEFAULT: f32 = 15.0;
@@ -6056,7 +6056,7 @@ index b4cc644..0d1d6ac 100644
  
      #[test]
 diff --git a/crates/benilla-app/src/player/mover.rs b/crates/benilla-app/src/player/mover.rs
-index 5082241..075d72a 100644
+index 50822410..075d72a6 100644
 --- a/crates/benilla-app/src/player/mover.rs
 +++ b/crates/benilla-app/src/player/mover.rs
 @@ -455,7 +455,7 @@ pub(crate) fn grounded_step(
@@ -6231,7 +6231,7 @@ index 5082241..075d72a 100644
                  let mut center = start_feet + Vec3::Y * (CAPSULE_HEIGHT * 0.5);
                  let mut vel_y = JUMP_SPEED;
 diff --git a/crates/benilla-app/src/player/server_ride.rs b/crates/benilla-app/src/player/server_ride.rs
-index 01ebbe8..c6bfd24 100644
+index 01ebbe8b..c6bfd243 100644
 --- a/crates/benilla-app/src/player/server_ride.rs
 +++ b/crates/benilla-app/src/player/server_ride.rs
 @@ -227,8 +227,9 @@ pub(super) fn drive_self_ride(
@@ -6246,7 +6246,7 @@ index 01ebbe8..c6bfd24 100644
      use super::*;
  
 diff --git a/crates/benilla-app/src/player/world_focus.rs b/crates/benilla-app/src/player/world_focus.rs
-index c96fd62..8bbc10b 100644
+index c96fd620..8bbc10bd 100644
 --- a/crates/benilla-app/src/player/world_focus.rs
 +++ b/crates/benilla-app/src/player/world_focus.rs
 @@ -157,7 +157,7 @@ pub(super) fn release_post_snap_hold(
@@ -6259,7 +6259,7 @@ index c96fd62..8bbc10b 100644
      use super::*;
  
 diff --git a/crates/benilla-app/src/portrait/booth.rs b/crates/benilla-app/src/portrait/booth.rs
-index b9af39c..d4606b3 100644
+index b9af39c4..d4606b36 100644
 --- a/crates/benilla-app/src/portrait/booth.rs
 +++ b/crates/benilla-app/src/portrait/booth.rs
 @@ -1371,7 +1371,7 @@ mod tests {
@@ -6272,7 +6272,7 @@ index b9af39c..d4606b3 100644
              .entity_mut(root)
              .get_mut::<AnimationPlayer>()
 diff --git a/crates/benilla-app/src/portrait/glue_booth.rs b/crates/benilla-app/src/portrait/glue_booth.rs
-index 428e50f..376ca93 100644
+index 428e50f7..376ca935 100644
 --- a/crates/benilla-app/src/portrait/glue_booth.rs
 +++ b/crates/benilla-app/src/portrait/glue_booth.rs
 @@ -251,6 +251,7 @@ pub(crate) struct GluePreview {
@@ -6336,7 +6336,7 @@ index 428e50f..376ca93 100644
  }
  
 diff --git a/crates/benilla-app/src/realmlist.rs b/crates/benilla-app/src/realmlist.rs
-index 91f2b62..990620f 100644
+index 91f2b624..990620fe 100644
 --- a/crates/benilla-app/src/realmlist.rs
 +++ b/crates/benilla-app/src/realmlist.rs
 @@ -53,14 +53,15 @@ pub(crate) struct Realmlist {
@@ -6375,7 +6375,7 @@ index 91f2b62..990620f 100644
 +    }
 +}
 diff --git a/crates/benilla-app/src/run_mode.rs b/crates/benilla-app/src/run_mode.rs
-index 65fe179..a4a1d8e 100644
+index 65fe1793..a4a1d8e5 100644
 --- a/crates/benilla-app/src/run_mode.rs
 +++ b/crates/benilla-app/src/run_mode.rs
 @@ -38,7 +38,7 @@ pub(crate) fn capture_ui_opted_in() -> bool {
@@ -6408,7 +6408,7 @@ index 65fe179..a4a1d8e 100644
  
  /// [`fast_path`]'s decision, with the environment, the declaration and the lease passed in;
 diff --git a/crates/benilla-app/src/sound/cinematic.rs b/crates/benilla-app/src/sound/cinematic.rs
-index bb13010..982fc85 100644
+index bb130104..982fc85f 100644
 --- a/crates/benilla-app/src/sound/cinematic.rs
 +++ b/crates/benilla-app/src/sound/cinematic.rs
 @@ -26,6 +26,11 @@ pub(super) struct CinematicVoice {
@@ -6533,7 +6533,7 @@ index bb13010..982fc85 100644
      // No category slider applies: the narration opens (`0x48ef29` → `0x458a40` → `0x45ce60`)
      // with flags `0x15`, and bit `0x10` skips the category multiply at `0x7a5dc0`, so its gain is
 diff --git a/crates/benilla-app/src/sound/creature.rs b/crates/benilla-app/src/sound/creature.rs
-index e47551b..da9695d 100644
+index e47551b5..da9695dc 100644
 --- a/crates/benilla-app/src/sound/creature.rs
 +++ b/crates/benilla-app/src/sound/creature.rs
 @@ -444,7 +444,7 @@ fn creature_anim_vocals(
@@ -6546,7 +6546,7 @@ index e47551b..da9695d 100644
      voices: Option<Res<CreatureVoices>>,
      kits: Option<ResMut<SoundKits>>,
 diff --git a/crates/benilla-app/src/sound/glue.rs b/crates/benilla-app/src/sound/glue.rs
-index a8d5151..de25a1a 100644
+index a8d51516..de25a1a7 100644
 --- a/crates/benilla-app/src/sound/glue.rs
 +++ b/crates/benilla-app/src/sound/glue.rs
 @@ -60,6 +60,10 @@ struct GlueMusic {
@@ -6561,7 +6561,7 @@ index a8d5151..de25a1a 100644
      fn default() -> Self {
          Self {
 diff --git a/crates/benilla-app/src/sound/kit.rs b/crates/benilla-app/src/sound/kit.rs
-index d5ea5c8..0dc3901 100644
+index d5ea5c83..0dc3901c 100644
 --- a/crates/benilla-app/src/sound/kit.rs
 +++ b/crates/benilla-app/src/sound/kit.rs
 @@ -10,7 +10,9 @@
@@ -6742,7 +6742,7 @@ index d5ea5c8..0dc3901 100644
  #[cfg(test)]
 diff --git a/crates/benilla-app/src/sound/kit/deferred.rs b/crates/benilla-app/src/sound/kit/deferred.rs
 new file mode 100644
-index 0000000..cfc9213
+index 00000000..cfc9213c
 --- /dev/null
 +++ b/crates/benilla-app/src/sound/kit/deferred.rs
 @@ -0,0 +1,355 @@
@@ -7102,7 +7102,7 @@ index 0000000..cfc9213
 +    }
 +}
 diff --git a/crates/benilla-app/src/sound/mix_tap.rs b/crates/benilla-app/src/sound/mix_tap.rs
-index 3d916a0..bb2487d 100644
+index 3d916a05..bb2487d4 100644
 --- a/crates/benilla-app/src/sound/mix_tap.rs
 +++ b/crates/benilla-app/src/sound/mix_tap.rs
 @@ -17,7 +17,7 @@ use std::sync::Arc;
@@ -7137,7 +7137,7 @@ index 3d916a0..bb2487d 100644
      builder: &mut kira::track::MainTrackBuilder,
      path: &std::path::Path,
 diff --git a/crates/benilla-app/src/sound/mixer.rs b/crates/benilla-app/src/sound/mixer.rs
-index d2e9906..c0a5fc9 100644
+index d2e9906e..c0a5fc96 100644
 --- a/crates/benilla-app/src/sound/mixer.rs
 +++ b/crates/benilla-app/src/sound/mixer.rs
 @@ -14,14 +14,38 @@ use bevy::prelude::*;
@@ -7719,7 +7719,7 @@ index d2e9906..c0a5fc9 100644
          h.state() == kira::sound::PlaybackState::Stopped
      }
 diff --git a/crates/benilla-app/src/sound/mod.rs b/crates/benilla-app/src/sound/mod.rs
-index 321d74b..f54084f 100644
+index 321d74b8..f54084f5 100644
 --- a/crates/benilla-app/src/sound/mod.rs
 +++ b/crates/benilla-app/src/sound/mod.rs
 @@ -33,6 +33,9 @@ mod money;
@@ -7771,7 +7771,7 @@ index 321d74b..f54084f 100644
      let level = mixer.take_level();
      let rate = mixer.sample_rate();
 diff --git a/crates/benilla-app/src/sound/output/cpal.rs b/crates/benilla-app/src/sound/output/cpal.rs
-index 356edfe..c7112de 100644
+index 356edfe0..c7112def 100644
 --- a/crates/benilla-app/src/sound/output/cpal.rs
 +++ b/crates/benilla-app/src/sound/output/cpal.rs
 @@ -13,7 +13,7 @@
@@ -7784,7 +7784,7 @@ index 356edfe..c7112de 100644
  use anyhow::{bail, Context, Result};
  use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 diff --git a/crates/benilla-app/src/sound/output/mod.rs b/crates/benilla-app/src/sound/output/mod.rs
-index ba7defd..b20e0af 100644
+index ba7defdb..b20e0af0 100644
 --- a/crates/benilla-app/src/sound/output/mod.rs
 +++ b/crates/benilla-app/src/sound/output/mod.rs
 @@ -38,7 +38,7 @@ mod device;
@@ -7797,7 +7797,7 @@ index ba7defd..b20e0af 100644
  use anyhow::{Context, Result};
  use bevy::log::{debug, warn};
 diff --git a/crates/benilla-app/src/sound/probe.rs b/crates/benilla-app/src/sound/probe.rs
-index 8c430d3..6052344 100644
+index 8c430d34..6052344f 100644
 --- a/crates/benilla-app/src/sound/probe.rs
 +++ b/crates/benilla-app/src/sound/probe.rs
 @@ -31,10 +31,10 @@ use bevy::prelude::*;
@@ -7892,7 +7892,7 @@ index 8c430d3..6052344 100644
              Window {
 diff --git a/crates/benilla-app/src/sound/web_backend.rs b/crates/benilla-app/src/sound/web_backend.rs
 new file mode 100644
-index 0000000..10414dd
+index 00000000..10414ddb
 --- /dev/null
 +++ b/crates/benilla-app/src/sound/web_backend.rs
 @@ -0,0 +1,75 @@
@@ -7973,7 +7973,7 @@ index 0000000..10414dd
 +}
 diff --git a/crates/benilla-app/src/sound/web_load.rs b/crates/benilla-app/src/sound/web_load.rs
 new file mode 100644
-index 0000000..ea2fa42
+index 00000000..ea2fa425
 --- /dev/null
 +++ b/crates/benilla-app/src/sound/web_load.rs
 @@ -0,0 +1,292 @@
@@ -8270,7 +8270,7 @@ index 0000000..ea2fa42
 +    format!("{e:?}")
 +}
 diff --git a/crates/benilla-app/src/sound/zone.rs b/crates/benilla-app/src/sound/zone.rs
-index 44775f4..c5bd3a7 100644
+index 44775f46..c5bd3a73 100644
 --- a/crates/benilla-app/src/sound/zone.rs
 +++ b/crates/benilla-app/src/sound/zone.rs
 @@ -22,16 +22,20 @@
@@ -8577,7 +8577,7 @@ index 44775f4..c5bd3a7 100644
      /// A kit of `files`, of which only the `present` ones open, picked uniformly per attempt as
      /// the reference's weighted pick does: every attempt is logged in `tried`.
 diff --git a/crates/benilla-app/src/spell/cast_send.rs b/crates/benilla-app/src/spell/cast_send.rs
-index 6597784..763c608 100644
+index 65977846..763c6081 100644
 --- a/crates/benilla-app/src/spell/cast_send.rs
 +++ b/crates/benilla-app/src/spell/cast_send.rs
 @@ -15,7 +15,8 @@
@@ -8591,7 +8591,7 @@ index 6597784..763c608 100644
  use benilla_protocol::messages::UseItemTarget;
  use bevy::ecs::system::SystemParam;
 diff --git a/crates/benilla-app/src/spell/cooldowns.rs b/crates/benilla-app/src/spell/cooldowns.rs
-index b17df82..376ed46 100644
+index b17df82b..376ed465 100644
 --- a/crates/benilla-app/src/spell/cooldowns.rs
 +++ b/crates/benilla-app/src/spell/cooldowns.rs
 @@ -14,7 +14,13 @@
@@ -8610,7 +8610,7 @@ index b17df82..376ed46 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/spell/inflight.rs b/crates/benilla-app/src/spell/inflight.rs
-index 7bf8b5a..2f573db 100644
+index 7bf8b5a6..2f573dbc 100644
 --- a/crates/benilla-app/src/spell/inflight.rs
 +++ b/crates/benilla-app/src/spell/inflight.rs
 @@ -3,7 +3,10 @@
@@ -8626,7 +8626,7 @@ index 7bf8b5a..2f573db 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/spell/net.rs b/crates/benilla-app/src/spell/net.rs
-index 65e1544..3123d90 100644
+index 65e1544b..3123d90a 100644
 --- a/crates/benilla-app/src/spell/net.rs
 +++ b/crates/benilla-app/src/spell/net.rs
 @@ -3,7 +3,10 @@
@@ -8658,7 +8658,7 @@ index 65e1544..3123d90 100644
          }
          // The precast edge, instants included: their GO follows at once and reaps the hold.
 diff --git a/crates/benilla-app/src/spell/range_units.rs b/crates/benilla-app/src/spell/range_units.rs
-index de6c0c5..8d605fd 100644
+index de6c0c5d..8d605fd5 100644
 --- a/crates/benilla-app/src/spell/range_units.rs
 +++ b/crates/benilla-app/src/spell/range_units.rs
 @@ -163,8 +163,8 @@ mod tests {
@@ -8673,7 +8673,7 @@ index de6c0c5..8d605fd 100644
              grounded: true,
              run_mode: true,
 diff --git a/crates/benilla-app/src/spell/targeting/cursor.rs b/crates/benilla-app/src/spell/targeting/cursor.rs
-index fa23a16..0a024bc 100644
+index fa23a16e..0a024bc3 100644
 --- a/crates/benilla-app/src/spell/targeting/cursor.rs
 +++ b/crates/benilla-app/src/spell/targeting/cursor.rs
 @@ -954,8 +954,8 @@ mod tests {
@@ -8688,7 +8688,7 @@ index fa23a16..0a024bc 100644
                      grounded: true,
                      run_mode: true,
 diff --git a/crates/benilla-app/src/swing_refusal.rs b/crates/benilla-app/src/swing_refusal.rs
-index 14beeb5..7156f51 100644
+index 14beeb5a..7156f51f 100644
 --- a/crates/benilla-app/src/swing_refusal.rs
 +++ b/crates/benilla-app/src/swing_refusal.rs
 @@ -31,7 +31,7 @@
@@ -8701,7 +8701,7 @@ index 14beeb5..7156f51 100644
  use benilla_protocol::messages::AttackSwingError;
  use bevy::prelude::*;
 diff --git a/crates/benilla-app/src/target/by_name.rs b/crates/benilla-app/src/target/by_name.rs
-index 62bb942..62b7bc3 100644
+index 62bb9425..62b7bc33 100644
 --- a/crates/benilla-app/src/target/by_name.rs
 +++ b/crates/benilla-app/src/target/by_name.rs
 @@ -504,7 +504,10 @@ pub(super) fn follow_requests(
@@ -8717,7 +8717,7 @@ index 62bb942..62b7bc3 100644
                  info!("follow: refused — {key}");
                  errors.0.push(crate::ui_action::UiError::key(key));
 diff --git a/crates/benilla-app/src/textinput/clipboard.rs b/crates/benilla-app/src/textinput/clipboard.rs
-index cba7387..cd2fa2a 100644
+index cba73877..cd2fa2ad 100644
 --- a/crates/benilla-app/src/textinput/clipboard.rs
 +++ b/crates/benilla-app/src/textinput/clipboard.rs
 @@ -19,6 +19,9 @@ trait Pasteboard {
@@ -8752,7 +8752,7 @@ index cba7387..cd2fa2a 100644
          if let Some(backend) = &self.backend {
              info!("clipboard: {}{}", backend.name(), session_note());
 diff --git a/crates/benilla-app/src/transport.rs b/crates/benilla-app/src/transport.rs
-index b4845a8..3529665 100644
+index b4845a85..35296652 100644
 --- a/crates/benilla-app/src/transport.rs
 +++ b/crates/benilla-app/src/transport.rs
 @@ -12,9 +12,9 @@
@@ -8767,7 +8767,7 @@ index b4845a8..3529665 100644
  // avian's own AABB and collider-tree refresh, run a second time each frame in the chain below.
  use avian3d::collider_tree::update_moved_collider_aabbs as republish_moved_collider_aabbs;
 diff --git a/crates/benilla-app/src/tutorial.rs b/crates/benilla-app/src/tutorial.rs
-index 4c55d97..ad6df63 100644
+index 4c55d970..ad6df631 100644
 --- a/crates/benilla-app/src/tutorial.rs
 +++ b/crates/benilla-app/src/tutorial.rs
 @@ -16,7 +16,11 @@
@@ -8793,7 +8793,7 @@ index 4c55d97..ad6df63 100644
  
          {
 diff --git a/crates/benilla-app/src/ui_achievement.rs b/crates/benilla-app/src/ui_achievement.rs
-index 4798d6e..4024f72 100644
+index 4798d6e9..4024f727 100644
 --- a/crates/benilla-app/src/ui_achievement.rs
 +++ b/crates/benilla-app/src/ui_achievement.rs
 @@ -135,8 +135,8 @@ fn list_parts(d: &AllAchievementData) -> (Vec<(u32, u32)>, Vec<CriteriaWire>) {
@@ -8808,7 +8808,7 @@ index 4798d6e..4024f72 100644
  }
  
 diff --git a/crates/benilla-app/src/ui_action/state.rs b/crates/benilla-app/src/ui_action/state.rs
-index ccb06e3..f1f4ec4 100644
+index ccb06e30..f1f4ec43 100644
 --- a/crates/benilla-app/src/ui_action/state.rs
 +++ b/crates/benilla-app/src/ui_action/state.rs
 @@ -8,7 +8,8 @@
@@ -8840,7 +8840,7 @@ index ccb06e3..f1f4ec4 100644
          );
          app.insert_resource(actions)
 diff --git a/crates/benilla-app/src/ui_arena_team.rs b/crates/benilla-app/src/ui_arena_team.rs
-index 4ccffe5..64c67bc 100644
+index 4ccffe57..64c67bcd 100644
 --- a/crates/benilla-app/src/ui_arena_team.rs
 +++ b/crates/benilla-app/src/ui_arena_team.rs
 @@ -3,7 +3,7 @@
@@ -8853,7 +8853,7 @@ index 4ccffe5..64c67bc 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_battlefield.rs b/crates/benilla-app/src/ui_battlefield.rs
-index 5b588b1..fb29f9e 100644
+index 5b588b10..fb29f9e4 100644
 --- a/crates/benilla-app/src/ui_battlefield.rs
 +++ b/crates/benilla-app/src/ui_battlefield.rs
 @@ -9,7 +9,7 @@
@@ -8877,7 +8877,7 @@ index 5b588b1..fb29f9e 100644
      let frame = BattlefieldFrame {
          slots: [0, 1]
 diff --git a/crates/benilla-app/src/ui_battlefield_positions.rs b/crates/benilla-app/src/ui_battlefield_positions.rs
-index c11aa1e..f20aa89 100644
+index c11aa1e1..f20aa896 100644
 --- a/crates/benilla-app/src/ui_battlefield_positions.rs
 +++ b/crates/benilla-app/src/ui_battlefield_positions.rs
 @@ -7,7 +7,11 @@
@@ -8894,7 +8894,7 @@ index c11aa1e..f20aa89 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_battlefield_score.rs b/crates/benilla-app/src/ui_battlefield_score.rs
-index 9f630cd..b2e35ef 100644
+index 9f630cd1..b2e35ef2 100644
 --- a/crates/benilla-app/src/ui_battlefield_score.rs
 +++ b/crates/benilla-app/src/ui_battlefield_score.rs
 @@ -5,7 +5,11 @@
@@ -8911,7 +8911,7 @@ index 9f630cd..b2e35ef 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_cast.rs b/crates/benilla-app/src/ui_cast.rs
-index 3740b96..63e8346 100644
+index 3740b960..63e83460 100644
 --- a/crates/benilla-app/src/ui_cast.rs
 +++ b/crates/benilla-app/src/ui_cast.rs
 @@ -9,7 +9,7 @@
@@ -8924,7 +8924,7 @@ index 3740b96..63e8346 100644
  use benilla_formats::SpellDisplay;
  use bevy::prelude::*;
 diff --git a/crates/benilla-app/src/ui_char.rs b/crates/benilla-app/src/ui_char.rs
-index 33bec8a..fb21b25 100644
+index 33bec8a6..fb21b250 100644
 --- a/crates/benilla-app/src/ui_char.rs
 +++ b/crates/benilla-app/src/ui_char.rs
 @@ -660,7 +660,7 @@ fn slot_view(
@@ -8937,7 +8937,7 @@ index 33bec8a..fb21b25 100644
      );
      // `ITEM_FIELD_RANDOM_PROPERTIES_ID`, the roll behind an "of the Bear" name; its enchants are
 diff --git a/crates/benilla-app/src/ui_chat.rs b/crates/benilla-app/src/ui_chat.rs
-index 975f3ec..4fc92f2 100644
+index 975f3ec8..4fc92f29 100644
 --- a/crates/benilla-app/src/ui_chat.rs
 +++ b/crates/benilla-app/src/ui_chat.rs
 @@ -50,11 +50,12 @@ pub(crate) use channels::seed_zone_channel_catalog;
@@ -8956,7 +8956,7 @@ index 975f3ec..4fc92f2 100644
  /// must precede the session's first chat line and `PLAYER_LOGIN`.
  pub(crate) use settings::restore_chat_looks;
 diff --git a/crates/benilla-app/src/ui_chat/frames.rs b/crates/benilla-app/src/ui_chat/frames.rs
-index b264429..9386525 100644
+index b2644296..9386525c 100644
 --- a/crates/benilla-app/src/ui_chat/frames.rs
 +++ b/crates/benilla-app/src/ui_chat/frames.rs
 @@ -15,6 +15,8 @@ pub(crate) struct ChatWindows {
@@ -8979,7 +8979,7 @@ index b264429..9386525 100644
  
  /// `ChatFrame_MessageEventHandler`'s composition (`ChatFrame.lua:2753-2937`) for the line that
 diff --git a/crates/benilla-app/src/ui_chat/idle.rs b/crates/benilla-app/src/ui_chat/idle.rs
-index af38230..bfa7233 100644
+index af38230e..bfa72334 100644
 --- a/crates/benilla-app/src/ui_chat/idle.rs
 +++ b/crates/benilla-app/src/ui_chat/idle.rs
 @@ -9,7 +9,7 @@
@@ -8992,7 +8992,7 @@ index af38230..bfa7233 100644
  use bevy::input::keyboard::KeyboardInput;
  use bevy::input::mouse::{AccumulatedMouseMotion, MouseButtonInput, MouseWheel};
 diff --git a/crates/benilla-app/src/ui_chat/logging.rs b/crates/benilla-app/src/ui_chat/logging.rs
-index bf27ae4..b732cb7 100644
+index bf27ae42..b732cb7a 100644
 --- a/crates/benilla-app/src/ui_chat/logging.rs
 +++ b/crates/benilla-app/src/ui_chat/logging.rs
 @@ -102,10 +102,25 @@ fn local_now() -> [u32; 6] {
@@ -9024,7 +9024,7 @@ index bf27ae4..b732cb7 100644
      let [month, day, hour, min, sec] = local_fields(now.as_secs() as i64);
      [month, day, hour, min, sec, now.subsec_millis()]
 diff --git a/crates/benilla-app/src/ui_chat/settings.rs b/crates/benilla-app/src/ui_chat/settings.rs
-index cbfee21..6134d6a 100644
+index cbfee214..6134d6aa 100644
 --- a/crates/benilla-app/src/ui_chat/settings.rs
 +++ b/crates/benilla-app/src/ui_chat/settings.rs
 @@ -57,7 +57,7 @@ use crate::net::{ClientCommand, NetCommands};
@@ -9084,7 +9084,7 @@ index cbfee21..6134d6a 100644
  
  fn write(script: &UiScript, channels: &super::edit::ChannelState, path: &std::path::Path) {
 diff --git a/crates/benilla-app/src/ui_chat/tests.rs b/crates/benilla-app/src/ui_chat/tests.rs
-index 9ec205e..33119ef 100644
+index 9ec205e9..33119ef7 100644
 --- a/crates/benilla-app/src/ui_chat/tests.rs
 +++ b/crates/benilla-app/src/ui_chat/tests.rs
 @@ -2225,6 +2225,29 @@ fn the_posture_emotes_carry_no_swim_suppression_flag() {
@@ -9118,7 +9118,7 @@ index 9ec205e..33119ef 100644
  #[test]
  fn level_up_gains_are_matched_by_level_and_a_miss_is_not_an_absence() {
 diff --git a/crates/benilla-app/src/ui_dialog_verbs.rs b/crates/benilla-app/src/ui_dialog_verbs.rs
-index 084eefb..570ac18 100644
+index 084eefbe..570ac18d 100644
 --- a/crates/benilla-app/src/ui_dialog_verbs.rs
 +++ b/crates/benilla-app/src/ui_dialog_verbs.rs
 @@ -5,7 +5,9 @@
@@ -9167,7 +9167,7 @@ index 084eefb..570ac18 100644
      }
  
 diff --git a/crates/benilla-app/src/ui_guild/mod.rs b/crates/benilla-app/src/ui_guild/mod.rs
-index e680c4e..6539d7b 100644
+index e680c4e0..6539d7b6 100644
 --- a/crates/benilla-app/src/ui_guild/mod.rs
 +++ b/crates/benilla-app/src/ui_guild/mod.rs
 @@ -569,7 +569,9 @@ pub(crate) fn corpse_guild_emblem(
@@ -9182,7 +9182,7 @@ index e680c4e..6539d7b 100644
      guild: &mut GuildState,
      commands: &NetCommands,
 diff --git a/crates/benilla-app/src/ui_guild_bank/mod.rs b/crates/benilla-app/src/ui_guild_bank/mod.rs
-index 51c7de5..9b5fe0f 100644
+index 51c7de56..9b5fe0fe 100644
 --- a/crates/benilla-app/src/ui_guild_bank/mod.rs
 +++ b/crates/benilla-app/src/ui_guild_bank/mod.rs
 @@ -220,8 +220,8 @@ impl Plugin for UiGuildBankPlugin {
@@ -9197,7 +9197,7 @@ index 51c7de5..9b5fe0f 100644
  }
  
 diff --git a/crates/benilla-app/src/ui_honor.rs b/crates/benilla-app/src/ui_honor.rs
-index bd9210f..bd959e6 100644
+index bd9210f5..bd959e6a 100644
 --- a/crates/benilla-app/src/ui_honor.rs
 +++ b/crates/benilla-app/src/ui_honor.rs
 @@ -82,19 +82,19 @@ const PVP_DESIRED: u32 = 0x200;
@@ -9278,7 +9278,7 @@ index bd9210f..bd959e6 100644
          t.enter(PVP_TIMER, now);
          t.flags = Some(PVP_TIMER);
 diff --git a/crates/benilla-app/src/ui_items/feed.rs b/crates/benilla-app/src/ui_items/feed.rs
-index 99ffc1b..bb74554 100644
+index 99ffc1b4..bb745547 100644
 --- a/crates/benilla-app/src/ui_items/feed.rs
 +++ b/crates/benilla-app/src/ui_items/feed.rs
 @@ -684,7 +684,10 @@ fn resolve_slot(
@@ -9312,7 +9312,7 @@ index 99ffc1b..bb74554 100644
      let (now, ui_now) = (clock.anchor, clock.ui_now);
      let spell_catalog = spells.as_deref().map(|s| &s.catalog);
 diff --git a/crates/benilla-app/src/ui_layout.rs b/crates/benilla-app/src/ui_layout.rs
-index 229fb3d..20960c6 100644
+index 229fb3da..20960c6f 100644
 --- a/crates/benilla-app/src/ui_layout.rs
 +++ b/crates/benilla-app/src/ui_layout.rs
 @@ -26,7 +26,7 @@ use benilla_ui::script::{FrameLayout, LayoutPoint, UiScript};
@@ -9352,7 +9352,7 @@ index 229fb3d..20960c6 100644
  
  /// The autosave: dirty and one quiet second rewrite the file atomically. Every orderly end is
 diff --git a/crates/benilla-app/src/ui_loot_roll.rs b/crates/benilla-app/src/ui_loot_roll.rs
-index 0b09f29..731da7d 100644
+index 0b09f29c..731da7d5 100644
 --- a/crates/benilla-app/src/ui_loot_roll.rs
 +++ b/crates/benilla-app/src/ui_loot_roll.rs
 @@ -1007,7 +1007,7 @@ mod tests {
@@ -9365,7 +9365,7 @@ index 0b09f29..731da7d 100644
  
      fn sent(rx: &crossbeam_channel::Receiver<ClientCommand>) -> Vec<ClientCommand> {
 diff --git a/crates/benilla-app/src/ui_macro/mod.rs b/crates/benilla-app/src/ui_macro/mod.rs
-index f7f08ba..81feb6b 100644
+index f7f08ba1..81feb6b4 100644
 --- a/crates/benilla-app/src/ui_macro/mod.rs
 +++ b/crates/benilla-app/src/ui_macro/mod.rs
 @@ -163,7 +163,7 @@ fn load_macros(
@@ -9378,7 +9378,7 @@ index f7f08ba..81feb6b 100644
              // Absent is the first run, not a failure.
              Err(e) if e.kind() == std::io::ErrorKind::NotFound => Vec::new(),
 diff --git a/crates/benilla-app/src/ui_pass.rs b/crates/benilla-app/src/ui_pass.rs
-index bb78264..caea1a9 100644
+index bb78264a..caea1a9d 100644
 --- a/crates/benilla-app/src/ui_pass.rs
 +++ b/crates/benilla-app/src/ui_pass.rs
 @@ -420,7 +420,7 @@ impl Plugin for PlayerUiPlugin {
@@ -9443,7 +9443,7 @@ index bb78264..caea1a9 100644
                  .as_secs();
              if LAST_SEC.swap(sec, Ordering::Relaxed) != sec {
 diff --git a/crates/benilla-app/src/ui_pet/bar.rs b/crates/benilla-app/src/ui_pet/bar.rs
-index 34257bc..d3e9ca4 100644
+index 34257bc4..d3e9ca4c 100644
 --- a/crates/benilla-app/src/ui_pet/bar.rs
 +++ b/crates/benilla-app/src/ui_pet/bar.rs
 @@ -1,7 +1,8 @@
@@ -9457,7 +9457,7 @@ index 34257bc..d3e9ca4 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_pet/drain.rs b/crates/benilla-app/src/ui_pet/drain.rs
-index 874150e..82dc4d9 100644
+index 874150e8..82dc4d90 100644
 --- a/crates/benilla-app/src/ui_pet/drain.rs
 +++ b/crates/benilla-app/src/ui_pet/drain.rs
 @@ -3,7 +3,8 @@
@@ -9471,7 +9471,7 @@ index 874150e..82dc4d9 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_pet/flush_tests.rs b/crates/benilla-app/src/ui_pet/flush_tests.rs
-index 752e7cf..a6f1d92 100644
+index 752e7cf4..a6f1d929 100644
 --- a/crates/benilla-app/src/ui_pet/flush_tests.rs
 +++ b/crates/benilla-app/src/ui_pet/flush_tests.rs
 @@ -3,7 +3,8 @@
@@ -9485,7 +9485,7 @@ index 752e7cf..a6f1d92 100644
  use benilla_formats::SpellDisplay;
  use benilla_protocol::messages::{PetSpellCooldown, PetSpells};
 diff --git a/crates/benilla-app/src/ui_pet/mod.rs b/crates/benilla-app/src/ui_pet/mod.rs
-index fa59467..7386308 100644
+index fa594673..73863083 100644
 --- a/crates/benilla-app/src/ui_pet/mod.rs
 +++ b/crates/benilla-app/src/ui_pet/mod.rs
 @@ -3,7 +3,8 @@
@@ -9499,7 +9499,7 @@ index fa59467..7386308 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_pet/net.rs b/crates/benilla-app/src/ui_pet/net.rs
-index 2f189d7..09fb911 100644
+index 2f189d72..09fb9117 100644
 --- a/crates/benilla-app/src/ui_pet/net.rs
 +++ b/crates/benilla-app/src/ui_pet/net.rs
 @@ -3,7 +3,8 @@
@@ -9531,7 +9531,7 @@ index 2f189d7..09fb911 100644
  
          pet_spells(a_bar(0x2A), None, &mut bar);
 diff --git a/crates/benilla-app/src/ui_pet/press_tests.rs b/crates/benilla-app/src/ui_pet/press_tests.rs
-index 5f0d04d..a0529bf 100644
+index 5f0d04db..a0529bf6 100644
 --- a/crates/benilla-app/src/ui_pet/press_tests.rs
 +++ b/crates/benilla-app/src/ui_pet/press_tests.rs
 @@ -3,7 +3,8 @@
@@ -9545,7 +9545,7 @@ index 5f0d04d..a0529bf 100644
  use bevy::ecs::schedule::Schedule;
  use bevy::ecs::system::RunSystemOnce;
 diff --git a/crates/benilla-app/src/ui_pet/tests.rs b/crates/benilla-app/src/ui_pet/tests.rs
-index e027ff2..40c19b0 100644
+index e027ff21..40c19b00 100644
 --- a/crates/benilla-app/src/ui_pet/tests.rs
 +++ b/crates/benilla-app/src/ui_pet/tests.rs
 @@ -799,7 +799,7 @@ fn a_cooldown_alone_is_pushed_with_no_event_from_the_bar_feed() {
@@ -9558,7 +9558,7 @@ index e027ff2..40c19b0 100644
          seen(&mut app),
          Vec::<String>::new(),
 diff --git a/crates/benilla-app/src/ui_pet_book.rs b/crates/benilla-app/src/ui_pet_book.rs
-index 49d974b..1de534d 100644
+index 49d974b9..1de534df 100644
 --- a/crates/benilla-app/src/ui_pet_book.rs
 +++ b/crates/benilla-app/src/ui_pet_book.rs
 @@ -13,7 +13,8 @@
@@ -9572,7 +9572,7 @@ index 49d974b..1de534d 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_saved.rs b/crates/benilla-app/src/ui_saved.rs
-index 577c0d7..9750ccd 100644
+index 577c0d74..9750ccd5 100644
 --- a/crates/benilla-app/src/ui_saved.rs
 +++ b/crates/benilla-app/src/ui_saved.rs
 @@ -34,7 +34,7 @@ pub(crate) fn load_saved_variables(
@@ -9585,7 +9585,7 @@ index 577c0d7..9750ccd 100644
                  if let Err(e) = script.run_chunk(&bytes) {
                      warn!(
 diff --git a/crates/benilla-app/src/ui_script/achievement_open_cost.rs b/crates/benilla-app/src/ui_script/achievement_open_cost.rs
-index 8e5907e..3c89d94 100644
+index 8e5907e6..3c89d942 100644
 --- a/crates/benilla-app/src/ui_script/achievement_open_cost.rs
 +++ b/crates/benilla-app/src/ui_script/achievement_open_cost.rs
 @@ -1,7 +1,7 @@
@@ -9598,7 +9598,7 @@ index 8e5907e..3c89d94 100644
  use benilla_ui::script::{
      AchievementBook, AchievementDb, AchievementUpdate, CriteriaWire, WowDate,
 diff --git a/crates/benilla-app/src/ui_script/addons.rs b/crates/benilla-app/src/ui_script/addons.rs
-index e3ad831..b4c0dd9 100644
+index e3ad8318..b4c0dd95 100644
 --- a/crates/benilla-app/src/ui_script/addons.rs
 +++ b/crates/benilla-app/src/ui_script/addons.rs
 @@ -255,7 +255,15 @@ fn read_under(root: &Path, rel: &str) -> Option<Vec<u8>> {
@@ -9661,7 +9661,7 @@ index e3ad831..b4c0dd9 100644
                      .unwrap_or_default();
                  (character.clone(), EnableHash::from_rows(rows))
 diff --git a/crates/benilla-app/src/ui_script/extract/mod.rs b/crates/benilla-app/src/ui_script/extract/mod.rs
-index 7bc7c79..cfc70c8 100644
+index 7bc7c797..cfc70c8e 100644
 --- a/crates/benilla-app/src/ui_script/extract/mod.rs
 +++ b/crates/benilla-app/src/ui_script/extract/mod.rs
 @@ -35,7 +35,7 @@ fn report_patch_check(matched: bool) {
@@ -9731,7 +9731,7 @@ index 7bc7c79..cfc70c8 100644
      };
      // ── The second measure and resolve ───────────────────────────────────────────────────────
 diff --git a/crates/benilla-app/src/ui_script/gate.rs b/crates/benilla-app/src/ui_script/gate.rs
-index 4535c63..53e58a5 100644
+index 4535c63f..53e58a5c 100644
 --- a/crates/benilla-app/src/ui_script/gate.rs
 +++ b/crates/benilla-app/src/ui_script/gate.rs
 @@ -27,8 +27,8 @@ pub(crate) fn auditing() -> bool {
@@ -9745,7 +9745,7 @@ index 4535c63..53e58a5 100644
      if !*ON.get_or_init(|| std::env::var_os("WOW_FEED_GATE_TRACE").is_some_and(|v| v != "0")) {
          return;
 diff --git a/crates/benilla-app/src/ui_script/glue_mgr_tests.rs b/crates/benilla-app/src/ui_script/glue_mgr_tests.rs
-index 46577aa..68f5ca7 100644
+index 46577aa3..68f5ca7e 100644
 --- a/crates/benilla-app/src/ui_script/glue_mgr_tests.rs
 +++ b/crates/benilla-app/src/ui_script/glue_mgr_tests.rs
 @@ -736,12 +736,8 @@ fn a_logout_keeps_the_link_for_the_screens_roster_ask() {
@@ -9803,7 +9803,7 @@ index 46577aa..68f5ca7 100644
      app.update();
      assert_eq!(
 diff --git a/crates/benilla-app/src/ui_script/glue_scene.rs b/crates/benilla-app/src/ui_script/glue_scene.rs
-index 79b9e22..3e6e893 100644
+index 79b9e22f..3e6e893c 100644
 --- a/crates/benilla-app/src/ui_script/glue_scene.rs
 +++ b/crates/benilla-app/src/ui_script/glue_scene.rs
 @@ -114,7 +114,7 @@ pub(crate) fn feed_stock_glue_preview(
@@ -9844,7 +9844,7 @@ index 79b9e22..3e6e893 100644
      let feed = feed.get_for(script.as_deref());
      // A pane that was not the one shown last frame has just shown: its OnShow (`0x46fa60`).
 diff --git a/crates/benilla-app/src/ui_script/input.rs b/crates/benilla-app/src/ui_script/input.rs
-index 6ce4272..21e0d4f 100644
+index 6ce42723..21e0d4f7 100644
 --- a/crates/benilla-app/src/ui_script/input.rs
 +++ b/crates/benilla-app/src/ui_script/input.rs
 @@ -148,7 +148,7 @@ pub(super) fn feed_ui_input(
@@ -9868,7 +9868,7 @@ index 6ce4272..21e0d4f 100644
                  .unwrap_or(0);
              if LAST.swap(now_s, Ordering::Relaxed) != now_s && calls > 1 {
 diff --git a/crates/benilla-app/src/ui_script/instance_tests.rs b/crates/benilla-app/src/ui_script/instance_tests.rs
-index 2256bd5..b00504b 100644
+index 2256bd57..b00504b2 100644
 --- a/crates/benilla-app/src/ui_script/instance_tests.rs
 +++ b/crates/benilla-app/src/ui_script/instance_tests.rs
 @@ -23,8 +23,9 @@ fn the_three_bindings_have_the_reference_shapes() {
@@ -9884,7 +9884,7 @@ index 2256bd5..b00504b 100644
          s.set_instance_type(Some(ty));
          assert_eq!(
 diff --git a/crates/benilla-app/src/ui_script/lifecycle.rs b/crates/benilla-app/src/ui_script/lifecycle.rs
-index d91600f..ab6aaa4 100644
+index d91600f6..ab6aaa46 100644
 --- a/crates/benilla-app/src/ui_script/lifecycle.rs
 +++ b/crates/benilla-app/src/ui_script/lifecycle.rs
 @@ -71,7 +71,7 @@ fn install_glue_vm(world: &mut World, screen: super::glue::GlueScreen) -> bool {
@@ -9924,7 +9924,7 @@ index d91600f..ab6aaa4 100644
          let mut world = World::new();
          world.init_resource::<UiClock>();
 diff --git a/crates/benilla-app/src/ui_script/manifest.rs b/crates/benilla-app/src/ui_script/manifest.rs
-index 5dc172e..a1b5559 100644
+index 5dc172ee..a1b55596 100644
 --- a/crates/benilla-app/src/ui_script/manifest.rs
 +++ b/crates/benilla-app/src/ui_script/manifest.rs
 @@ -47,7 +47,7 @@ pub(super) fn shipped_manifest_files() -> Vec<String> {
@@ -10011,7 +10011,7 @@ index 5dc172e..a1b5559 100644
      layer.load_files(script, &layer.toc.files)
  }
 diff --git a/crates/benilla-app/src/ui_script/mod.rs b/crates/benilla-app/src/ui_script/mod.rs
-index bfd13a4..70c9f0b 100644
+index bfd13a4f..70c9f0b7 100644
 --- a/crates/benilla-app/src/ui_script/mod.rs
 +++ b/crates/benilla-app/src/ui_script/mod.rs
 @@ -262,7 +262,9 @@ pub(crate) struct UiInput;
@@ -10035,7 +10035,7 @@ index bfd13a4..70c9f0b 100644
          }
      }
 diff --git a/crates/benilla-app/src/ui_script/resolve_bench.rs b/crates/benilla-app/src/ui_script/resolve_bench.rs
-index 486707f..1bbf483 100644
+index 486707f8..1bbf483a 100644
 --- a/crates/benilla-app/src/ui_script/resolve_bench.rs
 +++ b/crates/benilla-app/src/ui_script/resolve_bench.rs
 @@ -5,7 +5,7 @@
@@ -10048,7 +10048,7 @@ index 486707f..1bbf483 100644
  use benilla_ui::script::UiScript;
  
 diff --git a/crates/benilla-app/src/ui_script/server_alert.rs b/crates/benilla-app/src/ui_script/server_alert.rs
-index a0eb006..8ac0518 100644
+index a0eb0062..8ac05185 100644
 --- a/crates/benilla-app/src/ui_script/server_alert.rs
 +++ b/crates/benilla-app/src/ui_script/server_alert.rs
 @@ -28,7 +28,7 @@
@@ -10061,7 +10061,7 @@ index a0eb006..8ac0518 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_script/server_alert_tests.rs b/crates/benilla-app/src/ui_script/server_alert_tests.rs
-index c4a2f3e..92e9552 100644
+index c4a2f3ed..92e9552f 100644
 --- a/crates/benilla-app/src/ui_script/server_alert_tests.rs
 +++ b/crates/benilla-app/src/ui_script/server_alert_tests.rs
 @@ -1,7 +1,7 @@
@@ -10074,7 +10074,7 @@ index c4a2f3e..92e9552 100644
  use super::*;
  
 diff --git a/crates/benilla-app/src/ui_shapeshift.rs b/crates/benilla-app/src/ui_shapeshift.rs
-index 58fb6b5..5289844 100644
+index 58fb6b5e..52898442 100644
 --- a/crates/benilla-app/src/ui_shapeshift.rs
 +++ b/crates/benilla-app/src/ui_shapeshift.rs
 @@ -12,7 +12,8 @@
@@ -10088,7 +10088,7 @@ index 58fb6b5..5289844 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_text/engine/gpu.rs b/crates/benilla-app/src/ui_text/engine/gpu.rs
-index 56bc87f..68c1fc4 100644
+index 56bc87fe..68c1fc44 100644
 --- a/crates/benilla-app/src/ui_text/engine/gpu.rs
 +++ b/crates/benilla-app/src/ui_text/engine/gpu.rs
 @@ -204,8 +204,8 @@ fn report_cache(atlas: &UiFontAtlas) {
@@ -10103,7 +10103,7 @@ index 56bc87f..68c1fc4 100644
      if LAST.swap(now, Ordering::Relaxed) == now {
          return;
 diff --git a/crates/benilla-app/src/ui_text/layout/mod.rs b/crates/benilla-app/src/ui_text/layout/mod.rs
-index 3941e56..bfeaede 100644
+index 3941e560..bfeaede8 100644
 --- a/crates/benilla-app/src/ui_text/layout/mod.rs
 +++ b/crates/benilla-app/src/ui_text/layout/mod.rs
 @@ -760,8 +760,8 @@ mod measure_fits_render {
@@ -10117,7 +10117,7 @@ index 3941e56..bfeaede 100644
      /// vmangos `page_text` 2676 verbatim, the Alliance Military Ranks plaque in Stormwind's Old
      /// Town (`GameObject` 3011): HTML, 647 bytes.
 diff --git a/crates/benilla-app/src/ui_tooltip/bench.rs b/crates/benilla-app/src/ui_tooltip/bench.rs
-index 87e7971..4834431 100644
+index 87e7971d..48344315 100644
 --- a/crates/benilla-app/src/ui_tooltip/bench.rs
 +++ b/crates/benilla-app/src/ui_tooltip/bench.rs
 @@ -2,7 +2,7 @@
@@ -10130,7 +10130,7 @@ index 87e7971..4834431 100644
  use benilla_protocol::ObjectFields;
  use benilla_ui::script::UiScript;
 diff --git a/crates/benilla-app/src/ui_tooltip/feed_tests.rs b/crates/benilla-app/src/ui_tooltip/feed_tests.rs
-index 25caf13..5cd5a67 100644
+index 25caf132..5cd5a674 100644
 --- a/crates/benilla-app/src/ui_tooltip/feed_tests.rs
 +++ b/crates/benilla-app/src/ui_tooltip/feed_tests.rs
 @@ -27,8 +27,8 @@ fn melee_and_authored_rows() -> benilla_formats::SpellRangeCatalog {
@@ -10145,7 +10145,7 @@ index 25caf13..5cd5a67 100644
          grounded: true,
          run_mode: true,
 diff --git a/crates/benilla-app/src/ui_totem.rs b/crates/benilla-app/src/ui_totem.rs
-index b5ab9ad..91d63f3 100644
+index b5ab9ad9..91d63f3b 100644
 --- a/crates/benilla-app/src/ui_totem.rs
 +++ b/crates/benilla-app/src/ui_totem.rs
 @@ -1,6 +1,6 @@
@@ -10157,7 +10157,7 @@ index b5ab9ad..91d63f3 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/weapon_trail/tests.rs b/crates/benilla-app/src/weapon_trail/tests.rs
-index b9cea15..3de975a 100644
+index b9cea152..3de975ad 100644
 --- a/crates/benilla-app/src/weapon_trail/tests.rs
 +++ b/crates/benilla-app/src/weapon_trail/tests.rs
 @@ -422,7 +422,7 @@ fn an_armed_trail_commits_a_strip_to_the_effect_stream() {
@@ -10189,7 +10189,7 @@ index b9cea15..3de975a 100644
          lit[i] = strip_rgb(&app);
 diff --git a/crates/benilla-app/src/webbridge/mod.rs b/crates/benilla-app/src/webbridge/mod.rs
 new file mode 100644
-index 0000000..9a77e00
+index 00000000..9a77e006
 --- /dev/null
 +++ b/crates/benilla-app/src/webbridge/mod.rs
 @@ -0,0 +1,668 @@
@@ -10863,7 +10863,7 @@ index 0000000..9a77e00
 +}
 diff --git a/crates/benilla-app/src/webbridge/nearby.rs b/crates/benilla-app/src/webbridge/nearby.rs
 new file mode 100644
-index 0000000..4b8c729
+index 00000000..4b8c729a
 --- /dev/null
 +++ b/crates/benilla-app/src/webbridge/nearby.rs
 @@ -0,0 +1,74 @@
@@ -10943,7 +10943,7 @@ index 0000000..4b8c729
 +}
 diff --git a/crates/benilla-app/src/webbridge/sink.rs b/crates/benilla-app/src/webbridge/sink.rs
 new file mode 100644
-index 0000000..34de3f1
+index 00000000..34de3f17
 --- /dev/null
 +++ b/crates/benilla-app/src/webbridge/sink.rs
 @@ -0,0 +1,218 @@
@@ -11167,7 +11167,7 @@ index 0000000..34de3f1
 +}
 diff --git a/crates/benilla-app/src/webbridge/snapshot.rs b/crates/benilla-app/src/webbridge/snapshot.rs
 new file mode 100644
-index 0000000..3ef4d9e
+index 00000000..3ef4d9e7
 --- /dev/null
 +++ b/crates/benilla-app/src/webbridge/snapshot.rs
 @@ -0,0 +1,522 @@
@@ -11695,7 +11695,7 @@ index 0000000..3ef4d9e
 +}
 diff --git a/crates/benilla-app/src/webenv.rs b/crates/benilla-app/src/webenv.rs
 new file mode 100644
-index 0000000..3400d4f
+index 00000000..3400d4f7
 --- /dev/null
 +++ b/crates/benilla-app/src/webenv.rs
 @@ -0,0 +1,204 @@
@@ -11905,7 +11905,7 @@ index 0000000..3400d4f
 +}
 diff --git a/crates/benilla-app/src/webprogress.rs b/crates/benilla-app/src/webprogress.rs
 new file mode 100644
-index 0000000..aa06036
+index 00000000..aa06036a
 --- /dev/null
 +++ b/crates/benilla-app/src/webprogress.rs
 @@ -0,0 +1,60 @@
@@ -11970,7 +11970,7 @@ index 0000000..aa06036
 +    signal("startup");
 +}
 diff --git a/crates/benilla-app/src/world_backdrop.rs b/crates/benilla-app/src/world_backdrop.rs
-index 8316b42..0bf86ca 100644
+index 8316b42f..0bf86ca5 100644
 --- a/crates/benilla-app/src/world_backdrop.rs
 +++ b/crates/benilla-app/src/world_backdrop.rs
 @@ -43,8 +43,10 @@ const MAX_RENDER_AXIS: u32 = 8192;
@@ -11988,7 +11988,7 @@ index 8316b42..0bf86ca 100644
              .map_or(1.0, |v| {
 diff --git a/crates/benilla-app/tests/boot_manifest.rs b/crates/benilla-app/tests/boot_manifest.rs
 new file mode 100644
-index 0000000..fb40f6c
+index 00000000..fb40f6c4
 --- /dev/null
 +++ b/crates/benilla-app/tests/boot_manifest.rs
 @@ -0,0 +1,103 @@
@@ -12097,7 +12097,7 @@ index 0000000..fb40f6c
 +}
 diff --git a/crates/benilla-app/tests/web_assets.rs b/crates/benilla-app/tests/web_assets.rs
 new file mode 100644
-index 0000000..9c83778
+index 00000000..9c83778a
 --- /dev/null
 +++ b/crates/benilla-app/tests/web_assets.rs
 @@ -0,0 +1,87 @@
@@ -12189,7 +12189,7 @@ index 0000000..9c83778
 +    }
 +}
 diff --git a/crates/benilla-assets/Cargo.toml b/crates/benilla-assets/Cargo.toml
-index 0cd91ff..c512ca1 100644
+index 0cd91ff2..c512ca1c 100644
 --- a/crates/benilla-assets/Cargo.toml
 +++ b/crates/benilla-assets/Cargo.toml
 @@ -15,6 +15,7 @@ default = ["dev"]
@@ -12214,7 +12214,7 @@ index 0cd91ff..c512ca1 100644
 +js-sys = "0.3.99"
 +web-sys = { version = "0.3.99", features = ["Window", "Response", "Request"] }
 diff --git a/crates/benilla-assets/src/anim_rng.rs b/crates/benilla-assets/src/anim_rng.rs
-index b61486f..9492a3e 100644
+index b61486f8..9492a3ec 100644
 --- a/crates/benilla-assets/src/anim_rng.rs
 +++ b/crates/benilla-assets/src/anim_rng.rs
 @@ -64,8 +64,8 @@ impl AnimRng {
@@ -12229,7 +12229,7 @@ index b61486f..9492a3e 100644
          self.seed = self.state;
      }
 diff --git a/crates/benilla-assets/src/lib.rs b/crates/benilla-assets/src/lib.rs
-index 92d096a..7b651cb 100644
+index 92d096a7..7b651cb5 100644
 --- a/crates/benilla-assets/src/lib.rs
 +++ b/crates/benilla-assets/src/lib.rs
 @@ -68,6 +68,13 @@ pub const MPQ_SOURCE: &str = "mpq";
@@ -12392,7 +12392,7 @@ index 92d096a..7b651cb 100644
          let (cells, n_shading, layer_h, alpha_h, shadow_h, n_doodads) =
              info.expect("the ADT tile should load via mpq:// + AdtLoader");
 diff --git a/crates/benilla-assets/src/trace.rs b/crates/benilla-assets/src/trace.rs
-index 5df4eeb..a42bb27 100644
+index 5df4eeba..a42bb271 100644
 --- a/crates/benilla-assets/src/trace.rs
 +++ b/crates/benilla-assets/src/trace.rs
 @@ -8,7 +8,7 @@
@@ -12416,7 +12416,7 @@ index 5df4eeb..a42bb27 100644
          let _ = writeln!(out, "# t0={t0_wall:.3} (unix epoch seconds at t=0)");
          Some(Mutex::new(Sink {
 diff --git a/crates/benilla-formats/Cargo.toml b/crates/benilla-formats/Cargo.toml
-index 0c92c54..560d5bf 100644
+index 0c92c546..560d5bf1 100644
 --- a/crates/benilla-formats/Cargo.toml
 +++ b/crates/benilla-formats/Cargo.toml
 @@ -32,3 +32,18 @@ benilla-wmo = { path = "../benilla-wmo" }
@@ -12439,7 +12439,7 @@ index 0c92c54..560d5bf 100644
 +# The boot-read trace (web.rs::trace) reads window.__wenilla_boottrace as a js_sys::Array.
 +js-sys = "0.3"
 diff --git a/crates/benilla-formats/src/chain.rs b/crates/benilla-formats/src/chain.rs
-index b7ddbe1..9cf13d7 100644
+index b7ddbe11..9cf13d7f 100644
 --- a/crates/benilla-formats/src/chain.rs
 +++ b/crates/benilla-formats/src/chain.rs
 @@ -3,10 +3,16 @@
@@ -12621,7 +12621,7 @@ index b7ddbe1..9cf13d7 100644
      use super::*;
  
 diff --git a/crates/benilla-formats/src/install.rs b/crates/benilla-formats/src/install.rs
-index 98911ac..cc14ef1 100644
+index 98911ac7..cc14ef13 100644
 --- a/crates/benilla-formats/src/install.rs
 +++ b/crates/benilla-formats/src/install.rs
 @@ -53,10 +53,23 @@ fn benilla_checkout() -> Option<&'static Path> {
@@ -12649,7 +12649,7 @@ index 98911ac..cc14ef1 100644
  pub fn candidates() -> Vec<PathBuf> {
      candidates_from(
 diff --git a/crates/benilla-formats/src/lib.rs b/crates/benilla-formats/src/lib.rs
-index 8a7d812..0abdefa 100644
+index 8a7d8123..0abdefad 100644
 --- a/crates/benilla-formats/src/lib.rs
 +++ b/crates/benilla-formats/src/lib.rs
 @@ -18,6 +18,8 @@ mod tga;
@@ -12663,7 +12663,7 @@ index 8a7d812..0abdefa 100644
      wow_data,
 diff --git a/crates/benilla-formats/src/web.rs b/crates/benilla-formats/src/web.rs
 new file mode 100644
-index 0000000..18ede66
+index 00000000..18ede66e
 --- /dev/null
 +++ b/crates/benilla-formats/src/web.rs
 @@ -0,0 +1,130 @@
@@ -12799,7 +12799,7 @@ index 0000000..18ede66
 +pub use wasm::{data_base, exists_sync, fetch_sync, trace};
 diff --git a/crates/benilla-formats/tests/web_names.rs b/crates/benilla-formats/tests/web_names.rs
 new file mode 100644
-index 0000000..01d745d
+index 00000000..01d745da
 --- /dev/null
 +++ b/crates/benilla-formats/tests/web_names.rs
 @@ -0,0 +1,36 @@
@@ -12840,7 +12840,7 @@ index 0000000..01d745d
 +    assert_eq!(encode_name(""), "");
 +}
 diff --git a/crates/benilla-protocol/Cargo.toml b/crates/benilla-protocol/Cargo.toml
-index 7bc71d8..7f42721 100644
+index 7bc71d87..7f427216 100644
 --- a/crates/benilla-protocol/Cargo.toml
 +++ b/crates/benilla-protocol/Cargo.toml
 @@ -9,10 +9,14 @@ description = "WoW 1.12.1 auth (SRP6) + world wire protocol and the benilla-auth
@@ -12882,7 +12882,7 @@ index 7bc71d8..7f42721 100644
 +    "Window",
 +] }
 diff --git a/crates/benilla-protocol/src/auth.rs b/crates/benilla-protocol/src/auth.rs
-index 200a368..ab0f3d6 100644
+index 200a3680..ab0f3d6b 100644
 --- a/crates/benilla-protocol/src/auth.rs
 +++ b/crates/benilla-protocol/src/auth.rs
 @@ -1,13 +1,48 @@
@@ -13115,7 +13115,7 @@ index 200a368..ab0f3d6 100644
 +    futures_lite::future::block_on(read_realm_list_async(&mut NativeReader(r)))
 +}
 diff --git a/crates/benilla-protocol/src/bin/benilla-auth.rs b/crates/benilla-protocol/src/bin/benilla-auth.rs
-index 4a13c3f..fb42aa3 100644
+index 4a13c3f2..fb42aa3d 100644
 --- a/crates/benilla-protocol/src/bin/benilla-auth.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-auth.rs
 @@ -2,10 +2,19 @@
@@ -13147,7 +13147,7 @@ index 4a13c3f..fb42aa3 100644
      let cli = Cli::parse();
  
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/main.rs b/crates/benilla-protocol/src/bin/benilla-world/main.rs
-index 30fead1..6e082a3 100644
+index 30fead15..6e082a3f 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/main.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/main.rs
 @@ -8,28 +8,45 @@
@@ -13230,7 +13230,7 @@ index 30fead1..6e082a3 100644
      session: &mut WorldSession,
      start: [f32; 3],
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/aura.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/aura.rs
-index 8d88869..564f022 100644
+index 8d88869c..564f0224 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/aura.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/aura.rs
 @@ -2,7 +2,7 @@
@@ -13243,7 +13243,7 @@ index 8d88869..564f022 100644
  use anyhow::{bail, ensure, Context, Result};
  use benilla_protocol::{decode, ObjectFields, ServerPacket, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/charge.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/charge.rs
-index ba1c80f..2a1f682 100644
+index ba1c80f7..2a1f682a 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/charge.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/charge.rs
 @@ -2,7 +2,7 @@
@@ -13256,7 +13256,7 @@ index ba1c80f..2a1f682 100644
  use anyhow::{bail, Context, Result};
  use benilla_protocol::{guid, EntityKind, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/equip_pack_slot.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/equip_pack_slot.rs
-index fa35de9..b951de6 100644
+index fa35de9e..b951de64 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/equip_pack_slot.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/equip_pack_slot.rs
 @@ -1,7 +1,7 @@
@@ -13269,7 +13269,7 @@ index fa35de9..b951de6 100644
  use anyhow::{bail, Context, Result};
  use benilla_protocol::{decode, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/giverstatus.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/giverstatus.rs
-index d445e4f..979ed1d 100644
+index d445e4f4..979ed1d4 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/giverstatus.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/giverstatus.rs
 @@ -1,7 +1,7 @@
@@ -13282,7 +13282,7 @@ index d445e4f..979ed1d 100644
  use anyhow::{Context, Result};
  use benilla_protocol::{decode, guid, EntityKind, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/groundfx.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/groundfx.rs
-index fc1f744..1a53857 100644
+index fc1f744c..1a53857d 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/groundfx.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/groundfx.rs
 @@ -3,7 +3,7 @@
@@ -13295,7 +13295,7 @@ index fc1f744..1a53857 100644
  use anyhow::{bail, Result};
  use benilla_protocol::{EntityKind, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/loot.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/loot.rs
-index 89d8b0f..055d514 100644
+index 89d8b0fd..055d5144 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/loot.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/loot.rs
 @@ -2,7 +2,7 @@
@@ -13308,7 +13308,7 @@ index 89d8b0f..055d514 100644
  use anyhow::{bail, Context, Result};
  use benilla_protocol::{decode, guid, EntityKind, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/mount_tele.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/mount_tele.rs
-index eab01b8..1ede52c 100644
+index eab01b8d..1ede52cc 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/mount_tele.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/mount_tele.rs
 @@ -7,7 +7,7 @@
@@ -13330,7 +13330,7 @@ index eab01b8..1ede52c 100644
              match cx.session.recv() {
                  Ok(msg) => {
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/open_item.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/open_item.rs
-index ef9ac17..ca22283 100644
+index ef9ac176..ca222837 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/open_item.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/open_item.rs
 @@ -3,7 +3,7 @@
@@ -13343,7 +13343,7 @@ index ef9ac17..ca22283 100644
  use anyhow::{Context, Result};
  use benilla_protocol::{decode, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/quest.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/quest.rs
-index b2b100c..cd8ede7 100644
+index b2b100ca..cd8ede79 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/quest.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/quest.rs
 @@ -1,7 +1,7 @@
@@ -13356,7 +13356,7 @@ index b2b100c..cd8ede7 100644
  use anyhow::{Context, Result};
  use benilla_protocol::{decode, guid, EntityKind, SessionEvent, WorldSession};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/quest_item.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/quest_item.rs
-index 3eff324..636bf4f 100644
+index 3eff324f..636bf4f4 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/quest_item.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/quest_item.rs
 @@ -2,7 +2,7 @@
@@ -13369,7 +13369,7 @@ index 3eff324..636bf4f 100644
  use anyhow::{Context, Result};
  use benilla_protocol::{decode, SessionEvent, WorldSession};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/questlog.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/questlog.rs
-index 455ba50..3224fc9 100644
+index 455ba508..3224fc92 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/questlog.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/questlog.rs
 @@ -1,7 +1,7 @@
@@ -13382,7 +13382,7 @@ index 455ba50..3224fc9 100644
  use anyhow::{bail, Context, Result};
  use benilla_protocol::{decode, guid, EntityKind, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/questtimer.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/questtimer.rs
-index 5de5859..9ca823f 100644
+index 5de58597..9ca823f3 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/questtimer.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/questtimer.rs
 @@ -3,7 +3,7 @@
@@ -13395,7 +13395,7 @@ index 5de5859..9ca823f 100644
  use anyhow::{bail, Context, Result};
  use benilla_protocol::events::decode;
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/spells.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/spells.rs
-index 075860a..d117d9d 100644
+index 075860a4..d117d9dd 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/spells.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/spells.rs
 @@ -1,7 +1,7 @@
@@ -13408,7 +13408,7 @@ index 075860a..d117d9d 100644
  use anyhow::{bail, Context, Result};
  use benilla_protocol::{decode, guid, EntityKind, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/spirit.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/spirit.rs
-index da5c887..171cad1 100644
+index da5c887d..171cad10 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/spirit.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/spirit.rs
 @@ -2,7 +2,7 @@
@@ -13421,7 +13421,7 @@ index da5c887..171cad1 100644
  use anyhow::{bail, Result};
  use benilla_protocol::{guid, EntityKind, ObjectFields, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/swap_pack_slots.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/swap_pack_slots.rs
-index 15346cb..65fbc3c 100644
+index 15346cbf..65fbc3cd 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/swap_pack_slots.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/swap_pack_slots.rs
 @@ -1,7 +1,7 @@
@@ -13434,7 +13434,7 @@ index 15346cb..65fbc3c 100644
  use anyhow::{bail, Context, Result};
  use benilla_protocol::{decode, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/use_pack_slot.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/use_pack_slot.rs
-index c6a6989..2331798 100644
+index c6a6989e..2331798f 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/use_pack_slot.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/use_pack_slot.rs
 @@ -1,7 +1,7 @@
@@ -13447,7 +13447,7 @@ index c6a6989..2331798 100644
  use anyhow::{Context, Result};
  use benilla_protocol::{decode, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/vendor.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/vendor.rs
-index 13191ab..3ff7117 100644
+index 13191aba..3ff7117c 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/vendor.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/vendor.rs
 @@ -1,7 +1,7 @@
@@ -13460,7 +13460,7 @@ index 13191ab..3ff7117 100644
  use anyhow::{bail, Context, Result};
  use benilla_protocol::{decode, SessionEvent};
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/probes/worldstate.rs b/crates/benilla-protocol/src/bin/benilla-world/probes/worldstate.rs
-index 446646c..b8c15df 100644
+index 446646ce..b8c15df7 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/probes/worldstate.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/probes/worldstate.rs
 @@ -6,7 +6,7 @@
@@ -13473,7 +13473,7 @@ index 446646c..b8c15df 100644
  use anyhow::{bail, Result};
  use benilla_protocol::SessionEvent;
 diff --git a/crates/benilla-protocol/src/bin/benilla-world/world.rs b/crates/benilla-protocol/src/bin/benilla-world/world.rs
-index 4f43170..bbdb029 100644
+index 4f431705..bbdb0298 100644
 --- a/crates/benilla-protocol/src/bin/benilla-world/world.rs
 +++ b/crates/benilla-protocol/src/bin/benilla-world/world.rs
 @@ -1,7 +1,7 @@
@@ -13486,7 +13486,7 @@ index 4f43170..bbdb029 100644
  use anyhow::Result;
  use benilla_protocol::{
 diff --git a/crates/benilla-protocol/src/events.rs b/crates/benilla-protocol/src/events.rs
-index e1aea18..451b76f 100644
+index e1aea18c..451b76f5 100644
 --- a/crates/benilla-protocol/src/events.rs
 +++ b/crates/benilla-protocol/src/events.rs
 @@ -998,6 +998,9 @@ pub enum SessionEvent {
@@ -13500,7 +13500,7 @@ index e1aea18..451b76f 100644
      /// (`ServerPacket::Other`), true when its parser errored and the body was skipped.
      PacketDropped { opcode: u16, unparseable: bool },
 diff --git a/crates/benilla-protocol/src/events/decode.rs b/crates/benilla-protocol/src/events/decode.rs
-index 9aec590..bc2bbf4 100644
+index 9aec5904..bc2bbf48 100644
 --- a/crates/benilla-protocol/src/events/decode.rs
 +++ b/crates/benilla-protocol/src/events/decode.rs
 @@ -1112,6 +1112,7 @@ pub fn decode(packet: ServerPacket) -> Vec<SessionEvent> {
@@ -13512,7 +13512,7 @@ index 9aec590..bc2bbf4 100644
              window,
              flightmaster,
 diff --git a/crates/benilla-protocol/src/lib.rs b/crates/benilla-protocol/src/lib.rs
-index 375aca2..f7579fe 100644
+index 375aca2d..f7579fe0 100644
 --- a/crates/benilla-protocol/src/lib.rs
 +++ b/crates/benilla-protocol/src/lib.rs
 @@ -5,6 +5,7 @@ pub mod auth;
@@ -13734,7 +13734,7 @@ index 375aca2..f7579fe 100644
          session_key,
 diff --git a/crates/benilla-protocol/src/messages/mirror_image.rs b/crates/benilla-protocol/src/messages/mirror_image.rs
 new file mode 100644
-index 0000000..49fc010
+index 00000000..49fc0108
 --- /dev/null
 +++ b/crates/benilla-protocol/src/messages/mirror_image.rs
 @@ -0,0 +1,83 @@
@@ -13822,7 +13822,7 @@ index 0000000..49fc010
 +    })
 +}
 diff --git a/crates/benilla-protocol/src/messages/mod.rs b/crates/benilla-protocol/src/messages/mod.rs
-index ab55543..a3c0699 100644
+index ab555430..a3c06990 100644
 --- a/crates/benilla-protocol/src/messages/mod.rs
 +++ b/crates/benilla-protocol/src/messages/mod.rs
 @@ -33,6 +33,7 @@ mod lfg;
@@ -13842,7 +13842,7 @@ index ab55543..a3c0699 100644
      read_pause_mirror_timer, read_start_mirror_timer, read_stop_mirror_timer, MirrorTimerKind,
      MirrorTimerStart,
 diff --git a/crates/benilla-protocol/src/messages/opcode.rs b/crates/benilla-protocol/src/messages/opcode.rs
-index 33f1614..8f8b5bb 100644
+index 33f16148..8f8b5bba 100644
 --- a/crates/benilla-protocol/src/messages/opcode.rs
 +++ b/crates/benilla-protocol/src/messages/opcode.rs
 @@ -453,6 +453,14 @@ pub const CMSG_FAR_SIGHT: u16 = 0x027A; // 634
@@ -13861,7 +13861,7 @@ index 33f1614..8f8b5bb 100644
  // and the pong echoes the sequence. vmangos kicks after more than 2 pings under 27 s apart.
  pub const CMSG_PING: u16 = 0x01DC; // 476
 diff --git a/crates/benilla-protocol/src/messages/opcode_names.rs b/crates/benilla-protocol/src/messages/opcode_names.rs
-index 5a228ec..ec5dc4a 100644
+index 5a228ece..ec5dc4a8 100644
 --- a/crates/benilla-protocol/src/messages/opcode_names.rs
 +++ b/crates/benilla-protocol/src/messages/opcode_names.rs
 @@ -844,4 +844,7 @@ static NAMES: &[(u16, &str)] = &[
@@ -13873,7 +13873,7 @@ index 5a228ec..ec5dc4a 100644
 +    (0x0402, "SMSG_MIRRORIMAGE_DATA"),
  ];
 diff --git a/crates/benilla-protocol/src/messages/packet.rs b/crates/benilla-protocol/src/messages/packet.rs
-index 5b881fe..905e553 100644
+index 5b881fed..905e553d 100644
 --- a/crates/benilla-protocol/src/messages/packet.rs
 +++ b/crates/benilla-protocol/src/messages/packet.rs
 @@ -11,14 +11,15 @@ use super::{
@@ -13919,7 +13919,7 @@ index 5b881fe..905e553 100644
              ServerPacket::TaxiNodeStatus { .. } => "SMSG_TAXINODE_STATUS".into(),
              ServerPacket::ActivateTaxiReply { .. } => "SMSG_ACTIVATETAXIREPLY".into(),
 diff --git a/crates/benilla-protocol/src/messages/parse.rs b/crates/benilla-protocol/src/messages/parse.rs
-index 9d4deb9..21b0108 100644
+index 9d4deb92..21b0108c 100644
 --- a/crates/benilla-protocol/src/messages/parse.rs
 +++ b/crates/benilla-protocol/src/messages/parse.rs
 @@ -11,11 +11,11 @@ use super::{
@@ -13950,7 +13950,7 @@ index 9d4deb9..21b0108 100644
              let (window, flightmaster, nearest_node, known) = taxi::read_show_taxi_nodes(&mut r)?;
              ServerPacket::ShowTaxiNodes {
 diff --git a/crates/benilla-protocol/src/messages/update_object/fields/layout.rs b/crates/benilla-protocol/src/messages/update_object/fields/layout.rs
-index ce784d4..b8b3954 100644
+index ce784d48..b8b3954f 100644
 --- a/crates/benilla-protocol/src/messages/update_object/fields/layout.rs
 +++ b/crates/benilla-protocol/src/messages/update_object/fields/layout.rs
 @@ -70,6 +70,8 @@ pub enum Field {
@@ -13980,7 +13980,7 @@ index ce784d4..b8b3954 100644
          run(F::UnitBaseAttackTime, Unit, 62, 2),
          one(F::UnitRangedAttackTime, Unit, 64),
 diff --git a/crates/benilla-protocol/src/messages/update_object/fields/mod.rs b/crates/benilla-protocol/src/messages/update_object/fields/mod.rs
-index 7b6958d..32f8e03 100644
+index 7b6958d5..32f8e036 100644
 --- a/crates/benilla-protocol/src/messages/update_object/fields/mod.rs
 +++ b/crates/benilla-protocol/src/messages/update_object/fields/mod.rs
 @@ -110,6 +110,9 @@ const FIELD_UNIT_NPC_EMOTESTATE: u16 = 148;
@@ -14005,7 +14005,7 @@ index 7b6958d..32f8e03 100644
  /// OBJECT, UNIT and PLAYER.
  fn descriptor_len(object_type: ObjectType) -> u16 {
 diff --git a/crates/benilla-protocol/src/messages/update_object/fields/player.rs b/crates/benilla-protocol/src/messages/update_object/fields/player.rs
-index 3106e82..cb8bec1 100644
+index 3106e823..cb8bec14 100644
 --- a/crates/benilla-protocol/src/messages/update_object/fields/player.rs
 +++ b/crates/benilla-protocol/src/messages/update_object/fields/player.rs
 @@ -36,6 +36,11 @@ impl ObjectFields {
@@ -14021,7 +14021,7 @@ index 3106e82..cb8bec1 100644
      /// (0 permanent, 1 temporary, 2-6 random properties), each an id, duration and charges
      /// (`Item.h:117-119`). Signed: the tooltip looks up `abs(id)` and paints a negative one red.
 diff --git a/crates/benilla-protocol/src/messages/update_object/fields/unit.rs b/crates/benilla-protocol/src/messages/update_object/fields/unit.rs
-index 2d7a66e..f74347a 100644
+index 2d7a66ed..f74347af 100644
 --- a/crates/benilla-protocol/src/messages/update_object/fields/unit.rs
 +++ b/crates/benilla-protocol/src/messages/update_object/fields/unit.rs
 @@ -6,6 +6,10 @@ use super::*;
@@ -14065,7 +14065,7 @@ index 2d7a66e..f74347a 100644
      }
      /// `UNIT_FIELD_BYTES_2` byte 0: sheath state, 0 stowed, 1 melee drawn, 2 ranged drawn; for a
 diff --git a/crates/benilla-protocol/src/messages/update_object/fields/wotlk.rs b/crates/benilla-protocol/src/messages/update_object/fields/wotlk.rs
-index 3e10153..5f32393 100644
+index 3e101532..5f323938 100644
 --- a/crates/benilla-protocol/src/messages/update_object/fields/wotlk.rs
 +++ b/crates/benilla-protocol/src/messages/update_object/fields/wotlk.rs
 @@ -75,6 +75,9 @@ impl ObjectFields {
@@ -14102,7 +14102,7 @@ index 3e10153..5f32393 100644
              (Field::UnitAuraLevels, FIELD_UNIT_AURALEVELS),
 diff --git a/crates/benilla-protocol/src/transport/mod.rs b/crates/benilla-protocol/src/transport/mod.rs
 new file mode 100644
-index 0000000..ed19f52
+index 00000000..ed19f52c
 --- /dev/null
 +++ b/crates/benilla-protocol/src/transport/mod.rs
 @@ -0,0 +1,64 @@
@@ -14172,7 +14172,7 @@ index 0000000..ed19f52
 +}
 diff --git a/crates/benilla-protocol/src/transport/native.rs b/crates/benilla-protocol/src/transport/native.rs
 new file mode 100644
-index 0000000..8b15393
+index 00000000..8b153930
 --- /dev/null
 +++ b/crates/benilla-protocol/src/transport/native.rs
 @@ -0,0 +1,119 @@
@@ -14297,7 +14297,7 @@ index 0000000..8b15393
 +}
 diff --git a/crates/benilla-protocol/src/transport/web.rs b/crates/benilla-protocol/src/transport/web.rs
 new file mode 100644
-index 0000000..145a2a5
+index 00000000..145a2a54
 --- /dev/null
 +++ b/crates/benilla-protocol/src/transport/web.rs
 @@ -0,0 +1,397 @@
@@ -14699,7 +14699,7 @@ index 0000000..145a2a5
 +    io::Error::other(message)
 +}
 diff --git a/crates/benilla-protocol/src/world/cipher.rs b/crates/benilla-protocol/src/world/cipher.rs
-index 396dd3a..f900ac4 100644
+index 396dd3aa..f900ac4a 100644
 --- a/crates/benilla-protocol/src/world/cipher.rs
 +++ b/crates/benilla-protocol/src/world/cipher.rs
 @@ -96,6 +96,32 @@ pub(super) fn read_server_header(
@@ -14736,7 +14736,7 @@ index 396dd3a..f900ac4 100644
  mod tests {
      use super::*;
 diff --git a/crates/benilla-protocol/src/world/mod.rs b/crates/benilla-protocol/src/world/mod.rs
-index c5bc209..5f70a03 100644
+index c5bc209b..5f70a030 100644
 --- a/crates/benilla-protocol/src/world/mod.rs
 +++ b/crates/benilla-protocol/src/world/mod.rs
 @@ -5,8 +5,8 @@
@@ -14796,7 +14796,7 @@ index c5bc209..5f70a03 100644
      opcode: u16,
      body: &[u8],
 diff --git a/crates/benilla-protocol/src/world/movement.rs b/crates/benilla-protocol/src/world/movement.rs
-index 967434a..657fb65 100644
+index 967434a9..657fb653 100644
 --- a/crates/benilla-protocol/src/world/movement.rs
 +++ b/crates/benilla-protocol/src/world/movement.rs
 @@ -7,7 +7,13 @@ pub(super) const MOVEMENT_FLAG_FORWARD: u32 = 0x1;
@@ -14815,7 +14815,7 @@ index 967434a..657fb65 100644
      (START.get_or_init(Instant::now).elapsed().as_millis() as u32).max(1)
  }
 diff --git a/crates/benilla-protocol/src/world/reader.rs b/crates/benilla-protocol/src/world/reader.rs
-index df00646..d29b3ad 100644
+index df00646b..d29b3adc 100644
 --- a/crates/benilla-protocol/src/world/reader.rs
 +++ b/crates/benilla-protocol/src/world/reader.rs
 @@ -1,35 +1,44 @@
@@ -14874,7 +14874,7 @@ index df00646..d29b3ad 100644
          }
          match messages::parse_server_with_tail(opcode, &body) {
 diff --git a/crates/benilla-protocol/src/world/session.rs b/crates/benilla-protocol/src/world/session.rs
-index 9661438..e240279 100644
+index 96614382..e2402798 100644
 --- a/crates/benilla-protocol/src/world/session.rs
 +++ b/crates/benilla-protocol/src/world/session.rs
 @@ -1,4 +1,4 @@
@@ -15170,7 +15170,7 @@ index 9661438..e240279 100644
                  Ok(ServerPacket::LogoutResponse { reason, .. }) => {
                      // A non-zero reason means the server refused (combat, falling, GM-frozen).
 diff --git a/crates/benilla-protocol/src/world/writer/mod.rs b/crates/benilla-protocol/src/world/writer/mod.rs
-index 7df3249..3c07e33 100644
+index 7df3249b..3c07e33d 100644
 --- a/crates/benilla-protocol/src/world/writer/mod.rs
 +++ b/crates/benilla-protocol/src/world/writer/mod.rs
 @@ -1,7 +1,7 @@
@@ -15192,7 +15192,7 @@ index 7df3249..3c07e33 100644
      /// The character's faction language, set at login from its race, which a chat send naming no
      /// language carries. vmangos drops the whole message, dot-commands included, when the
 diff --git a/crates/benilla-protocol/src/world/writer/names.rs b/crates/benilla-protocol/src/world/writer/names.rs
-index 430b47e..675342d 100644
+index 430b47e0..675342d0 100644
 --- a/crates/benilla-protocol/src/world/writer/names.rs
 +++ b/crates/benilla-protocol/src/world/writer/names.rs
 @@ -12,6 +12,16 @@ impl WorldWriter {
@@ -15213,7 +15213,7 @@ index 430b47e..675342d 100644
      pub fn creature_query(&mut self, entry: u32, guid: u64) -> Result<()> {
          self.send(
 diff --git a/crates/benilla-protocol/tests/simple_packets.rs b/crates/benilla-protocol/tests/simple_packets.rs
-index e308bb4..8b5aa4a 100644
+index e308bb40..8b5aa4a8 100644
 --- a/crates/benilla-protocol/tests/simple_packets.rs
 +++ b/crates/benilla-protocol/tests/simple_packets.rs
 @@ -521,6 +521,44 @@ fn client_control_update_reads_a_packed_mover_and_the_allow_byte() {
@@ -15263,7 +15263,7 @@ index e308bb4..8b5aa4a 100644
      use benilla_protocol::messages::opcode;
 diff --git a/crates/benilla-protocol/tests/transport_native.rs b/crates/benilla-protocol/tests/transport_native.rs
 new file mode 100644
-index 0000000..5b9ac89
+index 00000000..5b9ac89e
 --- /dev/null
 +++ b/crates/benilla-protocol/tests/transport_native.rs
 @@ -0,0 +1,76 @@
@@ -15344,7 +15344,7 @@ index 0000000..5b9ac89
 +    });
 +}
 diff --git a/crates/benilla-srp/Cargo.toml b/crates/benilla-srp/Cargo.toml
-index d093a40..a424a72 100644
+index d093a409..a424a72d 100644
 --- a/crates/benilla-srp/Cargo.toml
 +++ b/crates/benilla-srp/Cargo.toml
 @@ -12,3 +12,10 @@ workspace = true
@@ -15359,7 +15359,7 @@ index d093a40..a424a72 100644
 +[target.'cfg(target_arch = "wasm32")'.dependencies]
 +getrandom = { version = "0.2", features = ["js"] }
 diff --git a/crates/benilla-ui/Cargo.toml b/crates/benilla-ui/Cargo.toml
-index bfe5ea6..64535d5 100644
+index bfe5ea62..64535d58 100644
 --- a/crates/benilla-ui/Cargo.toml
 +++ b/crates/benilla-ui/Cargo.toml
 @@ -9,6 +9,9 @@ description = "Engine-free WoW UI engine core: TOC and FrameXML parsing, templat
@@ -15373,7 +15373,7 @@ index bfe5ea6..64535d5 100644
  # The script host's Lua 5.1; `vendored` builds it from the workspace's `lua-src`.
  mlua = { version = "0.11", features = ["lua51", "vendored"] }
 diff --git a/crates/benilla-ui/src/civil.rs b/crates/benilla-ui/src/civil.rs
-index 1a623f2..f4b5ec6 100644
+index 1a623f28..f4b5ec62 100644
 --- a/crates/benilla-ui/src/civil.rs
 +++ b/crates/benilla-ui/src/civil.rs
 @@ -68,8 +68,8 @@ pub(crate) fn days_from_civil(y: i64, m: u32, d: u32) -> i64 {
@@ -15388,7 +15388,7 @@ index 1a623f2..f4b5ec6 100644
          .unwrap_or(0)
  }
 diff --git a/crates/benilla-ui/src/lib.rs b/crates/benilla-ui/src/lib.rs
-index 6a4ccc8..321abf6 100644
+index 6a4ccc81..321abf66 100644
 --- a/crates/benilla-ui/src/lib.rs
 +++ b/crates/benilla-ui/src/lib.rs
 @@ -18,3 +18,6 @@ pub mod status;
@@ -15399,7 +15399,7 @@ index 6a4ccc8..321abf6 100644
 +#[cfg(target_arch = "wasm32")]
 +pub mod web_saved;
 diff --git a/crates/benilla-ui/src/script/achievement/verbs.rs b/crates/benilla-ui/src/script/achievement/verbs.rs
-index 435ebe9..915f55a 100644
+index 435ebe9b..915f55a6 100644
 --- a/crates/benilla-ui/src/script/achievement/verbs.rs
 +++ b/crates/benilla-ui/src/script/achievement/verbs.rs
 @@ -76,8 +76,8 @@ fn colorblind(model: &Model) -> bool {
@@ -15414,7 +15414,7 @@ index 435ebe9..915f55a 100644
  }
  
 diff --git a/crates/benilla-ui/src/script/addon.rs b/crates/benilla-ui/src/script/addon.rs
-index 7fa1fa8..941439d 100644
+index 7fa1fa8a..941439da 100644
 --- a/crates/benilla-ui/src/script/addon.rs
 +++ b/crates/benilla-ui/src/script/addon.rs
 @@ -575,7 +575,11 @@ fn load_saved_variables(lua: &Lua, i: usize) {
@@ -15431,7 +15431,7 @@ index 7fa1fa8..941439d 100644
              Err(e) if e.kind() == std::io::ErrorKind::NotFound => continue, // the first-run case
              Err(e) => {
 diff --git a/crates/benilla-ui/src/script/guild_bank.rs b/crates/benilla-ui/src/script/guild_bank.rs
-index 0f07d63..2d5b775 100644
+index 0f07d639..2d5b7751 100644
 --- a/crates/benilla-ui/src/script/guild_bank.rs
 +++ b/crates/benilla-ui/src/script/guild_bank.rs
 @@ -373,8 +373,8 @@ fn age_parts(written_at: u32, now: u32) -> [i64; 4] {
@@ -15446,7 +15446,7 @@ index 0f07d63..2d5b775 100644
  }
  
 diff --git a/crates/benilla-ui/src/script/handler_prof.rs b/crates/benilla-ui/src/script/handler_prof.rs
-index e124a6d..89e91d0 100644
+index e124a6d1..89e91d08 100644
 --- a/crates/benilla-ui/src/script/handler_prof.rs
 +++ b/crates/benilla-ui/src/script/handler_prof.rs
 @@ -6,7 +6,7 @@
@@ -15459,7 +15459,7 @@ index e124a6d..89e91d0 100644
  use mlua::Lua;
  
 diff --git a/crates/benilla-ui/src/script/instance.rs b/crates/benilla-ui/src/script/instance.rs
-index 213d5e0..9fc1dd2 100644
+index 213d5e0f..9fc1dd27 100644
 --- a/crates/benilla-ui/src/script/instance.rs
 +++ b/crates/benilla-ui/src/script/instance.rs
 @@ -5,12 +5,13 @@
@@ -15478,7 +15478,7 @@ index 213d5e0..9fc1dd2 100644
      }
  }
 diff --git a/crates/benilla-ui/src/script/layout.rs b/crates/benilla-ui/src/script/layout.rs
-index 6ea9f97..5d7787f 100644
+index 6ea9f973..5d7787fc 100644
 --- a/crates/benilla-ui/src/script/layout.rs
 +++ b/crates/benilla-ui/src/script/layout.rs
 @@ -530,7 +530,7 @@ fn layout_verify_enabled() -> bool {
@@ -15534,7 +15534,7 @@ index 6ea9f97..5d7787f 100644
              for &ri in &sweep_regions {
                  let RegionRow {
 diff --git a/crates/benilla-ui/src/script/mod.rs b/crates/benilla-ui/src/script/mod.rs
-index a9b3870..c33652d 100644
+index a9b38705..c33652d4 100644
 --- a/crates/benilla-ui/src/script/mod.rs
 +++ b/crates/benilla-ui/src/script/mod.rs
 @@ -209,6 +209,7 @@ mod multicast;
@@ -15555,7 +15555,7 @@ index a9b3870..c33652d 100644
      }
  
 diff --git a/crates/benilla-ui/src/script/model.rs b/crates/benilla-ui/src/script/model.rs
-index 79f1e3c..9b5a0ce 100644
+index 79f1e3c8..9b5a0ce4 100644
 --- a/crates/benilla-ui/src/script/model.rs
 +++ b/crates/benilla-ui/src/script/model.rs
 @@ -1002,6 +1002,10 @@ pub(crate) struct Model {
@@ -15608,7 +15608,7 @@ index 79f1e3c..9b5a0ce 100644
              AtomicU32::new(n.trim().parse().ok()?),
          ))
 diff --git a/crates/benilla-ui/src/script/object.rs b/crates/benilla-ui/src/script/object.rs
-index b04f752..01be927 100644
+index b04f7521..01be9276 100644
 --- a/crates/benilla-ui/src/script/object.rs
 +++ b/crates/benilla-ui/src/script/object.rs
 @@ -348,7 +348,8 @@ fn frame_type(s: &str) -> Option<FrameType> {
@@ -15623,7 +15623,7 @@ index b04f752..01be927 100644
          // `IsObjectType` `0x58fb00`.
 diff --git a/crates/benilla-ui/src/script/plain.rs b/crates/benilla-ui/src/script/plain.rs
 new file mode 100644
-index 0000000..50a976f
+index 00000000..50a976f3
 --- /dev/null
 +++ b/crates/benilla-ui/src/script/plain.rs
 @@ -0,0 +1,191 @@
@@ -15819,7 +15819,7 @@ index 0000000..50a976f
 +    }
 +}
 diff --git a/crates/benilla-ui/src/script/tabard.rs b/crates/benilla-ui/src/script/tabard.rs
-index 1d78653..7bf62ac 100644
+index 1d78653c..7bf62acf 100644
 --- a/crates/benilla-ui/src/script/tabard.rs
 +++ b/crates/benilla-ui/src/script/tabard.rs
 @@ -113,8 +113,9 @@ fn draw(rand: u32, count: i32) -> i32 {
@@ -15835,7 +15835,7 @@ index 1d78653..7bf62ac 100644
          .unwrap_or(0x9E37_79B9_7F4A_7C15);
      let mut x = nanos | 1;
 diff --git a/crates/benilla-ui/src/script/tests/dispatch_bench.rs b/crates/benilla-ui/src/script/tests/dispatch_bench.rs
-index a4fcb08..51251b5 100644
+index a4fcb08e..51251b5c 100644
 --- a/crates/benilla-ui/src/script/tests/dispatch_bench.rs
 +++ b/crates/benilla-ui/src/script/tests/dispatch_bench.rs
 @@ -3,7 +3,7 @@
@@ -15848,7 +15848,7 @@ index a4fcb08..51251b5 100644
  use super::common::script;
  
 diff --git a/crates/benilla-ui/src/script/tests/events.rs b/crates/benilla-ui/src/script/tests/events.rs
-index 9b10d35..64c39d4 100644
+index 9b10d35e..64c39d46 100644
 --- a/crates/benilla-ui/src/script/tests/events.rs
 +++ b/crates/benilla-ui/src/script/tests/events.rs
 @@ -205,6 +205,39 @@ fn mid_dispatch_removal_of_the_next_stops_and_append_is_visited() {
@@ -15892,7 +15892,7 @@ index 9b10d35..64c39d4 100644
  /// frame's `OnEvent`; `UnregisterAllEvents` clears it too, which is how AceEvent-2.0 gets back to
  /// per-event registration.
 diff --git a/crates/benilla-ui/src/script/tests/glue_surface.rs b/crates/benilla-ui/src/script/tests/glue_surface.rs
-index 52cf85b..868a937 100644
+index 52cf85b9..868a9374 100644
 --- a/crates/benilla-ui/src/script/tests/glue_surface.rs
 +++ b/crates/benilla-ui/src/script/tests/glue_surface.rs
 @@ -229,7 +229,7 @@ fn the_in_game_vm_keeps_its_events() {
@@ -15917,7 +15917,7 @@ index 52cf85b..868a937 100644
          "Minimap",
          "PlayerModel",
 diff --git a/crates/benilla-ui/src/script/tests/tooltip_item/law.rs b/crates/benilla-ui/src/script/tests/tooltip_item/law.rs
-index 3e5aeaa..37e6e4e 100644
+index 3e5aeaa9..37e6e4ea 100644
 --- a/crates/benilla-ui/src/script/tests/tooltip_item/law.rs
 +++ b/crates/benilla-ui/src/script/tests/tooltip_item/law.rs
 @@ -961,3 +961,28 @@ fn container_slots_line_names_its_subclass() {
@@ -15950,7 +15950,7 @@ index 3e5aeaa..37e6e4e 100644
 +        assert(t:NumLines()==2);assert(TTTextRight2:GetText()=="Speed 3.60")"#).unwrap();
 +}
 diff --git a/crates/benilla-ui/src/script/tick.rs b/crates/benilla-ui/src/script/tick.rs
-index 2496afc..35dd1b2 100644
+index 2496afc4..35dd1b2b 100644
 --- a/crates/benilla-ui/src/script/tick.rs
 +++ b/crates/benilla-ui/src/script/tick.rs
 @@ -7,7 +7,36 @@ use crate::widget::FrameHandle;
@@ -16051,7 +16051,7 @@ index 2496afc..35dd1b2 100644
              drop(model);
              if let Err(e) = event::fire_event_handler(lua, id, event, &args) {
 diff --git a/crates/benilla-ui/src/script/tooltip_item/names.rs b/crates/benilla-ui/src/script/tooltip_item/names.rs
-index 847cc3d..e0365fc 100644
+index 847cc3d2..e0365fca 100644
 --- a/crates/benilla-ui/src/script/tooltip_item/names.rs
 +++ b/crates/benilla-ui/src/script/tooltip_item/names.rs
 @@ -143,3 +143,44 @@ pub(super) fn req_color(ok: bool) -> [f32; 4] {
@@ -16100,7 +16100,7 @@ index 847cc3d..e0365fc 100644
 +    _ => return None,
 +})}
 diff --git a/crates/benilla-ui/src/script/tooltip_item/render.rs b/crates/benilla-ui/src/script/tooltip_item/render.rs
-index 41f3a45..29ab0bc 100644
+index 41f3a450..29ab0bcf 100644
 --- a/crates/benilla-ui/src/script/tooltip_item/render.rs
 +++ b/crates/benilla-ui/src/script/tooltip_item/render.rs
 @@ -104,7 +104,7 @@ pub(super) fn render_view(
@@ -16184,7 +16184,7 @@ index 41f3a45..29ab0bc 100644
              add((format!("  {name}"), color))?;
 diff --git a/crates/benilla-ui/src/script/wenilla_listener.rs b/crates/benilla-ui/src/script/wenilla_listener.rs
 new file mode 100644
-index 0000000..ac845c4
+index 00000000..ac845c4b
 --- /dev/null
 +++ b/crates/benilla-ui/src/script/wenilla_listener.rs
 @@ -0,0 +1,42 @@
@@ -16231,7 +16231,7 @@ index 0000000..ac845c4
 +    }
 +}
 diff --git a/crates/benilla-ui/src/script/worldmap.rs b/crates/benilla-ui/src/script/worldmap.rs
-index 890df23..f80cc8f 100644
+index 890df230..f80cc8f0 100644
 --- a/crates/benilla-ui/src/script/worldmap.rs
 +++ b/crates/benilla-ui/src/script/worldmap.rs
 @@ -1712,8 +1712,8 @@ pub(super) fn install(lua: &Lua) -> mlua::Result<()> {
@@ -16247,7 +16247,7 @@ index 890df23..f80cc8f 100644
                  end.wrapping_sub(now).max(0),
 diff --git a/crates/benilla-ui/src/web_saved.rs b/crates/benilla-ui/src/web_saved.rs
 new file mode 100644
-index 0000000..873ab0c
+index 00000000..873ab0ce
 --- /dev/null
 +++ b/crates/benilla-ui/src/web_saved.rs
 @@ -0,0 +1,31 @@
@@ -16283,7 +16283,7 @@ index 0000000..873ab0c
 +    }
 +}
 diff --git a/crates/benilla-world/Cargo.toml b/crates/benilla-world/Cargo.toml
-index 4c2a0db..6b63222 100644
+index 4c2a0dba..6b63222d 100644
 --- a/crates/benilla-world/Cargo.toml
 +++ b/crates/benilla-world/Cargo.toml
 @@ -9,12 +9,15 @@ description = "The world renderer: terrain, water, sky, weather, models, lightin
@@ -16312,7 +16312,7 @@ index 4c2a0db..6b63222 100644
 +# explicitly on the wasm32 target table per the plan's feature-unification note — this crate and
 +# `benilla-app` must resolve `bevy` to the SAME feature set or cargo builds two copies.
 diff --git a/crates/benilla-world/src/bgwin.rs b/crates/benilla-world/src/bgwin.rs
-index cb4a660..bbf8f04 100644
+index cb4a6609..bbf8f04d 100644
 --- a/crates/benilla-world/src/bgwin.rs
 +++ b/crates/benilla-world/src/bgwin.rs
 @@ -49,10 +49,21 @@ fn scan_background_run() -> bool {
@@ -16352,7 +16352,7 @@ index cb4a660..bbf8f04 100644
              continue;
          }
 diff --git a/crates/benilla-world/src/billboard.rs b/crates/benilla-world/src/billboard.rs
-index 770c15b..b387d82 100644
+index 770c15bf..b387d82f 100644
 --- a/crates/benilla-world/src/billboard.rs
 +++ b/crates/benilla-world/src/billboard.rs
 @@ -1348,7 +1348,7 @@ mod tests {
@@ -16365,7 +16365,7 @@ index 770c15b..b387d82 100644
          let tf = app.world().entity(card).get::<Transform>().unwrap();
          assert_eq!(
 diff --git a/crates/benilla-world/src/boot.rs b/crates/benilla-world/src/boot.rs
-index d8f43f9..ced0d13 100644
+index d8f43f98..ced0d13b 100644
 --- a/crates/benilla-world/src/boot.rs
 +++ b/crates/benilla-world/src/boot.rs
 @@ -7,7 +7,21 @@ use bevy::prelude::*;
@@ -16392,7 +16392,7 @@ index d8f43f9..ced0d13 100644
          .set(WindowPlugin {
              primary_window: Some(primary_window),
 diff --git a/crates/benilla-world/src/collision.rs b/crates/benilla-world/src/collision.rs
-index 11bbf26..bced2e7 100644
+index 11bbf267..bced2e73 100644
 --- a/crates/benilla-world/src/collision.rs
 +++ b/crates/benilla-world/src/collision.rs
 @@ -215,7 +215,7 @@ impl WorldCollision<'_, '_> {
@@ -16423,7 +16423,7 @@ index 11bbf26..bced2e7 100644
          on_hit: impl FnMut(MoveAndSlideHitData) -> MoveAndSlideHitResponse,
      ) -> MoveAndSlideOutput {
 diff --git a/crates/benilla-world/src/doodad_anim/lazy.rs b/crates/benilla-world/src/doodad_anim/lazy.rs
-index 40f45fc..964b360 100644
+index 40f45fc6..964b3605 100644
 --- a/crates/benilla-world/src/doodad_anim/lazy.rs
 +++ b/crates/benilla-world/src/doodad_anim/lazy.rs
 @@ -320,7 +320,7 @@ mod tests {
@@ -16436,7 +16436,7 @@ index 40f45fc..964b360 100644
              ));
          app.update();
 diff --git a/crates/benilla-world/src/doodad_anim/mod.rs b/crates/benilla-world/src/doodad_anim/mod.rs
-index 0336aed..f8a7cf5 100644
+index 0336aed6..f8a7cf57 100644
 --- a/crates/benilla-world/src/doodad_anim/mod.rs
 +++ b/crates/benilla-world/src/doodad_anim/mod.rs
 @@ -739,7 +739,7 @@ mod tests {
@@ -16467,7 +16467,7 @@ index 0336aed..f8a7cf5 100644
          }
          let h = app.world().entity(host).get::<DoodadAnimHost>().unwrap();
 diff --git a/crates/benilla-world/src/frame_pace.rs b/crates/benilla-world/src/frame_pace.rs
-index 2d8d334..341ad04 100644
+index 2d8d3344..341ad04a 100644
 --- a/crates/benilla-world/src/frame_pace.rs
 +++ b/crates/benilla-world/src/frame_pace.rs
 @@ -9,7 +9,7 @@
@@ -16505,7 +16505,7 @@ index 2d8d334..341ad04 100644
          })
          .add_systems(First, arm_fixed_dt.before(TimeSystems));
 diff --git a/crates/benilla-world/src/interior.rs b/crates/benilla-world/src/interior.rs
-index 77f0af1..ed628bc 100644
+index 77f0af1d..ed628bca 100644
 --- a/crates/benilla-world/src/interior.rs
 +++ b/crates/benilla-world/src/interior.rs
 @@ -346,7 +346,7 @@ pub fn classify_entity_interior(
@@ -16527,7 +16527,7 @@ index 77f0af1..ed628bc 100644
          let (law, room) = resolve_anchor_law(
              &mut commands,
 diff --git a/crates/benilla-world/src/log_ring.rs b/crates/benilla-world/src/log_ring.rs
-index 253b35d..0353d8f 100644
+index 253b35d0..0353d8fc 100644
 --- a/crates/benilla-world/src/log_ring.rs
 +++ b/crates/benilla-world/src/log_ring.rs
 @@ -3,10 +3,10 @@
@@ -16543,7 +16543,7 @@ index 253b35d..0353d8f 100644
  use bevy::log::tracing::field::{Field, Visit};
  use bevy::log::tracing::{Event, Subscriber};
 diff --git a/crates/benilla-world/src/model_fade.rs b/crates/benilla-world/src/model_fade.rs
-index 67f5fea..9b8f1d5 100644
+index 67f5feac..9b8f1d5a 100644
 --- a/crates/benilla-world/src/model_fade.rs
 +++ b/crates/benilla-world/src/model_fade.rs
 @@ -332,7 +332,7 @@ mod unit_render_alpha_tests {
@@ -16565,7 +16565,7 @@ index 67f5fea..9b8f1d5 100644
                  .resource_mut::<crate::view::Viewer>()
                  .world_covered = covered;
 diff --git a/crates/benilla-world/src/model_forms.rs b/crates/benilla-world/src/model_forms.rs
-index 52797f0..c1f41c2 100644
+index 52797f0f..c1f41c23 100644
 --- a/crates/benilla-world/src/model_forms.rs
 +++ b/crates/benilla-world/src/model_forms.rs
 @@ -4,8 +4,8 @@
@@ -16579,7 +16579,7 @@ index 52797f0..c1f41c2 100644
  use benilla_assets::{
      submesh_to_palette_billboard, submesh_to_skinned_mesh, submesh_to_static_mesh, M2Model,
 diff --git a/crates/benilla-world/src/rig_anim/compose.rs b/crates/benilla-world/src/rig_anim/compose.rs
-index cac934c..242ad76 100644
+index cac934cd..242ad769 100644
 --- a/crates/benilla-world/src/rig_anim/compose.rs
 +++ b/crates/benilla-world/src/rig_anim/compose.rs
 @@ -15,6 +15,10 @@ use crate::view::WorldCamera;
@@ -16612,7 +16612,7 @@ index cac934c..242ad76 100644
      // the anchors and the cascade write after. A seat another rig re-seats this frame is read as
 diff --git a/crates/benilla-world/src/rig_anim/compose_scratch.rs b/crates/benilla-world/src/rig_anim/compose_scratch.rs
 new file mode 100644
-index 0000000..7410804
+index 00000000..7410804b
 --- /dev/null
 +++ b/crates/benilla-world/src/rig_anim/compose_scratch.rs
 @@ -0,0 +1,132 @@
@@ -16749,7 +16749,7 @@ index 0000000..7410804
 +    }
 +}
 diff --git a/crates/benilla-world/src/rig_anim/global_seq.rs b/crates/benilla-world/src/rig_anim/global_seq.rs
-index 0c8be67..74ff5e3 100644
+index 0c8be677..74ff5e3a 100644
 --- a/crates/benilla-world/src/rig_anim/global_seq.rs
 +++ b/crates/benilla-world/src/rig_anim/global_seq.rs
 @@ -189,7 +189,7 @@ mod tests {
@@ -16771,7 +16771,7 @@ index 0c8be67..74ff5e3 100644
          app.add_systems(Update, apply_global_sequences);
  
 diff --git a/crates/benilla-world/src/rig_anim/pose.rs b/crates/benilla-world/src/rig_anim/pose.rs
-index d41a7f4..03cff0f 100644
+index d41a7f4c..03cff0f7 100644
 --- a/crates/benilla-world/src/rig_anim/pose.rs
 +++ b/crates/benilla-world/src/rig_anim/pose.rs
 @@ -315,7 +315,7 @@ pub fn plugin(app: &mut App) {
@@ -16784,7 +16784,7 @@ index d41a7f4..03cff0f 100644
      use benilla_assets::{bone_target_id, PoseBone, PoseClip, PoseTrack};
      use bevy::animation::animation_curves::{AnimatableCurve, AnimatableKeyframeCurve};
 diff --git a/crates/benilla-world/src/rig_palette.rs b/crates/benilla-world/src/rig_palette.rs
-index 4aa098d..a38ff00 100644
+index 4aa098d4..a38ff006 100644
 --- a/crates/benilla-world/src/rig_palette.rs
 +++ b/crates/benilla-world/src/rig_palette.rs
 @@ -151,7 +151,7 @@ fn rows_make_mut<'a>(
@@ -16806,7 +16806,7 @@ index 4aa098d..a38ff00 100644
      let mut cost_bytes = 0u64;
      // Coalesce first: each `write_buffer` call costs far more than its bytes.
 diff --git a/crates/benilla-world/src/shaders/static_gx.wgsl b/crates/benilla-world/src/shaders/static_gx.wgsl
-index 20530ba..39bbc10 100644
+index 20530ba3..39bbc103 100644
 --- a/crates/benilla-world/src/shaders/static_gx.wgsl
 +++ b/crates/benilla-world/src/shaders/static_gx.wgsl
 @@ -186,10 +186,18 @@ fn fragment(in: GxVsOut) -> @location(0) vec4<f32> {
@@ -16846,7 +16846,7 @@ index 20530ba..39bbc10 100644
              base = c_repeat;
          } else if (!wrap_x && !wrap_y) {
 diff --git a/crates/benilla-world/src/static_gx/mod.rs b/crates/benilla-world/src/static_gx/mod.rs
-index f20ac9b..58a0e74 100644
+index f20ac9be..58a0e749 100644
 --- a/crates/benilla-world/src/static_gx/mod.rs
 +++ b/crates/benilla-world/src/static_gx/mod.rs
 @@ -113,7 +113,7 @@ pub(crate) static GX_PERF: [std::sync::atomic::AtomicU64; 5] = [
@@ -16868,7 +16868,7 @@ index f20ac9b..58a0e74 100644
  
  /// One diverted batch, kept after its cell bakes so an unload or a later admission can re-bake.
 diff --git a/crates/benilla-world/src/terrain_stream.rs b/crates/benilla-world/src/terrain_stream.rs
-index a9d007f..26d7a20 100644
+index a9d007f6..26d7a20c 100644
 --- a/crates/benilla-world/src/terrain_stream.rs
 +++ b/crates/benilla-world/src/terrain_stream.rs
 @@ -2,8 +2,9 @@
@@ -16883,7 +16883,7 @@ index a9d007f..26d7a20 100644
  use benilla_assets::coords::{bevy_to_wow, placement_rotation, wow_to_bevy};
  use benilla_assets::{AdtTile, M2Model, WdtIndex, WmoModel};
 diff --git a/crates/benilla-world/src/terrain_stream/collider.rs b/crates/benilla-world/src/terrain_stream/collider.rs
-index 62bed18..531bade 100644
+index 62bed189..531bade6 100644
 --- a/crates/benilla-world/src/terrain_stream/collider.rs
 +++ b/crates/benilla-world/src/terrain_stream/collider.rs
 @@ -2,7 +2,8 @@
@@ -16936,7 +16936,7 @@ index 62bed18..531bade 100644
              .map(|_| {
 diff --git a/crates/benilla-world/src/terrain_stream/collider/web_budget.rs b/crates/benilla-world/src/terrain_stream/collider/web_budget.rs
 new file mode 100644
-index 0000000..005a5f6
+index 00000000..005a5f60
 --- /dev/null
 +++ b/crates/benilla-world/src/terrain_stream/collider/web_budget.rs
 @@ -0,0 +1,154 @@
@@ -17095,7 +17095,7 @@ index 0000000..005a5f6
 +    }
 +}
 diff --git a/crates/benilla-world/src/terrain_stream/furnish.rs b/crates/benilla-world/src/terrain_stream/furnish.rs
-index 17b04eb..4bbcaff 100644
+index 17b04ebc..4bbcaff8 100644
 --- a/crates/benilla-world/src/terrain_stream/furnish.rs
 +++ b/crates/benilla-world/src/terrain_stream/furnish.rs
 @@ -3,7 +3,7 @@
@@ -17108,7 +17108,7 @@ index 17b04eb..4bbcaff 100644
  use benilla_assets::{chunks_to_mesh, AdtTile};
  use bevy::camera::primitives::MeshAabb;
 diff --git a/crates/benilla-world/src/terrain_stream/spawn/mod.rs b/crates/benilla-world/src/terrain_stream/spawn/mod.rs
-index 928f36e..70db5d9 100644
+index 928f36e4..70db5d96 100644
 --- a/crates/benilla-world/src/terrain_stream/spawn/mod.rs
 +++ b/crates/benilla-world/src/terrain_stream/spawn/mod.rs
 @@ -10,8 +10,8 @@ use fx::{
@@ -17132,7 +17132,7 @@ index 928f36e..70db5d9 100644
      }
 diff --git a/crates/wenilla-host/Cargo.toml b/crates/wenilla-host/Cargo.toml
 new file mode 100644
-index 0000000..16bf117
+index 00000000..16bf1172
 --- /dev/null
 +++ b/crates/wenilla-host/Cargo.toml
 @@ -0,0 +1,37 @@
@@ -17175,7 +17175,7 @@ index 0000000..16bf117
 +tower = { version = "0.5", features = ["util"] }
 diff --git a/crates/wenilla-host/src/data.rs b/crates/wenilla-host/src/data.rs
 new file mode 100644
-index 0000000..bd0f0ac
+index 00000000..bd0f0acd
 --- /dev/null
 +++ b/crates/wenilla-host/src/data.rs
 @@ -0,0 +1,412 @@
@@ -17593,7 +17593,7 @@ index 0000000..bd0f0ac
 +}
 diff --git a/crates/wenilla-host/src/lib.rs b/crates/wenilla-host/src/lib.rs
 new file mode 100644
-index 0000000..7435cc2
+index 00000000..7435cc2a
 --- /dev/null
 +++ b/crates/wenilla-host/src/lib.rs
 @@ -0,0 +1,14 @@
@@ -17708,7 +17708,7 @@ index 0000000..8c5a0ca
 +}
 diff --git a/crates/wenilla-host/src/static_site.rs b/crates/wenilla-host/src/static_site.rs
 new file mode 100644
-index 0000000..bad47c4
+index 00000000..bad47c40
 --- /dev/null
 +++ b/crates/wenilla-host/src/static_site.rs
 @@ -0,0 +1,61 @@
@@ -17775,7 +17775,7 @@ index 0000000..bad47c4
 +}
 diff --git a/crates/wenilla-host/src/ws.rs b/crates/wenilla-host/src/ws.rs
 new file mode 100644
-index 0000000..18b3cfd
+index 00000000..18b3cfdc
 --- /dev/null
 +++ b/crates/wenilla-host/src/ws.rs
 @@ -0,0 +1,143 @@
@@ -17924,7 +17924,7 @@ index 0000000..18b3cfd
 +}
 diff --git a/crates/wenilla-host/tests/data.rs b/crates/wenilla-host/tests/data.rs
 new file mode 100644
-index 0000000..cccec1c
+index 00000000..cccec1c0
 --- /dev/null
 +++ b/crates/wenilla-host/tests/data.rs
 @@ -0,0 +1,128 @@
@@ -18058,7 +18058,7 @@ index 0000000..cccec1c
 +}
 diff --git a/crates/wenilla-host/tests/static_site.rs b/crates/wenilla-host/tests/static_site.rs
 new file mode 100644
-index 0000000..ecf2c96
+index 00000000..ecf2c96f
 --- /dev/null
 +++ b/crates/wenilla-host/tests/static_site.rs
 @@ -0,0 +1,75 @@
@@ -18139,7 +18139,7 @@ index 0000000..ecf2c96
 +}
 diff --git a/crates/wenilla-host/tests/ws_proxy.rs b/crates/wenilla-host/tests/ws_proxy.rs
 new file mode 100644
-index 0000000..b688698
+index 00000000..b6886982
 --- /dev/null
 +++ b/crates/wenilla-host/tests/ws_proxy.rs
 @@ -0,0 +1,87 @@
@@ -18232,7 +18232,7 @@ index 0000000..b688698
 +}
 diff --git a/crates/wenilla/Cargo.toml b/crates/wenilla/Cargo.toml
 new file mode 100644
-index 0000000..1fd59a2
+index 00000000..1fd59a25
 --- /dev/null
 +++ b/crates/wenilla/Cargo.toml
 @@ -0,0 +1,33 @@
@@ -18271,7 +18271,7 @@ index 0000000..1fd59a2
 +benilla-buildstamp = { path = "../benilla-buildstamp" }
 diff --git a/crates/wenilla/build.rs b/crates/wenilla/build.rs
 new file mode 100644
-index 0000000..c8ca965
+index 00000000..c8ca9657
 --- /dev/null
 +++ b/crates/wenilla/build.rs
 @@ -0,0 +1,8 @@
@@ -18285,7 +18285,7 @@ index 0000000..c8ca965
 +}
 diff --git a/crates/wenilla/src/lib.rs b/crates/wenilla/src/lib.rs
 new file mode 100644
-index 0000000..dc3e786
+index 00000000..dc3e786f
 --- /dev/null
 +++ b/crates/wenilla/src/lib.rs
 @@ -0,0 +1,39 @@
@@ -18330,7 +18330,7 @@ index 0000000..dc3e786
 +}
 diff --git a/scripts/web-build.sh b/scripts/web-build.sh
 new file mode 100755
-index 0000000..dade899
+index 00000000..5b1bcf6f
 --- /dev/null
 +++ b/scripts/web-build.sh
 @@ -0,0 +1,74 @@
@@ -18376,7 +18376,7 @@ index 0000000..dade899
 +strip=(--remove-name-section --remove-producers-section)
 +[ "${WEB_DEBUG:-0}" = 1 ] && strip=()
 +wasm-bindgen --target web --no-typescript "${strip[@]}" --out-dir "${DIST}" "${WASM}"
-+cp web/display.js web/index.html web/wasi_stubs.js web/boot.js web/platform.js web/bridge.js "${DIST}/"
++cp web/game-session.js web/arena-display.js web/index.html web/wasi_stubs.js web/boot.js web/platform.js web/bridge.js "${DIST}/"
 +# The bridge examples (web/README.md § "JavaScript bridge"): a HUD, an idle loop.
 +cp -R web/addons "${DIST}/"
 +mkdir -p "${DIST}/examples" && cp web/examples/*.js "${DIST}/examples/"
@@ -18410,7 +18410,7 @@ index 0000000..dade899
 +ls -la "${DIST}"
 diff --git a/scripts/web-setup.sh b/scripts/web-setup.sh
 new file mode 100755
-index 0000000..1688f9b
+index 00000000..1688f9bb
 --- /dev/null
 +++ b/scripts/web-setup.sh
 @@ -0,0 +1,70 @@
@@ -18485,7 +18485,7 @@ index 0000000..1688f9b
 +command -v brotli >/dev/null || echo "  brotli not found — web-build.sh will skip .br siblings (the host then serves plain files)"
 +echo "ready: scripts/web-build.sh"
 diff --git a/third_party/lua-src/lua-5.1.5/luaconf.h b/third_party/lua-src/lua-5.1.5/luaconf.h
-index 8dfb363..cf89eed 100644
+index 8dfb3636..cf89eedc 100644
 --- a/third_party/lua-src/lua-5.1.5/luaconf.h
 +++ b/third_party/lua-src/lua-5.1.5/luaconf.h
 @@ -142,7 +142,12 @@
@@ -18502,7 +18502,7 @@ index 8dfb363..cf89eed 100644
  
  /*
 diff --git a/third_party/lua-src/src/lib.rs b/third_party/lua-src/src/lib.rs
-index 9bc5448..3663d0a 100644
+index 9bc54484..3663d0a4 100644
 --- a/third_party/lua-src/src/lib.rs
 +++ b/third_party/lua-src/src/lib.rs
 @@ -197,6 +197,56 @@ impl Build {
@@ -18564,7 +18564,7 @@ index 9bc5448..3663d0a 100644
  
 diff --git a/third_party/mlua-sys/.cargo_vcs_info.json b/third_party/mlua-sys/.cargo_vcs_info.json
 new file mode 100644
-index 0000000..57bd0f0
+index 00000000..57bd0f04
 --- /dev/null
 +++ b/third_party/mlua-sys/.cargo_vcs_info.json
 @@ -0,0 +1,6 @@
@@ -18577,7 +18577,7 @@ index 0000000..57bd0f0
 \ No newline at end of file
 diff --git a/third_party/mlua-sys/BENILLA.md b/third_party/mlua-sys/BENILLA.md
 new file mode 100644
-index 0000000..8253aa8
+index 00000000..8253aa8a
 --- /dev/null
 +++ b/third_party/mlua-sys/BENILLA.md
 @@ -0,0 +1,11 @@
@@ -18594,7 +18594,7 @@ index 0000000..8253aa8
 +    diff -r ~/.cargo/registry/src/*/mlua-sys-0.10.0 third_party/mlua-sys
 diff --git a/third_party/mlua-sys/Cargo.lock b/third_party/mlua-sys/Cargo.lock
 new file mode 100644
-index 0000000..cbca93b
+index 00000000..cbca93b9
 --- /dev/null
 +++ b/third_party/mlua-sys/Cargo.lock
 @@ -0,0 +1,202 @@
@@ -18802,7 +18802,7 @@ index 0000000..cbca93b
 +checksum = "f17a85883d4e6d00e8a97c586de764dabcc06133f7f1d55dce5cdc070ad7fe59"
 diff --git a/third_party/mlua-sys/Cargo.toml b/third_party/mlua-sys/Cargo.toml
 new file mode 100644
-index 0000000..07559ec
+index 00000000..07559ec0
 --- /dev/null
 +++ b/third_party/mlua-sys/Cargo.toml
 @@ -0,0 +1,94 @@
@@ -18902,7 +18902,7 @@ index 0000000..07559ec
 +check-cfg = ["cfg(raw_dylib)"]
 diff --git a/third_party/mlua-sys/README.md b/third_party/mlua-sys/README.md
 new file mode 100644
-index 0000000..def6e91
+index 00000000..def6e91e
 --- /dev/null
 +++ b/third_party/mlua-sys/README.md
 @@ -0,0 +1,9 @@
@@ -18917,7 +18917,7 @@ index 0000000..def6e91
 +[mlua]: https://crates.io/crates/mlua
 diff --git a/third_party/mlua-sys/build/find_normal.rs b/third_party/mlua-sys/build/find_normal.rs
 new file mode 100644
-index 0000000..b91b1c0
+index 00000000..b91b1c01
 --- /dev/null
 +++ b/third_party/mlua-sys/build/find_normal.rs
 @@ -0,0 +1,64 @@
@@ -18987,7 +18987,7 @@ index 0000000..b91b1c0
 +}
 diff --git a/third_party/mlua-sys/build/find_vendored.rs b/third_party/mlua-sys/build/find_vendored.rs
 new file mode 100644
-index 0000000..7810525
+index 00000000..78105250
 --- /dev/null
 +++ b/third_party/mlua-sys/build/find_vendored.rs
 @@ -0,0 +1,32 @@
@@ -19025,7 +19025,7 @@ index 0000000..7810525
 +}
 diff --git a/third_party/mlua-sys/build/main.rs b/third_party/mlua-sys/build/main.rs
 new file mode 100644
-index 0000000..5bb8ddb
+index 00000000..5bb8ddbe
 --- /dev/null
 +++ b/third_party/mlua-sys/build/main.rs
 @@ -0,0 +1,21 @@
@@ -19052,7 +19052,7 @@ index 0000000..5bb8ddb
 +}
 diff --git a/third_party/mlua-sys/build/main_inner.rs b/third_party/mlua-sys/build/main_inner.rs
 new file mode 100644
-index 0000000..5d6c04e
+index 00000000..5d6c04ed
 --- /dev/null
 +++ b/third_party/mlua-sys/build/main_inner.rs
 @@ -0,0 +1,42 @@
@@ -19100,7 +19100,7 @@ index 0000000..5d6c04e
 +}
 diff --git a/third_party/mlua-sys/src/lib.rs b/third_party/mlua-sys/src/lib.rs
 new file mode 100644
-index 0000000..e6672c8
+index 00000000..e6672c88
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lib.rs
 @@ -0,0 +1,115 @@
@@ -19221,7 +19221,7 @@ index 0000000..e6672c8
 +pub mod luau;
 diff --git a/third_party/mlua-sys/src/lua51/compat.rs b/third_party/mlua-sys/src/lua51/compat.rs
 new file mode 100644
-index 0000000..5dc0254
+index 00000000..5dc02546
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua51/compat.rs
 @@ -0,0 +1,580 @@
@@ -19807,7 +19807,7 @@ index 0000000..5dc0254
 +}
 diff --git a/third_party/mlua-sys/src/lua51/lauxlib.rs b/third_party/mlua-sys/src/lua51/lauxlib.rs
 new file mode 100644
-index 0000000..767d8fe
+index 00000000..767d8fe0
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua51/lauxlib.rs
 @@ -0,0 +1,197 @@
@@ -20010,7 +20010,7 @@ index 0000000..767d8fe
 +}
 diff --git a/third_party/mlua-sys/src/lua51/lua.rs b/third_party/mlua-sys/src/lua51/lua.rs
 new file mode 100644
-index 0000000..3cb22e9
+index 00000000..3cb22e92
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua51/lua.rs
 @@ -0,0 +1,407 @@
@@ -20423,7 +20423,7 @@ index 0000000..3cb22e9
 +}
 diff --git a/third_party/mlua-sys/src/lua51/lualib.rs b/third_party/mlua-sys/src/lua51/lualib.rs
 new file mode 100644
-index 0000000..3ed0242
+index 00000000..3ed0242f
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua51/lualib.rs
 @@ -0,0 +1,43 @@
@@ -20472,7 +20472,7 @@ index 0000000..3ed0242
 +}
 diff --git a/third_party/mlua-sys/src/lua51/mod.rs b/third_party/mlua-sys/src/lua51/mod.rs
 new file mode 100644
-index 0000000..3f222bc
+index 00000000..3f222bc2
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua51/mod.rs
 @@ -0,0 +1,11 @@
@@ -20489,7 +20489,7 @@ index 0000000..3f222bc
 +pub mod lualib;
 diff --git a/third_party/mlua-sys/src/lua52/compat.rs b/third_party/mlua-sys/src/lua52/compat.rs
 new file mode 100644
-index 0000000..4cddd43
+index 00000000..4cddd436
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua52/compat.rs
 @@ -0,0 +1,269 @@
@@ -20764,7 +20764,7 @@ index 0000000..4cddd43
 +}
 diff --git a/third_party/mlua-sys/src/lua52/lauxlib.rs b/third_party/mlua-sys/src/lua52/lauxlib.rs
 new file mode 100644
-index 0000000..eb954a4
+index 00000000..eb954a46
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua52/lauxlib.rs
 @@ -0,0 +1,241 @@
@@ -21011,7 +21011,7 @@ index 0000000..eb954a4
 +}
 diff --git a/third_party/mlua-sys/src/lua52/lua.rs b/third_party/mlua-sys/src/lua52/lua.rs
 new file mode 100644
-index 0000000..e5239ce
+index 00000000..e5239cee
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua52/lua.rs
 @@ -0,0 +1,485 @@
@@ -21502,7 +21502,7 @@ index 0000000..e5239ce
 +}
 diff --git a/third_party/mlua-sys/src/lua52/lualib.rs b/third_party/mlua-sys/src/lua52/lualib.rs
 new file mode 100644
-index 0000000..1b3c844
+index 00000000..1b3c8445
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua52/lualib.rs
 @@ -0,0 +1,32 @@
@@ -21540,7 +21540,7 @@ index 0000000..1b3c844
 +}
 diff --git a/third_party/mlua-sys/src/lua52/mod.rs b/third_party/mlua-sys/src/lua52/mod.rs
 new file mode 100644
-index 0000000..7ea8ef1
+index 00000000..7ea8ef10
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua52/mod.rs
 @@ -0,0 +1,11 @@
@@ -21557,7 +21557,7 @@ index 0000000..7ea8ef1
 +pub mod lualib;
 diff --git a/third_party/mlua-sys/src/lua53/compat.rs b/third_party/mlua-sys/src/lua53/compat.rs
 new file mode 100644
-index 0000000..30b936e
+index 00000000..30b936ea
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua53/compat.rs
 @@ -0,0 +1,34 @@
@@ -21597,7 +21597,7 @@ index 0000000..30b936e
 +}
 diff --git a/third_party/mlua-sys/src/lua53/lauxlib.rs b/third_party/mlua-sys/src/lua53/lauxlib.rs
 new file mode 100644
-index 0000000..4483b9a
+index 00000000..4483b9ab
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua53/lauxlib.rs
 @@ -0,0 +1,237 @@
@@ -21840,7 +21840,7 @@ index 0000000..4483b9a
 +}
 diff --git a/third_party/mlua-sys/src/lua53/lua.rs b/third_party/mlua-sys/src/lua53/lua.rs
 new file mode 100644
-index 0000000..2729fdc
+index 00000000..2729fdcd
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua53/lua.rs
 @@ -0,0 +1,514 @@
@@ -22360,7 +22360,7 @@ index 0000000..2729fdc
 +}
 diff --git a/third_party/mlua-sys/src/lua53/lualib.rs b/third_party/mlua-sys/src/lua53/lualib.rs
 new file mode 100644
-index 0000000..c29d816
+index 00000000..c29d8160
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua53/lualib.rs
 @@ -0,0 +1,34 @@
@@ -22400,7 +22400,7 @@ index 0000000..c29d816
 +}
 diff --git a/third_party/mlua-sys/src/lua53/mod.rs b/third_party/mlua-sys/src/lua53/mod.rs
 new file mode 100644
-index 0000000..13f107b
+index 00000000..13f107b2
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua53/mod.rs
 @@ -0,0 +1,11 @@
@@ -22417,7 +22417,7 @@ index 0000000..13f107b
 +pub mod lualib;
 diff --git a/third_party/mlua-sys/src/lua54/lauxlib.rs b/third_party/mlua-sys/src/lua54/lauxlib.rs
 new file mode 100644
-index 0000000..26b31bf
+index 00000000..26b31bfe
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua54/lauxlib.rs
 @@ -0,0 +1,281 @@
@@ -22704,7 +22704,7 @@ index 0000000..26b31bf
 +}
 diff --git a/third_party/mlua-sys/src/lua54/lua.rs b/third_party/mlua-sys/src/lua54/lua.rs
 new file mode 100644
-index 0000000..15a3044
+index 00000000..15a30444
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua54/lua.rs
 @@ -0,0 +1,559 @@
@@ -23269,7 +23269,7 @@ index 0000000..15a3044
 +}
 diff --git a/third_party/mlua-sys/src/lua54/lualib.rs b/third_party/mlua-sys/src/lua54/lualib.rs
 new file mode 100644
-index 0000000..0f66664
+index 00000000..0f666643
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua54/lualib.rs
 @@ -0,0 +1,32 @@
@@ -23307,7 +23307,7 @@ index 0000000..0f66664
 +}
 diff --git a/third_party/mlua-sys/src/lua54/mod.rs b/third_party/mlua-sys/src/lua54/mod.rs
 new file mode 100644
-index 0000000..2371e83
+index 00000000..2371e83f
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua54/mod.rs
 @@ -0,0 +1,9 @@
@@ -23322,7 +23322,7 @@ index 0000000..2371e83
 +pub mod lualib;
 diff --git a/third_party/mlua-sys/src/lua55/lauxlib.rs b/third_party/mlua-sys/src/lua55/lauxlib.rs
 new file mode 100644
-index 0000000..13a8524
+index 00000000..13a8524f
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua55/lauxlib.rs
 @@ -0,0 +1,299 @@
@@ -23627,7 +23627,7 @@ index 0000000..13a8524
 +}
 diff --git a/third_party/mlua-sys/src/lua55/lua.rs b/third_party/mlua-sys/src/lua55/lua.rs
 new file mode 100644
-index 0000000..dd6067d
+index 00000000..dd6067d6
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua55/lua.rs
 @@ -0,0 +1,578 @@
@@ -24211,7 +24211,7 @@ index 0000000..dd6067d
 +}
 diff --git a/third_party/mlua-sys/src/lua55/lualib.rs b/third_party/mlua-sys/src/lua55/lualib.rs
 new file mode 100644
-index 0000000..33903ad
+index 00000000..33903add
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua55/lualib.rs
 @@ -0,0 +1,55 @@
@@ -24272,7 +24272,7 @@ index 0000000..33903ad
 +}
 diff --git a/third_party/mlua-sys/src/lua55/mod.rs b/third_party/mlua-sys/src/lua55/mod.rs
 new file mode 100644
-index 0000000..8b653a4
+index 00000000..8b653a4c
 --- /dev/null
 +++ b/third_party/mlua-sys/src/lua55/mod.rs
 @@ -0,0 +1,9 @@
@@ -24287,7 +24287,7 @@ index 0000000..8b653a4
 +pub mod lualib;
 diff --git a/third_party/mlua-sys/src/luau/compat.rs b/third_party/mlua-sys/src/luau/compat.rs
 new file mode 100644
-index 0000000..bf2a7b9
+index 00000000..bf2a7b95
 --- /dev/null
 +++ b/third_party/mlua-sys/src/luau/compat.rs
 @@ -0,0 +1,577 @@
@@ -24870,7 +24870,7 @@ index 0000000..bf2a7b9
 +}
 diff --git a/third_party/mlua-sys/src/luau/lauxlib.rs b/third_party/mlua-sys/src/luau/lauxlib.rs
 new file mode 100644
-index 0000000..f57c3cd
+index 00000000..f57c3cdc
 --- /dev/null
 +++ b/third_party/mlua-sys/src/luau/lauxlib.rs
 @@ -0,0 +1,244 @@
@@ -25120,7 +25120,7 @@ index 0000000..f57c3cd
 +}
 diff --git a/third_party/mlua-sys/src/luau/lua.rs b/third_party/mlua-sys/src/luau/lua.rs
 new file mode 100644
-index 0000000..98ee5bc
+index 00000000..98ee5bc7
 --- /dev/null
 +++ b/third_party/mlua-sys/src/luau/lua.rs
 @@ -0,0 +1,583 @@
@@ -25709,7 +25709,7 @@ index 0000000..98ee5bc
 +}
 diff --git a/third_party/mlua-sys/src/luau/luacode.rs b/third_party/mlua-sys/src/luau/luacode.rs
 new file mode 100644
-index 0000000..cd7ec37
+index 00000000..cd7ec376
 --- /dev/null
 +++ b/third_party/mlua-sys/src/luau/luacode.rs
 @@ -0,0 +1,113 @@
@@ -25828,7 +25828,7 @@ index 0000000..cd7ec37
 +}
 diff --git a/third_party/mlua-sys/src/luau/luacodegen.rs b/third_party/mlua-sys/src/luau/luacodegen.rs
 new file mode 100644
-index 0000000..9e063ed
+index 00000000..9e063ed2
 --- /dev/null
 +++ b/third_party/mlua-sys/src/luau/luacodegen.rs
 @@ -0,0 +1,11 @@
@@ -25845,7 +25845,7 @@ index 0000000..9e063ed
 +}
 diff --git a/third_party/mlua-sys/src/luau/lualib.rs b/third_party/mlua-sys/src/luau/lualib.rs
 new file mode 100644
-index 0000000..a28a2a6
+index 00000000..a28a2a61
 --- /dev/null
 +++ b/third_party/mlua-sys/src/luau/lualib.rs
 @@ -0,0 +1,33 @@
@@ -25884,7 +25884,7 @@ index 0000000..a28a2a6
 +}
 diff --git a/third_party/mlua-sys/src/luau/luarequire.rs b/third_party/mlua-sys/src/luau/luarequire.rs
 new file mode 100644
-index 0000000..0574efd
+index 00000000..0574efd4
 --- /dev/null
 +++ b/third_party/mlua-sys/src/luau/luarequire.rs
 @@ -0,0 +1,219 @@
@@ -26109,7 +26109,7 @@ index 0000000..0574efd
 +}
 diff --git a/third_party/mlua-sys/src/luau/mod.rs b/third_party/mlua-sys/src/luau/mod.rs
 new file mode 100644
-index 0000000..ea882a9
+index 00000000..ea882a99
 --- /dev/null
 +++ b/third_party/mlua-sys/src/luau/mod.rs
 @@ -0,0 +1,17 @@
@@ -26132,7 +26132,7 @@ index 0000000..ea882a9
 +pub mod luarequire;
 diff --git a/third_party/mlua-sys/src/macros.rs b/third_party/mlua-sys/src/macros.rs
 new file mode 100644
-index 0000000..263b4e7
+index 00000000..263b4e76
 --- /dev/null
 +++ b/third_party/mlua-sys/src/macros.rs
 @@ -0,0 +1,6 @@
@@ -26144,7 +26144,7 @@ index 0000000..263b4e7
 +}
 diff --git a/web/README.md b/web/README.md
 new file mode 100644
-index 0000000..a4b9bad
+index 00000000..a4b9bad7
 --- /dev/null
 +++ b/web/README.md
 @@ -0,0 +1,258 @@
@@ -26408,7 +26408,7 @@ index 0000000..a4b9bad
 +a unit can be `name: null` for a frame or two), and raw packet access — deliberately.
 diff --git a/web/boot-manifest.json b/web/boot-manifest.json
 new file mode 100644
-index 0000000..8dae3a6
+index 00000000..8dae3a67
 --- /dev/null
 +++ b/web/boot-manifest.json
 @@ -0,0 +1,409 @@
@@ -26823,7 +26823,7 @@ index 0000000..8dae3a6
 +}
 diff --git a/web/boot.js b/web/boot.js
 new file mode 100644
-index 0000000..daac3cc
+index 00000000..daac3ccc
 --- /dev/null
 +++ b/web/boot.js
 @@ -0,0 +1,267 @@
@@ -27096,7 +27096,7 @@ index 0000000..daac3cc
 +}
 diff --git a/web/bridge.js b/web/bridge.js
 new file mode 100644
-index 0000000..7124256
+index 00000000..71242566
 --- /dev/null
 +++ b/web/bridge.js
 @@ -0,0 +1,408 @@
@@ -27510,7 +27510,7 @@ index 0000000..7124256
 +export default wenilla;
 diff --git a/web/examples/hud.js b/web/examples/hud.js
 new file mode 100644
-index 0000000..d97e50d
+index 00000000..d97e50d1
 --- /dev/null
 +++ b/web/examples/hud.js
 @@ -0,0 +1,58 @@
@@ -27574,7 +27574,7 @@ index 0000000..d97e50d
 +});
 diff --git a/web/examples/idle.js b/web/examples/idle.js
 new file mode 100644
-index 0000000..7182cd3
+index 00000000..7182cd37
 --- /dev/null
 +++ b/web/examples/idle.js
 @@ -0,0 +1,46 @@
@@ -27626,14 +27626,14 @@ index 0000000..7182cd3
 +}, 500);
 diff --git a/web/index.html b/web/index.html
 new file mode 100644
-index 0000000..629358a
+index 00000000..c2d54ab8
 --- /dev/null
 +++ b/web/index.html
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,126 @@
 +<!doctype html>
 +<meta charset="utf-8">
-+<title>Wenilla WotLK</title>
-+<script src="./display.js"></script>
++<title>WoW Arena Bots</title>
++<script src="./arena-display.js"></script>
 +<style>
 +  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
 +  #benilla { display: block; width: calc(var(--arena-width, 1920px) / var(--arena-dpr, 1)) !important; height: calc(var(--arena-height, 1080px) / var(--arena-dpr, 1)) !important; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(var(--arena-scale, 1)); transform-origin: center; }
@@ -27751,12 +27751,14 @@ index 0000000..629358a
 +      }
 +    })
 +    .catch((e) => console.warn('bridge.js:', e));
++  const { connectLobby } = await import('./game-session.js');
++  await connectLobby();
 +  const w = await boot(init);
 +  bind(w.memory);
 +</script>
 diff --git a/web/platform.js b/web/platform.js
 new file mode 100644
-index 0000000..6136419
+index 00000000..61364195
 --- /dev/null
 +++ b/web/platform.js
 @@ -0,0 +1,108 @@
@@ -27870,7 +27872,7 @@ index 0000000..6136419
 +}
 diff --git a/web/tests/boot.test.mjs b/web/tests/boot.test.mjs
 new file mode 100644
-index 0000000..4f2e4bd
+index 00000000..4f2e4bd2
 --- /dev/null
 +++ b/web/tests/boot.test.mjs
 @@ -0,0 +1,82 @@
@@ -27958,7 +27960,7 @@ index 0000000..4f2e4bd
 +});
 diff --git a/web/tests/journal.test.mjs b/web/tests/journal.test.mjs
 new file mode 100644
-index 0000000..fac177e
+index 00000000..fac177e2
 --- /dev/null
 +++ b/web/tests/journal.test.mjs
 @@ -0,0 +1,35 @@
@@ -27999,7 +28001,7 @@ index 0000000..fac177e
 +});
 diff --git a/web/wasi_stubs.js b/web/wasi_stubs.js
 new file mode 100644
-index 0000000..3f0217f
+index 00000000..3f0217f1
 --- /dev/null
 +++ b/web/wasi_stubs.js
 @@ -0,0 +1,26 @@
@@ -28031,7 +28033,7 @@ index 0000000..3f0217f
 +export function proc_exit(code) { throw new Error('proc_exit ' + code); }
 diff --git a/web/world-manifest.json b/web/world-manifest.json
 new file mode 100644
-index 0000000..240fbe4
+index 00000000..240fbe42
 --- /dev/null
 +++ b/web/world-manifest.json
 @@ -0,0 +1,204 @@

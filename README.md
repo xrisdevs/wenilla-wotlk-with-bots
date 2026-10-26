@@ -1,4 +1,4 @@
-# Wenilla WotLK with Bots
+# Wenilla WotLK with Bots — Arena
 
 A browser and native Rust client for **World of Warcraft 3.3.5a (build 12340)**, paired with a Dockerized TrinityCore server and NPCBots. The goal is to build proper arena play and increasingly capable PvP bots, with repeatable matches and measurements guiding improvements.
 
@@ -8,6 +8,8 @@ This is an experimental development project. It builds on [Benilla-WotLK](https:
 | --- | --- |
 | **main** | Standard game login/UI, browser + native clients, upstream NPCBots server. Shared rendering, protocol and model-preview fixes live here. |
 | [arena-with-bots](https://github.com/xrisdevs/wenilla-wotlk-with-bots/tree/arena-with-bots) | Custom in-game lobby, guest accounts, Season 8 presets, spectating, bot/human arenas, matchmaking and PvP bot experiments. |
+
+This branch includes the full-screen native WoW lobby, drag-to-rotate hero preview, graphical talent trees, equipment/glyph tooltips, Season 8 loadouts, bot-only spectating, human-versus-bot play, separate 2v2/3v3 player queues, and client-crash recovery back to the lobby. Camera selection preserves the view you leave it in. Nagrand, Blade’s Edge and Lordaeron are enabled in the random roster; Dalaran is excluded. Player matchmaking is currently unrated FIFO.
 
 No Blizzard game assets, account databases, credentials or build outputs are included. Supply your own English 3.3.5a `Data` directory and compatible TrinityCore world database. Upstream sources are pinned in `sources.json` and restored with patches; they are intentionally not copied into this Git history.
 
@@ -23,9 +25,11 @@ No Blizzard game assets, account databases, credentials or build outputs are inc
 ```sh
 git clone https://github.com/xrisdevs/wenilla-wotlk-with-bots.git
 cd wenilla-wotlk-with-bots
+git switch arena-with-bots
 python3 scripts/init-env.py
 # Edit .env: WOW_CLIENT_DIR must be the absolute directory containing Data/.
 python3 scripts/setup-sources.py all
+bash scripts/apply-custom.sh
 mkdir -p tdb
 # Extract your compatible TDB_full_world_*.sql into tdb/.
 docker compose --profile build build build
@@ -34,14 +38,18 @@ docker compose --profile extract run --rm extract
 docker compose up -d db authserver worldserver
 docker compose logs -f worldserver
 # Wait for the initial world import and database updates to finish.
+python3 scripts/init-arena.py
+docker compose restart worldserver
 docker compose --profile browser up -d --build browser
 ```
 
-Open **http://localhost:8090**. The standard game login screen appears. Create a normal account through the worldserver console: `docker compose attach worldserver`, then enter `account create YOURNAME YOURPASSWORD`. Detach using Ctrl-P, Ctrl-Q; Ctrl-C stops the server. Keep operator accounts separate from ordinary players. Default realm address is loopback, suitable for local desktop use; browser world connections are routed through the gateway.
+Open **http://localhost:8090**. The game loads first, then shows the custom lobby. Each browser receives its own guest identity. Choose **Watch**, **Bots**, or **Players**; select a prebuilt hero and an optional name for playable modes. A player-only 2v2/3v3 queue needs four/six humans; it never silently fills with bots.
+
+`init-arena.py` creates/updates a separate private operator using `.env`, and imports the supplied gear preset tables. Run it after initial setup or intentional preset changes, not as an automatic migration against a populated production world. Do not use the operator to play. Guest identity persists in the `lobby-data` volume; clearing browser cookies loses access to that guest's heroes.
 
 The extract job generates maps, DBCs, vmaps and arena mmaps. Set `MMAP_MAPS=all` in `.env` and rerun it to generate navigation for the full world (can take hours). The initial C++ and Rust/WASM builds are substantial; later server builds reuse Docker volumes. Startup imports NPCBots base tables through the upstream database updater.
 
-All exposed ports bind to loopback. Database credentials are generated into ignored `.env`; no shared administrator account is created. Persistent state lives in Compose volumes. `docker compose down` retains it; **`down -v` deletes it**.
+All exposed ports bind to loopback. Database and private operator credentials are generated into ignored `.env`; no shared default password is used. Persistent state lives in Compose volumes. `docker compose down` retains it; **`down -v` deletes it**.
 
 ## Browser client built locally
 
@@ -50,10 +58,12 @@ With the Docker server running, install rustup and a C compiler (Xcode Command L
 ```sh
 bash client/browser.sh setup
 bash client/browser.sh build
+export ARENA_SOAP_USER=ARENAOP
+# Set ARENA_SOAP_PASS in your environment to the generated value in .env.
 WOW_DATA=/absolute/path/to/WoW_3.3.5a/Data bash client/browser.sh serve
 ```
 
-Stop the Compose browser service first if it occupies port 8090. Setup installs the source tree's pinned Rust toolchain, matching wasm-bindgen, WASI SDK and Binaryen. The page uses the ordinary game login; credentials in query strings are disabled. Display defaults are 1080p/high quality with device-pixel-ratio-aware pointer mapping.
+Stop the Compose browser service first if it occupies port 8090. Setup installs the source tree's pinned Rust toolchain, matching wasm-bindgen, WASI SDK and Binaryen. The Python lobby runs locally on 8090 and its private Rust gateway on 8092. SOAP credentials stay on the server; credentials in query strings are disabled. Display defaults are 1080p/high quality with device-pixel-ratio-aware pointer mapping.
 
 ## Native desktop client (Rust)
 
@@ -65,10 +75,29 @@ cd ../..
 WOW_DATA=/absolute/path/to/WoW_3.3.5a/Data bash client/benilla.sh
 ```
 
-macOS needs Xcode Command Line Tools. Linux also needs ALSA/udev development packages (`libasound2-dev libudev-dev pkg-config` on Ubuntu). Native Windows requires the Rust MSVC toolchain and Visual Studio build tools; run `cargo play` inside the restored source with `WOW_DATA` set in PowerShell. The shell launchers target Linux/macOS. Native client settings stay under ignored `artifacts/desktop` by default. Optional `WOW_HOST`, `WOW_USER`, `WOW_PASS` and `WOW_CHAR` environment variables configure a server or unattended login; never commit them.
+macOS needs Xcode Command Line Tools. Linux also needs ALSA/udev development packages (`libasound2-dev libudev-dev pkg-config` on Ubuntu). Native Windows requires the Rust MSVC toolchain and Visual Studio build tools; run `cargo play` inside the restored source with `WOW_DATA` set in PowerShell. The shell launchers target Linux/macOS. The native desktop path uses ordinary game login and the spectator addon; the browser host owns the custom guest lobby. Native client settings stay under ignored `artifacts/desktop` by default. Optional `WOW_HOST`, `WOW_USER`, `WOW_PASS` and `WOW_CHAR` environment variables configure a server or unattended login; never commit them.
 
 ## Deployment and development
 
-See [deployment](docs/DEPLOYMENT.md), [architecture and branch workflow](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md) and [agent instructions](AGENTS.md). The arena branch documents its native WoW lobby and persistent all-in-one Docker/Fly deployment separately.
+See [deployment](docs/DEPLOYMENT.md), [architecture and branch workflow](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md) and [agent instructions](AGENTS.md). See the [lobby implementation](controller/lobby/README.md) and [optional Fly deployment](deploy/fly/README.md).
 
 Licensing is component-specific: new integration code is MIT; client-derived changes retain MIT/Apache-2.0 terms; TrinityCore/NPCBots-derived changes retain GPL terms. See [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY.md). Game assets and trademarks belong to their respective owners and are not covered by these source-code licenses.
+
+## Bot development and checks
+
+The controllers use private SOAP; set `ARENA_SOAP_USER` and `ARENA_SOAP_PASS` from your local .env before running them outside Docker.
+
+```sh
+python3 controller/arena_ctl.py start 3 random
+python3 controller/benchmark.py --smoke --out artifacts/benchmarks/smoke
+python3 controller/benchmark.py --quick --out artifacts/benchmarks/baseline
+python3 controller/analyze_benchmark.py --help
+python3 -m venv artifacts/test-venv
+artifacts/test-venv/bin/pip install -r controller/lobby/requirements.txt
+artifacts/test-venv/bin/python -m unittest discover -s controller/lobby -p 'test_*.py'
+python3 -m unittest discover -s controller -p 'test_*.py'
+npm ci
+npm run test:recovery
+```
+
+Browser checks use installed Chrome; live lobby/input checks require a running GPU-capable client/server and dedicated test guests. Benchmarks create real headless matches and write ignored result artifacts. Use a development server and coordinate with active players. `controller/tune.py` manages experiments, and `docker/conf/arenabrain.params` holds current tuning defaults. See the roadmap before claiming improvements.

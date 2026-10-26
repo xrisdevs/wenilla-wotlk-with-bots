@@ -1,0 +1,77 @@
+[
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "static std::set<uint32> _botsExtraCreaturesToDespawn;",
+    "static std::set<uint32> _botsExtraCreaturesToDespawn;\nstatic std::set<uint32> _botsExtraCreaturesRemoving; //botarena: retain metadata until unregister"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "void BotDataMgr::DespawnWandererBot(uint32 entry)\n{",
+    "void BotDataMgr::DespawnWandererBot(uint32 entry)\n{\n    if (_botsExtraCreaturesRemoving.contains(entry))\n        return; //botarena: deletion already queued"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "void BotDataMgr::DespawnDungeonBot(uint32 entry)\n{",
+    "void BotDataMgr::DespawnDungeonBot(uint32 entry)\n{\n    if (_botsExtraCreaturesRemoving.contains(entry))\n        return; //botarena: deletion already queued"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "            _botsExtraCreaturesToDespawn.erase(bot_despawn_iter);\n",
+    "            _botsExtraCreaturesToDespawn.erase(bot_despawn_iter);\n            _botsExtraCreaturesRemoving.insert(bot_despawn_id); //botarena\n"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "            sBotGen->CleanExtraBotData(bot);\n\n            BOT_LOG_DEBUG",
+    "            //botarena: the creature still references its generated template/data.\n            // UnregisterBot releases them once destruction reaches the final unregister.\n\n            BOT_LOG_DEBUG"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "    if (auto ditr = _botsExtraCreaturesToDespawn.find(bot->GetEntry()); ditr != _botsExtraCreaturesToDespawn.cend())\n    {\n        sBotGen->CleanExtraBotData(bot);\n        _botsExtraCreaturesToDespawn.erase(ditr);\n    }",
+    "    //botarena: exactly one owner releases generated metadata at final unregister.\n    bool const queued = _botsExtraCreaturesToDespawn.erase(bot->GetEntry()) != 0;\n    bool const removing = _botsExtraCreaturesRemoving.erase(bot->GetEntry()) != 0;\n    if (queued || removing)\n        sBotGen->CleanExtraBotData(bot);"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "void BotDataMgr::CreateGeneratedBotsSortedGear()",
+    "uint32 BotDataMgr::GetArenaBotCapacity(uint8 botClass, uint32 team, uint8 level)\n{\n    (void)sBotGen; // Initialize the free-template pool before the first admission check.\n    auto itr = _spareBotIdsPerClassMap.find(botClass);\n    if (itr == _spareBotIdsPerClassMap.end() || GetMinLevelForBotClass(botClass) > level)\n        return 0;\n    uint32 count = 0;\n    for (uint32 entry : itr->second)\n        if (NpcBotExtras const* extras = SelectNpcBotExtras(entry))\n            if (GetTeamForFaction(GetDefaultFactionForBotRaceClass(extras->bclass, extras->race)) == team)\n                ++count;\n    return count;\n}\n\nvoid BotDataMgr::CreateGeneratedBotsSortedGear()"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.h",
+    "    static ItemPerBotClassPerBotCategoryMap const& GetWanderingBotsSortedGearMap();\n",
+    "    static ItemPerBotClassPerBotCategoryMap const& GetWanderingBotsSortedGearMap();\n    static uint32 GetArenaBotCapacity(uint8 botClass, uint32 team, uint8 level); //botarena\n"
+  ],
+  [
+    "src/server/game/AI/NpcBots/bot_ai.cpp",
+    "    //handle BG kill BvP, BvB, BvC\n    if (me->GetMap()->IsBattleground())",
+    "    //handle BG/arena kill BvP, BvB, BvC //botarena\n    if (me->GetMap()->IsBattlegroundOrArena())"
+  ],
+  [
+    "src/server/game/Battlegrounds/Battleground.cpp",
+    "                if (!bot->IsAlive())\n                    BotMgr::ReviveBot(const_cast<Creature*>(bot));",
+    "                if (!bot->IsAlive())\n                {\n                    //botarena: keep the terminal outcome until logging/cleanup.\n                    if (!m_isBotArena)\n                        BotMgr::ReviveBot(const_cast<Creature*>(bot));\n                }"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.h",
+    "    static uint32 DefaultRolesForClass(uint8 m_class, uint8 spec);",
+    "    static uint32 DefaultRolesForClass(uint8 m_class, uint8 spec);\n    static uint32 ArenaRolesForSpec(uint8 botClass, uint8 spec); //botarena"
+  ],
+  [
+    "src/server/game/AI/NpcBots/botdatamgr.cpp",
+    "uint32 BotDataMgr::DefaultRolesForClass(uint8 m_class, uint8 spec)",
+    "uint32 BotDataMgr::ArenaRolesForSpec(uint8 botClass, uint8 spec)\n{\n    switch (spec)\n    {\n        case BOT_SPEC_PALADIN_HOLY:\n        case BOT_SPEC_PRIEST_DISCIPLINE:\n        case BOT_SPEC_PRIEST_HOLY:\n        case BOT_SPEC_SHAMAN_RESTORATION:\n        case BOT_SPEC_DRUID_RESTORATION:\n            return BOT_ROLE_HEAL | BOT_ROLE_RANGED;\n        default:\n            return DefaultRolesForClass(botClass, spec);\n    }\n}\n\nuint32 BotDataMgr::DefaultRolesForClass(uint8 m_class, uint8 spec)"
+  ],
+  [
+    "src/server/game/AI/NpcBots/bot_ai.cpp",
+    "    else\n        _roleMask = _botData->roles;\n}\n\nvoid bot_ai::InitSpec()",
+    "    else\n        _roleMask = _botData->roles;\n    //botarena: free-bot defaults are DPS-only even for healing specs.\n    if (IsWanderer() && me->GetMap()->IsBattleArena())\n        _roleMask = BotDataMgr::ArenaRolesForSpec(_botclass, GetSpec());\n}\n\nvoid bot_ai::InitSpec()"
+  ],
+  [
+    "src/server/game/AI/NpcBots/bot_ai.cpp",
+    "                if (std::ranges::find_if(bg->GetPlayers(), [](auto const& kv) { return kv.first.IsPlayer(); }) == bg->GetPlayers().cend())\n                    bg->RemoveBotAtLeave(me->GetGUID());",
+    "                //botarena: the arena manager logs scores before it removes any participant.\n                if (!bg->IsBotArena() && std::ranges::find_if(bg->GetPlayers(), [](auto const& kv) { return kv.first.IsPlayer(); }) == bg->GetPlayers().cend())\n                    bg->RemoveBotAtLeave(me->GetGUID());"
+  ],
+  [
+    "src/server/game/AI/NpcBots/bot_ai.cpp",
+    "void bot_ai::JustDied(Unit* u)\n{\n    AbortTeleport();",
+    "void bot_ai::JustDied(Unit* u)\n{\n    //botarena: self/environment deaths do not pass through a credited bot kill hook.\n    if (!u || u == me || !(u->IsPlayer() || u->IsNPCBotOrPet()))\n        if (Battleground* bg = GetBG(); bg && bg->IsBotArena() && bg->GetStatus() == STATUS_IN_PROGRESS)\n            bg->HandleBotKillBot(nullptr, me);\n\n    AbortTeleport();"
+  ]
+]

@@ -69,7 +69,7 @@ services:
     image: wenilla/trinitycore
     depends_on:
       db: { condition: service_healthy }
-    ports: ["127.0.0.1:8085:8085"]
+    ports: ["127.0.0.1:8085:8085", "127.0.0.1:7878:7878"]
     volumes:
       - tc-install:/opt/trinitycore:ro
       - tc-data:/data:ro
@@ -93,7 +93,20 @@ services:
     ports: ["127.0.0.1:8090:8090"]
     volumes:
       - ${WOW_CLIENT_DIR:?Set WOW_CLIENT_DIR}/Data:/game-data:ro
-    command: ["--bind", "0.0.0.0:8090", "--www", "/www", "--data", "/game-data", "--upstream", "authserver", "--world-upstream", "worldserver"]
+      - lobby-data:/state
+    environment:
+      ARENA_DB_HOST: db
+      ARENA_DB_PASSWORD: ${MYSQL_PASSWORD:?Run scripts/init-env.py}
+      ARENA_DB_USER: trinity
+      ARENA_SOAP_URL: http://worldserver:7878/
+      ARENA_SOAP_USER: ${ARENA_SOAP_USER:-ARENAOP}
+      ARENA_SOAP_PASS: ${ARENA_SOAP_PASS:?Set ARENA_SOAP_PASS}
+      ARENA_BIND: 0.0.0.0
+      ARENA_PORT: 8090
+      ARENA_LOBBY_HOME: /state
+      ARENA_LOGIN_HOST: authserver
+      ARENA_WORLD_HOST: worldserver
+      ARENA_PUBLIC_ORIGIN: ${ARENA_PUBLIC_ORIGIN:-http://localhost:8090}
     depends_on: [authserver, worldserver]
     restart: unless-stopped
 
@@ -103,3 +116,4 @@ volumes:
   tc-install:
   tc-data:
   logs:
+  lobby-data:

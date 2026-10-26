@@ -1,0 +1,6 @@
+## Interface: 30300
+## Title: BotArena Spectator
+## Notes: Spectator HUD for bot-vs-bot arena matches (server addon feed "BOTARENA").
+## Version: 0.1
+## SavedVariables: BotArenaSpectatorDB
+BotArenaSpectator.lua

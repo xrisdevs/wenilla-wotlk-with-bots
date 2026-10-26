@@ -1,0 +1,14 @@
+# ArenaBrain tunables (key = value). Written by controller/tune.py; reload with `.botarena brain reload`.
+healerBias = 22.348
+ccBonus = 12.997
+distWeight = 1.506
+swapMargin = 16.383
+minTargetHoldMs = 4927
+kiteTrigger = 15.000
+kiteDist = 19.663
+kiteStayMs = 5531
+kiteCooldownMs = 2000
+kiteHealthMin = 0
+stealthOpeners = 1
+focusFire = 1
+tickMs = 500

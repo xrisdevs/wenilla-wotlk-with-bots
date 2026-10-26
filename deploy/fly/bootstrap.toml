@@ -1,0 +1,11 @@
+app = "your-arena-app"
+primary_region = "lhr"
+[build]
+  dockerfile = "deploy/fly/Dockerfile.bootstrap"
+[[mounts]]
+  source = "arena_data"
+  destination = "/persist"
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 4
+  memory = "8gb"

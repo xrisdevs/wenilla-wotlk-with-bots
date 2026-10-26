@@ -8,3 +8,9 @@ node_modules
 **/*.pyc
 tdb
 artifacts
+
+!artifacts/fly/
+!artifacts/fly/www/
+!artifacts/fly/www/**
+!artifacts/fly/seed/
+!artifacts/fly/seed/**

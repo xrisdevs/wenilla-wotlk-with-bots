@@ -7,6 +7,8 @@ patterns=[r'/Users/[A-Za-z0-9_.-]+/',r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE 
 errors=[]
 for name in filter(None,files):
     p=root/name
+    if p.is_symlink():
+        errors.append(name+': symlink requires manual publication review'); continue
     if not p.is_file(): continue
     if name.startswith(('artifacts/','server/','client/benilla-src/')) or p.suffix.lower() in ('.mpq','.dbc','.sqlite','.wasm','.pem','.key') or (name.startswith('.env') and name!='.env.example'):
         errors.append(name+': prohibited publication file')

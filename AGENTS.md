@@ -22,3 +22,9 @@ Do not reset an existing source tree or delete Docker volumes to make setup pass
 Run `python3 scripts/audit-public.py`, Python syntax checks, shell `bash -n`, and `docker compose config --quiet` with a local .env. Restore each source from its exact pin and check patch applicability. For client JS run the restored source's `node --test web/tests/*.test.mjs`; for gateway changes run `cargo test --locked -p wenilla-host`. For engine changes run the relevant Rust tests and build WASM/native as appropriate. Report checks actually run and any untested deployment paths.
 
 Read README.md and docs/ARCHITECTURE.md before changing setup. Maintain branch-specific docs with behavior changes; don't claim the bots have MMR, coordinated CC or competitive quality until implemented and measured.
+
+## Arena branch handoff
+
+Current implementation: guest ownership checks, full-screen Lua lobby, level-80 Season 8 presets, graphical talent/glyph/gear inspection, spectators attached to a bot, preserved manual camera, three-map roster, player/bot queues, crash recovery. Headless benchmarks and tuning utilities are included; no private benchmark output is published. FIFO queues are not MMR. Native desktop supports stock UI and spectator addon; guest provisioning is hosted by the browser lobby.
+
+Validate Python service and tuner tests plus `npm run test:recovery`. Live tests need dedicated guests, initialized preset SQL and the compiled server/client. Check spawns, gate timing, weapon use and camera behavior in a rendered game before claiming visual fixes. Keep source patches, canonical Lua and generated loadout headers in sync.

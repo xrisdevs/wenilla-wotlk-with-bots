@@ -1,11 +1,42 @@
-LoginDatabaseInfo = "db;3306;trinity;@DB_PASSWORD@;auth"
-WorldDatabaseInfo = "db;3306;trinity;@DB_PASSWORD@;world"
+LoginDatabaseInfo     = "db;3306;trinity;@DB_PASSWORD@;auth"
+WorldDatabaseInfo     = "db;3306;trinity;@DB_PASSWORD@;world"
 CharacterDatabaseInfo = "db;3306;trinity;@DB_PASSWORD@;characters"
 DataDir = "/data"
 LogsDir = "/logs"
 Updates.EnableDatabases = 7
 Updates.AutoSetup = 1
+SOAP.Enabled = 1
+SOAP.IP = "0.0.0.0"
+SOAP.Port = 7878
 Console.Enable = 1
-SOAP.Enabled = 0
+# --- quality of life for a bot arena showcase ---
+PlayerStart.AllSpells = 1
+PlayerStart.MapsExplored = 1
+GM.LoginState = 2
+GM.Visible = 0
+GM.AllowInvite = 1
+GM.StartLevel = 80
+Battleground.PrematureFinishTimer = 10000
+Arena.QueueAnnouncer.Enable = 1
+Arena.ArenaSeason.InProgress = 1
+# --- NPCBots ---
 NpcBot.Enable = 1
+NpcBot.Enable.BG = 1
+NpcBot.Enable.Arena = 1
+NpcBot.WanderingBots.BG.Enable = 1
+NpcBot.WanderingBots.Continents.Count = 0
+NpcBot.MaxBots = 10,10,10,10,10,10,10,10,10
+NpcBot.MaxBotsPerAccount = 0
+NpcBot.Cost.Hire = 0
+# BotArena
+BotArena.MaxConcurrent = 16
+BotArena.RandomArenas = "na,be,rl"
+
+# Dalaran Sewers is removed from the arena roster.
+
+# Browser arena guests can create any supported class immediately.
+CharacterCreating.MinLevelForDeathKnight = 0
+SkipCinematics = 2
+DeathKnightsPerRealm = 10
+
 Warden.Enabled = 0

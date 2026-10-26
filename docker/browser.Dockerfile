@@ -8,13 +8,19 @@ COPY sources.json ./
 COPY scripts/setup-sources.py ./scripts/
 COPY patches ./patches
 COPY client ./client
+COPY addons ./addons
 RUN python3 scripts/setup-sources.py benilla
 RUN bash client/browser.sh setup
 RUN --mount=type=cache,target=/root/.cargo/registry bash client/browser.sh build
 FROM ubuntu:24.04
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates libssl3t64 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates libssl3t64 python3 python3-venv mysql-client && rm -rf /var/lib/apt/lists/*
 COPY --from=build /source/client/benilla-src/target/release/wenilla-host /usr/local/bin/wenilla-host
 COPY --from=build /source/client/benilla-src/web/dist /www
+WORKDIR /app
+COPY controller ./controller
+COPY client/lobby ./client/lobby
+COPY docker/scripts/browser.sh /browser.sh
+RUN python3 -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir -r controller/lobby/requirements.txt && mkdir /state && chown 65534:65534 /state
 USER 65534:65534
 EXPOSE 8090
-ENTRYPOINT ["wenilla-host"]
+ENTRYPOINT ["bash", "/browser.sh"]
