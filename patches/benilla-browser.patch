@@ -8853,7 +8853,7 @@ index 4ccffe57..64c67bcd 100644
  use bevy::prelude::*;
  
 diff --git a/crates/benilla-app/src/ui_battlefield.rs b/crates/benilla-app/src/ui_battlefield.rs
-index 5b588b10..fb29f9e4 100644
+index 5b588b1..69b4a9a 100644
 --- a/crates/benilla-app/src/ui_battlefield.rs
 +++ b/crates/benilla-app/src/ui_battlefield.rs
 @@ -9,7 +9,7 @@
@@ -8876,6 +8876,22 @@ index 5b588b10..fb29f9e4 100644
          .map_or(0, |d| d.as_secs() as i32);
      let frame = BattlefieldFrame {
          slots: [0, 1]
+@@ -820,12 +820,10 @@ mod net {
+             .net_handler(K::Disconnected, on_session_end);
+     }
+ 
+-    /// `SMSG_ARENA_UNIT_DESTROYED` (`0x54b5e0`), in an arena, fires `ARENA_OPPONENT_UPDATE` for the
+-    /// opponent or pet slot holding the guid. No opponent slot is tracked (the `arenaN` tokens, #90), so no
+-    /// slot matches and nothing fires, as the reference does for an unknown guid.
+-    fn on_arena_unit_destroyed(In(ev): In<SessionEvent>) {
++    /// Destruction hides the known slot without renumbering the arena roster.
++    fn on_arena_unit_destroyed(In(ev): In<SessionEvent>, mut arena: ResMut<crate::ui_unit::arena::ArenaOpponents>) {
+         if let SessionEvent::ArenaUnitDestroyed(guid) = ev {
+-            debug!("ui_battlefield: arena unit {guid:#x} destroyed — no opponent slot holds it");
++            arena.destroyed.push(guid);
+         }
+     }
+ 
 diff --git a/crates/benilla-app/src/ui_battlefield_positions.rs b/crates/benilla-app/src/ui_battlefield_positions.rs
 index c11aa1e1..f20aa896 100644
 --- a/crates/benilla-app/src/ui_battlefield_positions.rs
@@ -9598,7 +9614,7 @@ index 8e5907e6..3c89d942 100644
  use benilla_ui::script::{
      AchievementBook, AchievementDb, AchievementUpdate, CriteriaWire, WowDate,
 diff --git a/crates/benilla-app/src/ui_script/addons.rs b/crates/benilla-app/src/ui_script/addons.rs
-index e3ad8318..b4c0dd95 100644
+index e3ad831..31d111d 100644
 --- a/crates/benilla-app/src/ui_script/addons.rs
 +++ b/crates/benilla-app/src/ui_script/addons.rs
 @@ -255,7 +255,15 @@ fn read_under(root: &Path, rel: &str) -> Option<Vec<u8>> {
@@ -9660,6 +9676,16 @@ index e3ad8318..b4c0dd95 100644
                      .map(|b| parse_enable_state(&benilla_ui::source::decode(&b)))
                      .unwrap_or_default();
                  (character.clone(), EnableHash::from_rows(rows))
+@@ -759,6 +793,9 @@ pub(super) fn load_third_party(
+     let mut infos: Vec<_> = addons.iter().map(info_for).collect();
+     // Chain rows read their files off the player's patch chain.
+     script.set_addon_chain_reader(Box::new(super::reference_ui::read));
++    if let Some(root) = root() {
++        script.set_addon_directory_reader(Box::new(move |req| read_addon_file(&root, req)));
++    }
+     // Each enable bit through the reference's query: the character's explicit row, else what the
+     // realm's other characters agree on, else the manifest's `## DefaultState`.
+     let store = EnableStore::load(
 diff --git a/crates/benilla-app/src/ui_script/extract/mod.rs b/crates/benilla-app/src/ui_script/extract/mod.rs
 index 7bc7c797..cfc70c8e 100644
 --- a/crates/benilla-app/src/ui_script/extract/mod.rs
@@ -15414,10 +15440,36 @@ index 435ebe9b..915f55a6 100644
  }
  
 diff --git a/crates/benilla-ui/src/script/addon.rs b/crates/benilla-ui/src/script/addon.rs
-index 7fa1fa8a..941439da 100644
+index 7fa1fa8..1487447 100644
 --- a/crates/benilla-ui/src/script/addon.rs
 +++ b/crates/benilla-ui/src/script/addon.rs
-@@ -575,7 +575,11 @@ fn load_saved_variables(lua: &Lua, i: usize) {
+@@ -427,7 +427,7 @@ pub(super) fn install(lua: &Lua) -> mlua::Result<()> {
+ /// `AddOn_Load` (`0x51f240`), dependencies first; `Err` is the reason token. Synchronous inside
+ /// the Lua call, as stock callers use the addon on the next line (`UIParent.lua:577`).
+ fn load_addon(lua: &Lua, i: usize) -> Result<(), String> {
+-    let (name, root, files, deps, already, chain, chain_reader) = {
++    let (name, root, files, deps, already, chain, chain_reader, directory_reader) = {
+         let model = lua
+             .app_data_ref::<crate::script::ModelCell>()
+             .expect("model");
+@@ -440,6 +440,7 @@ fn load_addon(lua: &Lua, i: usize) -> Result<(), String> {
+             a.loaded,
+             a.chain,
+             model.addons_chain_reader.clone(),
++            model.addons_directory_reader.clone(),
+         )
+     };
+     if already {
+@@ -461,6 +462,8 @@ fn load_addon(lua: &Lua, i: usize) -> Result<(), String> {
+             return Err("MISSING".into());
+         };
+         Box::new(move |req: &str| reader(&format!("Interface/AddOns/{req}")))
++    } else if let Some(reader) = directory_reader {
++        Box::new(move |req: &str| reader(&format!("Interface/AddOns/{req}")))
+     } else {
+         let Some(root) = root else {
+             return Err("MISSING".into());
+@@ -575,7 +578,11 @@ fn load_saved_variables(lua: &Lua, i: usize) {
          }
          let Some(dir) = dir else { continue };
          let path = dir.join(format!("{name}.lua"));
@@ -15430,6 +15482,18 @@ index 7fa1fa8a..941439da 100644
              Ok(bytes) => bytes,
              Err(e) if e.kind() == std::io::ErrorKind::NotFound => continue, // the first-run case
              Err(e) => {
+@@ -836,6 +843,11 @@ impl super::UiScript {
+     pub fn set_addon_chain_reader(&self, reader: AddonChainReader) {
+         self.model_mut().addons_chain_reader = Some(std::rc::Rc::from(reader));
+     }
++    /// Seat the host reader for directory addons (browser fetches or native files).
++    pub fn set_addon_directory_reader(&self, reader: AddonChainReader) {
++        self.model_mut().addons_directory_reader = Some(std::rc::Rc::from(reader));
++    }
++
+     /// Replace the AddOn registry; called once at world entry, after discovery.
+     pub fn register_addons(
+         &mut self,
 diff --git a/crates/benilla-ui/src/script/guild_bank.rs b/crates/benilla-ui/src/script/guild_bank.rs
 index 0f07d639..2d5b7751 100644
 --- a/crates/benilla-ui/src/script/guild_bank.rs
@@ -15555,10 +15619,18 @@ index a9b38705..c33652d4 100644
      }
  
 diff --git a/crates/benilla-ui/src/script/model.rs b/crates/benilla-ui/src/script/model.rs
-index 79f1e3c8..9b5a0ce4 100644
+index 79f1e3c..de13454 100644
 --- a/crates/benilla-ui/src/script/model.rs
 +++ b/crates/benilla-ui/src/script/model.rs
-@@ -1002,6 +1002,10 @@ pub(crate) struct Model {
+@@ -76,6 +76,7 @@ pub(crate) struct Model {
+     /// The AddOns folder, so `LoadAddOn` can read an addon's files from inside a Lua binding.
+     pub(crate) addons_root: Option<std::path::PathBuf>,
+     /// The host's reader for chain-sourced addon files; without one such an addon is `MISSING`.
++    pub(crate) addons_directory_reader: Option<super::addon::SharedChainReader>,
+     pub(crate) addons_chain_reader: Option<super::addon::SharedChainReader>,
+     /// The host's font engine, so a metric answers inside the asking call, not a frame later.
+     pub(crate) measurer: Option<Box<dyn super::TextMeasure>>,
+@@ -1002,6 +1003,10 @@ pub(crate) struct Model {
      /// Events bindings raise. Deviation: fired at the next tick, not synchronously as in the
      /// reference, because a binding runs inside Lua and cannot re-enter handler dispatch.
      pub(crate) pending_events: Vec<(String, Vec<ScriptValue>)>,
@@ -15569,7 +15641,24 @@ index 79f1e3c8..9b5a0ce4 100644
      /// The last cursor position in UI space (logical px, y-up), behind `GetCursorPosition()`.
      pub(crate) cursor_pos: (f32, f32),
  
-@@ -1554,6 +1558,7 @@ impl Model {
+@@ -1142,7 +1147,7 @@ impl Model {
+     /// nothing here.
+     fn chained_unit(&self, token: &str) -> Option<&UnitState> {
+         match parse_unit_token(token) {
+-            UnitTokenParse::Unit { base, hops } if hops > 0 => {
++            UnitTokenParse::Unit { base, hops } if hops > 0 || matches!(base, super::UnitBase::Arena(_) | super::UnitBase::ArenaPet(_)) => {
+                 let guid = self.unit_guids.resolve_unit(base, hops)?;
+                 self.units_by_guid.get(&guid)
+             }
+@@ -1160,6 +1165,7 @@ impl Model {
+             addon_enable_saved: Default::default(),
+             addons_root: None,
+             addons_chain_reader: None,
++            addons_directory_reader: None,
+             measurer: None,
+             texture_probe: None,
+             world_ui_visible: true,
+@@ -1554,6 +1560,7 @@ impl Model {
              nameplates: super::nameplate::NamePlates::default(),
              worldstate: super::worldstate::WorldStateUiState::default(),
              pending_events: Vec::new(),
@@ -15577,7 +15666,7 @@ index 79f1e3c8..9b5a0ce4 100644
              cursor_pos: (0.0, 0.0),
              minimap_ping_request: None,
              minimap_ping: (0.0, 0.0),
-@@ -1922,12 +1927,12 @@ impl Model {
+@@ -1922,12 +1929,12 @@ impl Model {
          // `WOW_LAYOUT_TOUCH_TRACE=<secs>:<n>`: backtraces the first `n` touches after `secs`.
          use std::sync::atomic::{AtomicU32, Ordering};
          use std::sync::OnceLock;
@@ -15592,7 +15681,7 @@ index 79f1e3c8..9b5a0ce4 100644
                  secs.trim().parse().ok()?,
                  AtomicU32::new(n.trim().parse().ok()?),
              ))
-@@ -1962,12 +1967,12 @@ enum Adopt {
+@@ -1962,12 +1969,12 @@ enum Adopt {
  fn derive_trace_armed() -> bool {
      use std::sync::atomic::{AtomicU32, Ordering};
      use std::sync::OnceLock;
@@ -28445,3 +28534,587 @@ index 42142ef..7301bd6 100644
              })
              .collect();
          let mut at = (sectors.len() as u32 + 1) * 4;
+diff --git a/crates/benilla-app/src/ui_aura/units.rs b/crates/benilla-app/src/ui_aura/units.rs
+index f0f2c68..3ff9fb4 100644
+--- a/crates/benilla-app/src/ui_aura/units.rs
++++ b/crates/benilla-app/src/ui_aura/units.rs
+@@ -25,7 +25,8 @@ const EVENT_TOKEN_COUNT: usize = EVENT_UNITS.len()
+     + PARTY_TOKENS.len()
+     + PARTY_PET_TOKENS.len()
+     + RAID_TOKENS.len()
+-    + RAID_PET_TOKENS.len();
++    + RAID_PET_TOKENS.len()
++    + 10;
+ 
+ fn event_tokens() -> impl Iterator<Item = &'static str> {
+     EVENT_UNITS
+@@ -34,6 +35,7 @@ fn event_tokens() -> impl Iterator<Item = &'static str> {
+         .chain(PARTY_PET_TOKENS)
+         .chain(RAID_TOKENS)
+         .chain(RAID_PET_TOKENS)
++        .chain(["arena1", "arena2", "arena3", "arena4", "arena5", "arenapet1", "arenapet2", "arenapet3", "arenapet4", "arenapet5"])
+ }
+ 
+ /// The guid [`event_tokens`]' `i`-th names, 0 for nobody.
+@@ -48,7 +50,9 @@ fn event_guid(g: &UnitGuids, i: usize) -> u64 {
+         4..=7 => g.party[i - 4],
+         8..=11 => g.party_pets[i - 8],
+         12..=51 => at(&g.raid, i - 12),
+-        _ => at(&g.raid_pets, i - 52),
++        52..=91 => at(&g.raid_pets, i - 52),
++        92..=96 => at(&g.arena, i - 92),
++        _ => at(&g.arena_pets, i - 97),
+     }
+ }
+ 
+@@ -184,11 +188,13 @@ impl UnitAuras {
+         (g.player, g.pet, g.target, g.mouseover, g.npc, g.focus) =
+             (me, pet, target, mouseover, npc, focus);
+         fill_group(&mut g, group, me, &held);
++        (g.arena, g.arena_pets) = script.arena_opponents();
+         g.held.clear();
+         walk.clear();
+         walk.extend([me, pet, target, mouseover, npc, focus].map(|g| (g, false)));
+         walk.extend(g.party.iter().chain(&g.party_pets).map(|&g| (g, true)));
+         walk.extend(g.raid.iter().chain(&g.raid_pets).map(|&g| (g, true)));
++        walk.extend(g.arena.iter().chain(&g.arena_pets).map(|&g| (g, false)));
+         while let Some((guid, record_ok)) = walk.pop() {
+             if guid == 0 || g.held.contains_key(&guid) {
+                 continue;
+diff --git a/crates/benilla-app/src/ui_unit.rs b/crates/benilla-app/src/ui_unit.rs
+index c924283..1847cdb 100644
+--- a/crates/benilla-app/src/ui_unit.rs
++++ b/crates/benilla-app/src/ui_unit.rs
+@@ -22,6 +22,7 @@ use crate::target::{ring_reaction, Factions, Selection};
+ use crate::ui_script::{gate, UiInput};
+ 
+ mod held;
++pub(crate) mod arena;
+ 
+ /// The unit-feed pass, gated so none of its login one-shots or per-VM memos runs before the in-game
+ /// interface exists; the demo override orders itself after it.
+@@ -130,6 +131,7 @@ pub(crate) struct UiUnitPlugin;
+ 
+ impl Plugin for UiUnitPlugin {
+     fn build(&self, app: &mut App) {
++        arena::register(app);
+         app.configure_sets(
+             Update,
+             UnitFeed
+@@ -583,6 +585,7 @@ pub(crate) struct UnitTokens<'w, 's> {
+     /// `Option`, like those below: a UI-only harness lacks their plugins; a bare `Res` panics.
+     index: Option<Res<'w, crate::net::GuidIndex>>,
+     pet: Option<Res<'w, crate::ui_pet::PetBar>>,
++    arena: Option<Res<'w, arena::ArenaOpponents>>,
+     hovered: Option<Res<'w, crate::target::Hovered>>,
+     hovered_go: Option<Res<'w, crate::target::HoveredObject>>,
+     interact: Option<Res<'w, crate::ui_session::InteractNpc>>,
+@@ -641,13 +644,13 @@ impl UnitTokens<'_, '_> {
+             UnitBase::Party(row) => self.party_member(row).and_then(|guid| self.held(guid)),
+             // The interaction NPC's guid, `[0xb4e2d0]` (`0x515c00`).
+             UnitBase::Npc => self.held(self.interact.as_ref()?.1?),
++            UnitBase::Arena(row) => self.arena.as_ref()?.slots.get(row as usize).and_then(|&g| self.held(g)),
++            UnitBase::ArenaPet(row) => self.arena.as_ref()?.pets.get(row as usize).and_then(|&g| self.held(g)),
+             // 12340's bases the app has no unit for yet (#90).
+             UnitBase::Vehicle
+             | UnitBase::Focus
+             | UnitBase::QuestNpc
+             | UnitBase::Boss(_)
+-            | UnitBase::Arena(_)
+-            | UnitBase::ArenaPet(_)
+             | UnitBase::Commentator(_) => None,
+         }
+     }
+diff --git a/crates/benilla-app/src/ui_unit/arena.rs b/crates/benilla-app/src/ui_unit/arena.rs
+new file mode 100644
+index 0000000..37f247d
+--- /dev/null
++++ b/crates/benilla-app/src/ui_unit/arena.rs
+@@ -0,0 +1,247 @@
++//! Arena opponent slots over real streamed units. Slots survive stealth/range loss and death;
++//! only a world transfer/session end clears the roster. NPC servers may field unowned PvP
++//! combatants with playable race/class descriptors; pets and summons never consume a slot.
++use super::UnitFeed;
++use crate::net::{
++    FieldChanged, FieldEdges, Guid, GuidIndex, ObjectStore, Reputations, SelfPlayer,
++    WorldportMessage,
++};
++use crate::target::Factions;
++use crate::ui_script::VmMemo;
++use benilla_assets::MapCatalogRes;
++use benilla_ui::script::{ScriptValue, UiScript, UnitState};
++use bevy::prelude::*;
++
++#[derive(Resource, Default)]
++pub(crate) struct ArenaOpponents {
++    pub(crate) slots: [u64; 5],
++    pub(crate) pets: [u64; 5],
++    pub(crate) destroyed: Vec<u64>,
++    visible: [bool; 10],
++    targets: [u64; 10],
++    unit_events: Vec<(String, String)>,
++    map: Option<u32>,
++    pending: Vec<(String, &'static str)>,
++}
++
++impl ArenaOpponents {
++    fn discover(&mut self, mut candidates: Vec<u64>) {
++        candidates.sort_unstable();
++        candidates.dedup();
++        for guid in candidates {
++            if guid == 0 || self.slots.contains(&guid) {
++                continue;
++            }
++            if let Some(slot) = self.slots.iter_mut().find(|g| **g == 0) {
++                *slot = guid;
++            }
++        }
++    }
++}
++
++pub(super) fn register(app: &mut App) {
++    app.init_resource::<ArenaOpponents>()
++        .add_systems(
++            Update,
++            discover.in_set(UnitFeed).before(crate::ui_aura::AuraEvents),
++        )
++        .add_systems(
++            Update,
++            publish
++                .in_set(UnitFeed)
++                .after(super::held::feed_chain_units),
++        )
++        .add_systems(OnExit(crate::char_select::ClientState::InWorld), clear);
++}
++fn clear(mut arena: ResMut<ArenaOpponents>) {
++    *arena = ArenaOpponents::default();
++}
++
++#[allow(clippy::too_many_arguments)]
++fn discover(
++    script: Option<NonSendMut<UiScript>>,
++    mut arena: ResMut<ArenaOpponents>,
++    maps: Option<Res<MapCatalogRes>>,
++    current: Option<Res<benilla_world::world_map::CurrentMap>>,
++    me: Query<(&Guid, &ObjectStore), With<SelfPlayer>>,
++    units: Query<(&Guid, &ObjectStore)>,
++    index: Option<Res<GuidIndex>>,
++    factions: Option<Res<Factions>>,
++    reputations: Res<Reputations>,
++    mut ports: MessageReader<WorldportMessage>,
++) {
++    let Some(mut script) = script else {
++        return;
++    };
++    let map = current
++        .as_ref()
++        .map(|m| m.0)
++        .filter(|&m| maps.as_ref().and_then(|c| c.0.instance_type(m)) == Some(4));
++    let transferred = ports.read().count() != 0;
++    if transferred || arena.map != map || map.is_none() {
++        *arena = ArenaOpponents {
++            map,
++            ..Default::default()
++        };
++    }
++    if map.is_none() {
++        script.set_arena_opponents([0; 5], [0; 5]);
++        return;
++    }
++    let Some((my_guid, mine)) = me.iter().next() else {
++        return;
++    };
++    let candidates = units
++        .iter()
++        .filter_map(|(guid, unit)| {
++            if guid.0 == my_guid.0 || !unit.is_unit() || unit.0.unit_is_pet_or_charm() {
++                return None;
++            }
++            // Only streamed authoritative descriptors. No name/class guessing or spectator API.
++            let playable_npc = unit.0.unit_byte2_flags() & 1 != 0
++                && unit
++                    .0
++                    .unit_race()
++                    .is_some_and(|r| matches!(r, 1..=8 | 10 | 11));
++            let player = benilla_protocol::guid::is_player(guid.0);
++            ((player || playable_npc)
++                && crate::target::can_attack(
++                    Some(unit),
++                    factions.as_deref(),
++                    &reputations,
++                    Some(mine),
++                ))
++            .then_some(guid.0)
++        })
++        .collect();
++    arena.discover(candidates);
++    let held = |guid| {
++        index
++            .as_ref()
++            .and_then(|i| i.0.get(&guid))
++            .and_then(|&e| units.get(e).ok())
++            .map(|(_, s)| s)
++    };
++    let previous_pets = arena.pets;
++    for i in 0..5 {
++        // Charm takes precedence, matching the normal pet token.
++        arena.pets[i] = held(arena.slots[i])
++            .and_then(|u| {
++                u.0.unit_charm()
++                    .filter(|&g| g != 0)
++                    .or_else(|| u.0.unit_summon())
++            })
++            .unwrap_or(0);
++    }
++    for i in 0..5 {
++        if previous_pets[i] != arena.pets[i] {
++            arena.visible[i + 5] = false;
++            arena
++                .unit_events
++                .push(("UNIT_PET".into(), format!("arena{}", i + 1)));
++        }
++    }
++    for i in 0..10 {
++        let guid = if i < 5 {
++            arena.slots[i]
++        } else {
++            arena.pets[i - 5]
++        };
++        let token = if i < 5 {
++            format!("arena{}", i + 1)
++        } else {
++            format!("arenapet{}", i - 4)
++        };
++        let target = held(guid).and_then(|u| u.0.unit_target()).unwrap_or(0);
++        if arena.targets[i] != target {
++            arena.targets[i] = target;
++            arena
++                .unit_events
++                .push(("UNIT_TARGET".into(), token.clone()));
++        }
++        let destroyed = guid != 0 && arena.destroyed.contains(&guid);
++        let visible = !destroyed && guid != 0 && held(guid).is_some();
++        if destroyed {
++            arena.pending.push((token, "destroyed"));
++        } else if visible != arena.visible[i] {
++            arena
++                .pending
++                .push((token, if visible { "seen" } else { "unseen" }));
++        }
++        arena.visible[i] = visible;
++    }
++    arena.destroyed.clear();
++    script.set_arena_opponents(arena.slots, arena.pets);
++}
++
++#[derive(Default)]
++struct Published {
++    units: std::collections::HashMap<String, UnitState>,
++}
++fn publish(
++    script: Option<NonSendMut<UiScript>>,
++    mut arena: ResMut<ArenaOpponents>,
++    mut memo: Local<VmMemo<Published>>,
++    mut changes: MessageReader<FieldChanged>,
++) {
++    let Some(mut script) = script else {
++        return;
++    };
++    let (memo, reset) = memo.get_reset(&script);
++    let edges = FieldEdges::collect(&mut changes);
++    // The by-GUID snapshot feed has completed: handlers can now read all unit attributes.
++    for i in 0..10 {
++        let guid = if i < 5 {
++            arena.slots[i]
++        } else {
++            arena.pets[i - 5]
++        };
++        let token = if i < 5 {
++            format!("arena{}", i + 1)
++        } else {
++            format!("arenapet{}", i - 4)
++        };
++        let current = script.unit_state_by_guid(guid);
++        if let Some(state) = current {
++            if reset && arena.visible[i] && !arena.pending.iter().any(|(t, _)| t == &token) {
++                arena.pending.push((token.clone(), "seen"));
++            }
++            {
++                super::fire_transitions(
++                    &mut script,
++                    &token,
++                    memo.units.get(&token),
++                    &state,
++                    &edges,
++                );
++                memo.units.insert(token, state);
++            }
++        } else {
++            memo.units.remove(&token);
++        }
++    }
++    for (event, token) in arena.unit_events.drain(..) {
++        script.fire_event(&event, vec![ScriptValue::Str(token)]);
++    }
++    for (token, event) in arena.pending.drain(..) {
++        script.fire_event(
++            "ARENA_OPPONENT_UPDATE",
++            vec![ScriptValue::Str(token), ScriptValue::Str(event.into())],
++        );
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn roster_does_not_renumber_when_an_opponent_disappears_or_dies() {
++        let mut arena = ArenaOpponents::default();
++        arena.discover(vec![9, 2, 9]);
++        assert_eq!(arena.slots, [2, 9, 0, 0, 0]);
++        arena.discover(vec![9, 4]);
++        assert_eq!(arena.slots, [2, 9, 4, 0, 0]);
++        arena.discover(vec![8, 7, 6, 5]);
++        assert_eq!(arena.slots, [2, 9, 4, 5, 6]);
++    }
++}
+diff --git a/crates/benilla-ui/src/script/battlefield_positions.rs b/crates/benilla-ui/src/script/battlefield_positions.rs
+index ef31993..2c3125e 100644
+--- a/crates/benilla-ui/src/script/battlefield_positions.rs
++++ b/crates/benilla-ui/src/script/battlefield_positions.rs
+@@ -144,9 +144,10 @@ pub(super) fn install(lua: &Lua) -> mlua::Result<()> {
+         "GetNumBattlefieldVehicles",
+         lua.create_function(|_, ()| Ok(0))?,
+     )?;
+-    // GetNumArenaOpponents() (`0x54a2c0`): the opponent slots filled; benilla tracks no arena
+-    // opponent yet (#90), so 0.
+-    g.set("GetNumArenaOpponents", lua.create_function(|_, ()| Ok(0))?)?;
++    g.set("GetNumArenaOpponents", lua.create_function(|lua, ()| {
++        let model = lua.app_data_ref::<crate::script::ModelCell>().expect("model app_data");
++        Ok(model.unit_guids.arena.iter().filter(|&&g| g != 0).count())
++    })?)?;
+     g.set(
+         "GetBattlefieldVehicleInfo",
+         lua.create_function(|lua, index: Value| {
+diff --git a/crates/benilla-ui/src/script/tests/addon_index_space.rs b/crates/benilla-ui/src/script/tests/addon_index_space.rs
+index bf7b3d6..7fa6beb 100644
+--- a/crates/benilla-ui/src/script/tests/addon_index_space.rs
++++ b/crates/benilla-ui/src/script/tests/addon_index_space.rs
+@@ -222,3 +222,18 @@ fn disable_all_writes_rows_for_the_visible_addons_only() {
+         Some(vec![("Probe".to_string(), false)])
+     );
+ }
++
++#[test]
++fn demand_loaded_directory_addons_use_the_host_reader() {
++    let mut s = UiScript::new().unwrap();
++    s.set_addon_directory_reader(Box::new(|path| {
++        (path == "Interface/AddOns/Probe/main.lua")
++            .then(|| b"DirectoryProbe = (DirectoryProbe or 0) + 1".to_vec())
++    }));
++    s.register_addons(vec![AddOnInfo {
++        name: "Probe".into(), interface: 30300, enabled: true,
++        load_on_demand: true, files: vec!["main.lua".into()], ..Default::default()
++    }], None, None, None);
++    s.note_addon_info_reply(&[]);
++    assert_eq!(s.eval::<i64>("LoadAddOn('Probe'); LoadAddOn('Probe'); return DirectoryProbe").unwrap(), 1);
++}
+diff --git a/crates/benilla-ui/src/script/unit/bindings.rs b/crates/benilla-ui/src/script/unit/bindings.rs
+index 3b63258..a3bdc52 100644
+--- a/crates/benilla-ui/src/script/unit/bindings.rs
++++ b/crates/benilla-ui/src/script/unit/bindings.rs
+@@ -513,6 +513,13 @@ pub(in crate::script) fn install(lua: &Lua) -> mlua::Result<()> {
+             ))
+         })?,
+     )?;
++    // WotLK GUIDs are exact 64-bit hexadecimal strings, never Lua doubles.
++    g.set("UnitGUID", lua.create_function(|lua, token: Option<String>| {
++        let model = lua.app_data_ref::<crate::script::ModelCell>().expect("model app_data");
++        Ok(token.and_then(|t| model.unit_guids.resolve(&t).ok().flatten())
++            .filter(|&guid| guid != super::super::focus::NOBODY)
++            .map(|guid| format!("0x{guid:016X}")))
++    })?)?;
+     g.set(
+         "UnitIsPlayer",
+         lua.create_function(|lua, token: Option<String>| {
+diff --git a/crates/benilla-ui/src/script/unit/chain_tests.rs b/crates/benilla-ui/src/script/unit/chain_tests.rs
+index 2a0023d..0026bb7 100644
+--- a/crates/benilla-ui/src/script/unit/chain_tests.rs
++++ b/crates/benilla-ui/src/script/unit/chain_tests.rs
+@@ -318,3 +318,49 @@ fn spell_can_target_unit_gates_its_argument() {
+         assert!(eval::<bool>(&s, &format!("return {call} == nil")), "{call}");
+     }
+ }
++
++#[test]
++fn arena_units_share_real_snapshots_and_exact_guids() {
++    let mut s = world();
++    s.set_arena_opponents([BOSS, ADD, 0, 0, 0], [PET_FOE, 0, 0, 0, 0]);
++    assert_eq!(eval::<String>(&s, "return UnitGUID('arena1')"), "0xF1300000000000B0");
++    assert_eq!(eval::<String>(&s, "return UnitGUID('player')"), "0x0000000000000010");
++    assert_eq!(eval::<String>(&s, "return UnitGUID('arenapet1')"), "0xF1300000000000F0");
++    assert_eq!(eval::<String>(&s, "return UnitName('arena1')"), "Boss");
++    assert_eq!(eval::<i64>(&s, "return UnitHealth('arena1')"), 4000);
++    assert_eq!(eval::<i64>(&s, "return GetNumArenaOpponents()"), 2);
++    for token in ["arena0", "arena6", "arenapet6", "not-a-unit", "none"] {
++        assert!(eval::<Option<String>>(&s, &format!("return UnitGUID('{token}')")).is_none());
++    }
++    assert!(eval::<Option<String>>(&s, "return UnitGUID(nil)").is_none());
++    s.set_unit_by_guid(BOSS, None);
++    assert!(!eval::<bool>(&s, "return not not UnitExists('arena1')"));
++    assert_eq!(eval::<i64>(&s, "return UnitHealth('arena1')"), 0);
++    // A hidden opponent keeps its slot, without inventing a live snapshot.
++    assert_eq!(eval::<String>(&s, "return UnitGUID('arena1')"), "0xF1300000000000B0");
++    s.set_arena_opponents([0; 5], [0; 5]);
++    assert_eq!(eval::<i64>(&s, "return GetNumArenaOpponents()"), 0);
++    assert!(eval::<Option<String>>(&s, "return UnitGUID('arena1')").is_none());
++}
++
++#[test]
++fn arena_casts_auras_and_event_tokens_share_guid_state() {
++    use crate::script::{AuraState, UnitCast};
++    let mut s = world();
++    s.set_arena_opponents([MOB, 0, 0, 0, 0], [PET_FOE, 0, 0, 0, 0]);
++    assert_eq!(eval::<String>(&s, "return UnitGUID('arena1target')"), "0x0000000000000021");
++    s.set_unit_cast(MOB, false, Some(UnitCast {
++        name: "Frostbolt".into(), start_ms: 0.0, end_ms: 2000.0, ..Default::default()
++    }));
++    assert_eq!(eval::<String>(&s, "return UnitCastingInfo('arena1')"), "Frostbolt");
++    s.set_unit_auras(MOB, Some(vec![AuraState {
++        name: Some("Polymorph".into()), spell_id: 118, helpful: false, ..Default::default()
++    }]));
++    assert_eq!(eval::<String>(&s, "return UnitDebuff('arena1', 1)"), "Polymorph");
++    s.eval::<()>("ArenaEvents={}; local f=CreateFrame('Frame'); f:RegisterEvent('UNIT_SPELLCAST_STOP'); f:SetScript('OnEvent',function(_,_,unit) ArenaEvents[unit]=true end)").unwrap();
++    s.set_unit_cast(MOB, false, None);
++    s.fire_unit_event(MOB, "UNIT_SPELLCAST_STOP", vec![]);
++    assert!(eval::<bool>(&s, "return ArenaEvents.target and ArenaEvents.arena1"));
++    assert!(eval::<Option<String>>(&s, "return UnitCastingInfo('arena1')").is_none());
++    assert!(s.unit_tokens(PET_FOE).contains(&"arenapet1".into()));
++}
+diff --git a/crates/benilla-ui/src/script/unit/mod.rs b/crates/benilla-ui/src/script/unit/mod.rs
+index a448bc7..a8371d0 100644
+--- a/crates/benilla-ui/src/script/unit/mod.rs
++++ b/crates/benilla-ui/src/script/unit/mod.rs
+@@ -311,6 +311,18 @@ pub fn power_token(ty: u8) -> Option<&'static str> {
+ }
+ 
+ impl super::UiScript {
++    /// Publish the current arena's stable roster before unit/aura/cast feeds run.
++    pub fn set_arena_opponents(&mut self, opponents: [u64; 5], pets: [u64; 5]) {
++        let mut model = self.model_mut();
++        model.unit_guids.arena = opponents;
++        model.unit_guids.arena_pets = pets;
++    }
++
++    pub fn arena_opponents(&self) -> ([u64; 5], [u64; 5]) {
++        let model = self.model_ref();
++        (model.unit_guids.arena, model.unit_guids.arena_pets)
++    }
++
+     /// Push, or clear with `None`, a token's snapshot; the app's feed calls it each frame before
+     /// event dispatch, so a frame's `OnEvent` sees current values.
+     pub fn set_unit(&mut self, token: &str, state: Option<UnitState>) {
+@@ -350,11 +362,16 @@ impl super::UiScript {
+         super::tooltip_unit::on_unit_push(&self.lua, token);
+     }
+ 
+-    /// Push, or clear with `None`, the snapshot of a unit a `target` chain can end on, by guid. A
++    /// Read a streamed snapshot for event diffing; absent objects remain absent.
++    pub fn unit_state_by_guid(&self, guid: u64) -> Option<UnitState> {
++        self.model_ref().units_by_guid.get(&guid).cloned()
++    }
++
++    /// Push, or clear with `None`, a snapshot addressed by a chain, focus or arena token. A
+     /// token with a hop that no push names (`"party1target"`, `"raid3targettarget"`) resolves
+     /// through [`UnitGuids`] to a guid and reads that guid's entry, the reference's order
+     /// (`0x515970`, then each getter's object lookup `0x468460`); the guids to cover are
+-    /// [`Self::chain_end_guids`]. A token without a hop reads its own push, not this.
++    /// [`Self::chain_end_guids`]. Other base tokens read their own named pushes.
+     pub fn set_unit_by_guid(&mut self, guid: u64, state: Option<UnitState>) {
+         let mut model = self.model_mut();
+         match state {
+diff --git a/crates/benilla-ui/src/script/unit/resolve.rs b/crates/benilla-ui/src/script/unit/resolve.rs
+index 0d14137..dbd0c8b 100644
+--- a/crates/benilla-ui/src/script/unit/resolve.rs
++++ b/crates/benilla-ui/src/script/unit/resolve.rs
+@@ -3,8 +3,8 @@
+ //! `UNIT_FIELD_TARGET`. Every compare folds ASCII case. The bases are 12340's (`0x60abf0`, in its
+ //! compare order): `player`, `vehicle`, `pet`, `target`, `partypetN`, `partyN`, `raidpetN`,
+ //! `raidN`, `bossN`, `arenapetN`, `arenaN`, `commentatorN`, `mouseover`, `focus`, then the exact
+-//! `npc`, `questnpc` and `none`. The app pushes no guid for `vehicle`, `bossN`, `arenaN`,
+-//! `arenapetN`, `commentatorN`, `focus` or `questnpc` yet, so they name nobody (#90); 12340's
++//! `npc`, `questnpc` and `none`. The app pushes no guid for `vehicle`, `bossN`,
++//! `commentatorN` or `questnpc` yet, so they name nobody (#90); 12340's
+ //! `pet` and `-` suffixes and its name lookup (`0x60aaa0`, `0x60a630`) are not built.
+ 
+ use std::collections::HashMap;
+@@ -30,6 +30,9 @@ pub struct UnitGuids {
+     pub party: [u64; 4],
+     /// `partypetN`'s guid, index N-1 (`0x4e81d0`).
+     pub party_pets: [u64; 4],
++    /// Stable opponent and owned-pet slots for the current arena.
++    pub arena: [u64; 5],
++    pub arena_pets: [u64; 5],
+     /// `raidN`'s guid, one per roster row; a row past the end is nobody (`0x491940`).
+     pub raid: Vec<u64>,
+     /// `raidpetN`'s guid, row for row with [`Self::raid`] (`0x491960`).
+@@ -215,6 +218,8 @@ impl UnitGuids {
+             focus: _,
+             party,
+             party_pets,
++            arena,
++            arena_pets,
+             raid,
+             raid_pets,
+             held,
+@@ -226,6 +231,8 @@ impl UnitGuids {
+             && *npc == other.npc
+             && *party == other.party
+             && *party_pets == other.party_pets
++            && *arena == other.arena
++            && *arena_pets == other.arena_pets
+             && *raid == other.raid
+             && *raid_pets == other.raid_pets
+             && *held == other.held
+@@ -269,12 +276,12 @@ impl UnitGuids {
+             UnitBase::Mouseover if !self.held.contains_key(&self.mouseover) => return None,
+             UnitBase::Mouseover => self.mouseover,
+             UnitBase::Focus => self.focus,
++            UnitBase::Arena(row) => at(&self.arena, row),
++            UnitBase::ArenaPet(row) => at(&self.arena_pets, row),
+             // No guid pushed for these yet (#90).
+             UnitBase::Vehicle
+             | UnitBase::QuestNpc
+             | UnitBase::Boss(_)
+-            | UnitBase::Arena(_)
+-            | UnitBase::ArenaPet(_)
+             | UnitBase::Commentator(_) => return None,
+         };
+         self.follow(guid, hops)
+@@ -291,6 +298,8 @@ impl UnitGuids {
+             .values()
+             .copied()
+             .chain(std::iter::once(self.focus))
++            .chain(self.arena)
++            .chain(self.arena_pets)
+             .filter(|&guid| guid != 0 && guid != crate::script::focus::NOBODY)
+     }
+ 
+@@ -320,6 +329,8 @@ impl UnitGuids {
+             ("partypet", &self.party_pets[..]),
+             ("raid", &self.raid[..]),
+             ("raidpet", &self.raid_pets[..]),
++            ("arena", &self.arena[..]),
++            ("arenapet", &self.arena_pets[..]),
+         ] {
+             for (i, &g) in table.iter().enumerate() {
+                 if g == guid {
+@@ -392,6 +403,8 @@ mod tests {
+             mouseover: MOB,
+             npc: MOB,
+             focus: 0,
++            arena: [0; 5],
++            arena_pets: [0; 5],
+             party: [P1, FAR, 0, 0],
+             party_pets: [P1_PET, 0, 0, 0],
+             raid: vec![ME, P1, R3],
