@@ -22,3 +22,9 @@ Start from a clean pinned checkout. Apply this branch's patch, make changes, run
 Prefer a shared fix on main followed by a merge into arena-with-bots. Keep arena modules and UI on that branch. Never silently reuse an ignored server tree from the other branch: setup checks the commit, but a no-patch upstream specification cannot undo arena edits.
 
 The shared MPQ reader supports version-2 high table and file offsets, including standalone archives larger than 4 GiB. This is native gateway/desktop functionality; browser asset requests still use HTTP.
+
+## Arena unit APIs
+
+The shared client exposes exact 64-bit `UnitGUID` strings and stable `arena1`–`arena5` / `arenapet1`–`arenapet5` tokens. Arena maps discover hostile player combatants and unowned PvP NPC combatants with playable race descriptors. A slot survives death or temporary visibility loss and is cleared on world transfer or logout. Unit health, power, class, auras, casts and targeting use the same streamed descriptors as normal target frames; hidden objects do not receive fabricated snapshots. `ARENA_OPPONENT_UPDATE`, unit health/power/flag, target, pet, aura and cast events let addons follow changes. Spectator team selection is arena-branch policy, not part of this resolver.
+
+LoadOnDemand addons use the host's directory reader, matching startup addon loading on native and browser builds. Browser addons therefore fetch files under `/addons/` instead of trying to use a nonexistent local filesystem. This makes deferred loading possible once spell data is available; individual addons can still depend on other unimplemented APIs.
