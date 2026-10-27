@@ -8,16 +8,24 @@ frame:SetScript("OnUpdate", function()
     for _, name in ipairs({"InterruptBar", "LoseControl", "OmniCC", "Quartz"}) do
         ArenaPvPStatus[name] = IsAddOnLoaded(name) and "loaded" or "not loaded"
     end
-    -- These require GUID/opponent APIs absent from the current experimental client.
-    ArenaPvPStatus.Gladius = "installed; waiting for arena unit support"
-    ArenaPvPStatus.SoundAlerter = "installed; waiting for UnitGUID support"
+    -- Demand-load once spell names and the unit APIs are available. AceAddon handles
+    -- late initialization through ADDON_LOADED and IsLoggedIn.
+    for _, name in ipairs({"Gladius", "SoundAlerter"}) do
+        if UnitGUID and GetNumArenaOpponents then
+            local ok, reason = LoadAddOn(name)
+            ArenaPvPStatus[name] = ok and "loaded" or (reason or "load failed")
+        else
+            ArenaPvPStatus[name] = "requires updated client unit APIs"
+        end
+    end
     ArenaPvPDB = ArenaPvPDB or {}
     ArenaPvPDB.characters = ArenaPvPDB.characters or {}
     local character = (UnitName("player") or "").."-"..GetRealmName()
     local firstAccount = not ArenaPvPDB.configured
     local firstCharacter = not ArenaPvPDB.characters[character]
     local width, height = UIParent:GetWidth(), UIParent:GetHeight()
-    if firstCharacter and Gladius and Gladius.db then
+    ArenaPvPDB.opponentDefaults = ArenaPvPDB.opponentDefaults or {}
+    if not ArenaPvPDB.opponentDefaults[character] and Gladius and Gladius.db then
         local p = Gladius.db.profile
         p.x, p.y = width * 0.76, height * 0.68
         p.frameScale, p.barWidth, p.barHeight = 1, 190, 30
@@ -25,6 +33,7 @@ frame:SetScript("OnUpdate", function()
         p.minimapIcon.hide = true
         for _, key in ipairs({"enemyAnnounce", "specAnnounce", "trinketUpAnnounce", "trinketUsedAnnounce", "lowHealthAnnounce", "drinkAnnounce", "resAnnounce", "auraAnnounce", "cooldownAnnounce"}) do p[key] = false end
         Gladius:UpdateFrame()
+        ArenaPvPDB.opponentDefaults[character] = true
     end
     if firstAccount and InterruptBarDB then
         InterruptBarDB.scale, InterruptBarDB.hidden, InterruptBarDB.lock = 1.1, true, true
@@ -55,11 +64,13 @@ frame:SetScript("OnUpdate", function()
         end
         quartz:ApplySettings()
     end
-    if firstAccount and SoundAlerter and SoundAlerter.db1 then
+    if not ArenaPvPDB.soundDefaults and SoundAlerter and SoundAlerter.db1 then
         local p = SoundAlerter.db1.profile
         p.chatalerts = true -- This upstream setting means DISABLE chat alerts.
         p.field, p.all, p.arena, p.battleground = false, false, true, true
         p.enemyinrange, p.class, p.drinking = false, false, true
+        ArenaPvPDB.soundDefaults = true
+        SoundAlerter:PLAYER_ENTERING_WORLD()
     end
     if firstAccount and OmniCC then
         OmniCC:SetFontSize(20)

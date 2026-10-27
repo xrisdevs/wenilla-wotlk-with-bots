@@ -21,6 +21,10 @@ if not IsLoggedIn then
     f:SetScript("OnEvent", function(_, event) loggedIn = event == "PLAYER_LOGIN" end)
     function IsLoggedIn() return loggedIn end
 end
+-- The client cannot create override bindings yet, so there is never one to clear.
+if not ClearOverrideBindings then
+    function ClearOverrideBindings() end
+end
 if not issecurevariable then
     function issecurevariable() return false end
 end
@@ -39,6 +43,19 @@ for _, kind in ipairs({"Frame", "Cooldown", "StatusBar", "Button", "GameTooltip"
         end
     end
 end
+-- Textures never tile in this client; keep the 3.3.5 tiling flags so callers such as Gladius run.
+do
+    local sample = CreateFrame("Frame"):CreateTexture()
+    local methods = getmetatable(sample).__index
+    if type(methods) == "table" and not methods.SetHorizTile then
+        function methods:SetHorizTile(tile) self.arenaHorizTile = tile and true or false end
+        function methods:GetHorizTile() return self.arenaHorizTile or false end
+    end
+    if type(methods) == "table" and not methods.SetVertTile then
+        function methods:SetVertTile(tile) self.arenaVertTile = tile and true or false end
+        function methods:GetVertTile() return self.arenaVertTile or false end
+    end
+end
 -- Keep the primary addon error available even if the stock error dialog itself fails.
 ArenaAddonErrors = {}
 local previousErrorHandler = geterrorhandler()
@@ -47,7 +64,7 @@ seterrorhandler(function(message)
     if handlingError then return end
     local text = tostring(message)
     if #ArenaAddonErrors < 30 then
-        for _, name in ipairs({"ArenaCompat", "ArenaPvP", "InterruptBar", "LoseControl", "OmniCC", "Quartz"}) do
+        for _, name in ipairs({"ArenaCompat", "ArenaPvP", "InterruptBar", "LoseControl", "OmniCC", "Quartz", "Gladius", "SoundAlerter"}) do
             if string.find(text, "AddOns\\"..name.."\\", 1, true) then
                 ArenaAddonErrors[#ArenaAddonErrors+1] = text
                 break

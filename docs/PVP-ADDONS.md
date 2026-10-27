@@ -8,10 +8,10 @@ Browser builds and `client/benilla.sh` install the same checksum-pinned addon bu
 | LoseControl | 3.33 | Enabled: 52 px player CC indicator, roots included; target/focus/party indicators retained |
 | OmniCC | 3.0.4 | Enabled: 20 px numeric cooldowns, GCD-sized timers excluded; no duplicate InterruptBar text |
 | Quartz | 3.0.3.1 | Enabled: player, target and focus cast bars, with latency; unrelated buff/swing/flight/pet bars and unsupported GCD/range modules disabled |
-| Gladius Enhanced | v1.2.2 | Installed, **not enabled**: the client lacks `UnitGUID` and `arena1`–`arena5` opponent feeds |
-| SoundAlerter | pinned 3.3.5 archive | Installed, **not enabled**: required unit APIs are missing; audio alerts have not been validated |
+| Gladius Enhanced | v1.2.2 | Enabled in arenas: opponent frames with real health, casts and auras; clicking a frame targets that opponent. Gladius key bindings are not supported |
+| SoundAlerter | pinned 3.3.5 archive | Enabled in arenas and battlegrounds; chat alerts off. Audio alerts have not been validated by ear |
 
-Gladius's trinket/DR/enemy frames and SoundAlerter's audio alerts are not usable yet. Installing a compatible original-WoW addon does not supply missing Rust-client APIs. Do not enable them and interpret blank frames as working tracking. The client also currently fails to read external LoadOnDemand addon files, so the bundled OmniCC options panel is not supported. The enabled core uses automatic defaults instead.
+Gladius and SoundAlerter are demand-loaded by `ArenaPvP` once the client exposes `UnitGUID` and the `arena1`–`arena5` opponent tokens. Older client builds without those APIs keep them unloaded and `/pvpaddons` reports why. The bundled OmniCC options panel has not been validated; the enabled core uses automatic defaults instead.
 
 The [manifest](../addons/pvp-addons.json) records exact origins, revisions/file IDs and SHA-256 values. Sources: [Gladius](https://github.com/Cortes-Jeremy/Gladius), the [3.3.5 addon archive](https://github.com/NoM0Re/WoW-3.3.5a-Addons), and [Tuller's original OmniCC 3.0.4 release](https://www.curseforge.com/wow/addons/omni-cc/files/454434). Avoid retail or Wrath Classic releases: they target different APIs.
 
@@ -35,13 +35,14 @@ A browser deployment must also copy that complete `addons` directory into its se
 
 ## Compatibility work and validation
 
-`ArenaCompat` adds Lua post-hooks and login tracking only where the engine lacks them; it does not fabricate units, GUIDs, spell casts or combat events. This experimental engine has no secure/taint execution model. `ArenaPvP` waits for real spell data before configuring profiles. The installer defers InterruptBar construction until spell names exist, fixes Gladius library ordering/case, escapes multibyte Lua string literals for older parser builds, adapts optional Quartz texture methods, disables unused Quartz modules before initialization, and guards LoseControl aura events received before frame initialization. Optional Quartz channel tick tables cannot resolve spell names during initial loading, so channel tick counts are not guaranteed.
+`ArenaCompat` adds Lua post-hooks, login tracking, texture tiling flags (`SetHorizTile`/`SetVertTile`; this client never tiles) and an empty `ClearOverrideBindings` (the client cannot create override bindings) only where the engine lacks them; it does not fabricate units, GUIDs, spell casts or combat events. This experimental engine has no secure/taint execution model. `ArenaPvP` waits for real spell data before configuring profiles. The installer defers InterruptBar construction until spell names exist, fixes Gladius library ordering/case, escapes multibyte Lua string literals for older parser builds, adapts optional Quartz texture methods, disables unused Quartz modules before initialization, and guards LoseControl aura events received before frame initialization. Optional Quartz channel tick tables cannot resolve spell names during initial loading, so channel tick counts are not guaranteed.
 
 Run:
 
 ```sh
 python3 -m unittest discover -s client -p 'test_install_addons.py'
 BROWSER_URL=http://localhost:8096 node client/check-pvp-addons.cjs
+BROWSER_URL=http://localhost:8096 node client/check-unit-api.cjs
 ```
 
 The rendered check creates a dedicated guest, enters a bot arena, exercises InterruptBar's test timers and OmniCC's real rendering path, casts Holy Light to check Quartz, checks addon errors, and verifies saved preferences across matches. Test timers are synthetic previews, not evidence that an enemy used an interrupt. Live enemy cooldown/CC accuracy requires observing actual combat; do not infer it from `IsAddOnLoaded` alone. Stock FrameXML still has unrelated missing-API errors.
