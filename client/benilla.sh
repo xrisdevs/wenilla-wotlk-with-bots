@@ -9,5 +9,5 @@ python3 "$ROOT/client/configure-display.py" "$BENILLA_HOME/config.toml"
 export WOW_DPI=1 WOW_UI_SCALE=1 WOW_MSAA=8
 unset WOW_WIN
 mkdir -p "$BENILLA_HOME/AddOns"
-cp -R "$ROOT/addons/BotArenaSpectator" "$BENILLA_HOME/AddOns/"
+python3 "$ROOT/client/install-addons.py" "$BENILLA_HOME/AddOns"
 exec "$ROOT/client/benilla-src/target/play/benilla"

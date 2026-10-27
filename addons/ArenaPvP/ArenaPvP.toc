@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: Arena PvP Defaults
+## Notes: First-run arena profiles; later player customizations are preserved.
+## Version: 1.0
+## SavedVariables: ArenaPvPDB
+## Dependencies: ArenaCompat
+ArenaPvP.lua

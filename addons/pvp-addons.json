@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Gladius",
+    "repository": "https://github.com/Cortes-Jeremy/Gladius",
+    "revision": "03f05779cdf32c7e168c8422e5e97e45781db0fd",
+    "url": "https://codeload.github.com/Cortes-Jeremy/Gladius/zip/03f05779cdf32c7e168c8422e5e97e45781db0fd",
+    "sha256": "31c93476ded8b6d588b2474061418734ae1ad0b7c414a50196c2132e2ab8f2d8",
+    "folders": {
+      "Gladius": "Gladius-03f05779cdf32c7e168c8422e5e97e45781db0fd/Gladius"
+    }
+  },
+  {
+    "name": "InterruptBar",
+    "repository": "https://github.com/NoM0Re/WoW-3.3.5a-Addons",
+    "revision": "060f969c6c11f11b3ee78030529d9d8a78019b2b",
+    "url": "https://raw.githubusercontent.com/NoM0Re/WoW-3.3.5a-Addons/060f969c6c11f11b3ee78030529d9d8a78019b2b/src/Addons/InterruptBar.zip",
+    "sha256": "a913cc9873c4fd718762441ce8c4863b82714753347b1d426e8d3c9da2482d08",
+    "folders": {
+      "InterruptBar": "InterruptBar"
+    }
+  },
+  {
+    "name": "LoseControl",
+    "repository": "https://github.com/NoM0Re/WoW-3.3.5a-Addons",
+    "revision": "060f969c6c11f11b3ee78030529d9d8a78019b2b",
+    "url": "https://raw.githubusercontent.com/NoM0Re/WoW-3.3.5a-Addons/060f969c6c11f11b3ee78030529d9d8a78019b2b/src/Addons/LoseControl.zip",
+    "sha256": "5681ccc106bec77932b9f07c19cf31d329dacef8f40e75ce4a44701bfdae18fa",
+    "folders": {
+      "LoseControl": "LoseControl"
+    }
+  },
+  {
+    "name": "Quartz",
+    "repository": "https://github.com/NoM0Re/WoW-3.3.5a-Addons",
+    "revision": "060f969c6c11f11b3ee78030529d9d8a78019b2b",
+    "url": "https://raw.githubusercontent.com/NoM0Re/WoW-3.3.5a-Addons/060f969c6c11f11b3ee78030529d9d8a78019b2b/src/Addons/Quartz.zip",
+    "sha256": "c1fd6b53a31ee67e4510a527fd4ab034a616d25b129c1853c67c75d6c85117ef",
+    "folders": {
+      "Quartz": "Quartz"
+    }
+  },
+  {
+    "name": "SoundAlerter",
+    "repository": "https://github.com/NoM0Re/WoW-3.3.5a-Addons",
+    "revision": "060f969c6c11f11b3ee78030529d9d8a78019b2b",
+    "url": "https://raw.githubusercontent.com/NoM0Re/WoW-3.3.5a-Addons/060f969c6c11f11b3ee78030529d9d8a78019b2b/src/Addons/SoundAlerter.zip",
+    "sha256": "184a0890680a918d76802ec6cc829b57eb2f4851eb89522629654225e4130de5",
+    "folders": {
+      "SoundAlerter": "SoundAlerter"
+    }
+  },
+  {
+    "name": "OmniCC-3.0.4",
+    "repository": "https://www.curseforge.com/wow/addons/omni-cc/files/454434",
+    "revision": "454434",
+    "url": "https://edge.forgecdn.net/files/454/434/OmniCC_3.0.4.zip",
+    "sha256": "941bb3b15b3423b4e4ec697b4263473606fb3cc24d4763652f860cbcd5d7ecc0",
+    "folders": {
+      "OmniCC": "OmniCC",
+      "OmniCC_Config": "OmniCC_Config"
+    }
+  }
+]

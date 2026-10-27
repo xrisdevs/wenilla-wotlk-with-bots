@@ -1,0 +1,5 @@
+## Interface: 30300
+## Title: Arena Addon Compatibility
+## Notes: Small Lua adapters for the experimental client; native APIs take precedence.
+## Version: 1.0
+ArenaCompat.lua

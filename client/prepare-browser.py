@@ -16,8 +16,10 @@ def prepare(source):
     web = source / 'web'
     addons = web / 'addons'
     addons.mkdir(exist_ok=True)
-    shutil.copytree(ROOT / 'addons/BotArenaSpectator', addons / 'BotArenaSpectator', dirs_exist_ok=True)
-    (addons / 'index.json').write_text(json.dumps(['BotArenaSpectator']))
+    addon_spec = importlib.util.spec_from_file_location('install_addons', ROOT / 'client/install-addons.py')
+    addon_module = importlib.util.module_from_spec(addon_spec)
+    addon_spec.loader.exec_module(addon_module)
+    addon_module.install(addons)
     profile = dict(module.PROFILE)
     profile['realmName'] = 'Trinity'
     profile['gxMultisample'] = '4'  # WebGPU's supported multisample count.
