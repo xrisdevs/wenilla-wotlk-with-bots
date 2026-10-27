@@ -59,7 +59,10 @@
       if(recovering)return;
       lastFrame=Date.now();
       const session=snapshot.session;
-      if(session?.connected){connectedBefore=true;disconnectedAt=0;}
+      // NetStatus describes the in-world connection and is absent at character selection.
+      // A deliberate logout must not restart a healthy lobby ten seconds later.
+      if(session?.state==='charselect'){disconnectedAt=0;}
+      else if(session?.connected){connectedBefore=true;disconnectedAt=0;}
       else if(connectedBefore){disconnectedAt ||= Date.now();}
     },
     ready(){

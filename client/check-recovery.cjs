@@ -12,13 +12,19 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   if(url.pathname==='/healthz')return route.fulfill({status:available?200:503,body:'{}'});
   if(url.pathname==='/api/recover'){cleanups++;return route.fulfill({body:'{}'});}
   if(url.pathname==='/game/'){
-   loads++;return route.fulfill({contentType:'text/html',body:`<script>parent.arenaRecovery.attach(window);setInterval(()=>parent.arenaRecovery.frame({session:{state:'charselect',connected:true}}),100);parent.arenaRecovery.ready();</script><p>Custom lobby</p>`});
+   loads++;return route.fulfill({contentType:'text/html',body:`<script>parent.arenaRecovery.attach(window);window.testSession={state:'charselect',connected:false};setInterval(()=>parent.arenaRecovery.frame({session:window.testSession}),100);parent.arenaRecovery.ready();</script><p>Custom lobby</p>`});
   }
   return route.abort();
  });
  try{
   await page.goto('http://arena.test/');await page.waitForFunction(()=>!document.querySelector('#arena-recovery'));
   const game=page.frames().find(f=>f.url().includes('/game/'));
+  await game.evaluate(()=>{window.testSession={state:'inworld',connected:true};});
+  await page.waitForTimeout(250);
+  await game.evaluate(()=>{window.testSession={state:'charselect',connected:false};});
+  await page.waitForTimeout(12500);
+  assert.equal(loads,1,'Intentional return to character selection must not restart the client');
+  assert.equal(cleanups,0);
   available=false;
   await game.evaluate(()=>setTimeout(()=>{throw new WebAssembly.RuntimeError('unreachable');},0));
   await page.waitForFunction(()=>document.querySelector('#arena-recovery')?.textContent.includes('Waiting for the server'));
@@ -27,6 +33,13 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   await page.waitForFunction(()=>document.querySelector('#game') && !document.querySelector('#arena-recovery'),null,{timeout:15000});
   assert.equal(loads,2);assert.equal(cleanups,1);
   assert.equal(new URL(page.frames().find(f=>f.url().includes('/game/')).url()).search,'');
-  console.log('PASS fatal WASM error replaces the iframe, waits for server health, cleans up once and returns to a fresh lobby');
+  const recovered=page.frames().find(f=>f.url().includes('/game/'));
+  await recovered.evaluate(()=>{window.testSession={state:'inworld',connected:true};});
+  await page.waitForTimeout(250);
+  await recovered.evaluate(()=>{window.testSession={state:'inworld',connected:false};});
+  await page.waitForFunction(()=>document.querySelector('#arena-recovery'),null,{timeout:15000});
+  await page.waitForFunction(()=>document.querySelector('#game') && !document.querySelector('#arena-recovery'),null,{timeout:15000});
+  assert.equal(loads,3);assert.equal(cleanups,2);
+  console.log('PASS healthy character selection stays open; real disconnect and fatal WASM error replaces the iframe, waits for server health, cleans up once and returns to a fresh lobby');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
