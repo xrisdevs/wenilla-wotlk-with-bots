@@ -9,7 +9,8 @@ local back=U.button(root,"Return to Lobby",165,34,root:GetWidth()-185,-18,functi
 local queue=CreateFrame("Frame","ArenaQueueSelection",cover);queue:SetAllPoints(cover);queue:Hide()
 local b=ArenaActiveBuild
 local elapsed=0;local dots=0
-if ArenaActiveMode=="players" then
+local coop=ArenaActiveMode=="coop"
+if ArenaActiveMode=="players" or coop then
  local scene=CreateFrame("Model",nil,queue);scene:SetAllPoints(queue);scene:SetModel("Interface\\Glues\\Models\\UI_"..b.scene.."\\UI_"..b.scene..".m2");scene:SetCamera(0)
  -- The client renders the stock paper-doll booth; borrow it while queued, then restore it.
  local model=CharacterModelFrame;ArenaQueuedHero=model
@@ -45,18 +46,18 @@ if ArenaActiveMode=="players" then
  function ArenaQueueStatus(waiting,needed,size)
   text:Hide();queue:Show();cover:Show();ArenaQueueWaiting=waiting;ArenaQueueNeeded=needed
   back.caption:SetText("Cancel Queue")
-  progress:SetText(size.."v"..size.." · Players only\n\n"..waiting.." / "..needed.." players ready")
+  progress:SetText(size.."v"..size..(coop and " · Team vs bots\nCode: "..(ArenaActiveTeamCode or "") or " · Players only").."\n"..waiting.." / "..needed.." players ready")
   for i,t in ipairs(readySlots)do if i<=needed then t:Show();t:SetTexture(i<=waiting and "Interface\\Icons\\Achievement_Arena_2v2_1" or "Interface\\PaperDollInfoFrame\\UI-Backpack-EmptySlot")else t:Hide()end end
  end
  queue:SetScript("OnUpdate",function(_,dt)
   elapsed=elapsed+dt;dots=dots+dt
   clock:SetText(string.format("Time in queue  %02d:%02d",math.floor(elapsed/60),math.floor(elapsed)%60))
-  search:SetText("FINDING PLAYERS"..string.rep(".",math.floor(dots)%4))
+  search:SetText((coop and "WAITING FOR FRIEND" or "FINDING PLAYERS")..string.rep(".",math.floor(dots)%4))
  end)
 end
 function ArenaWorldStatus(message,shown)
  ArenaWorldMessage=message
- if shown then text:SetText(message or "");text:Show();queue:Hide();cover:Show()else cover:Hide()end
+ if shown then text:SetText(message or "");text:Show();queue:Hide();cover:Show()else back.caption:SetText("Return to Lobby");cover:Hide()end
 end
 ArenaLobbyViewReady=false
 root:RegisterEvent("PLAYER_FARSIGHT_FOCUS_CHANGED");root:SetScript("OnEvent",function()ArenaLobbyViewReady=true end)

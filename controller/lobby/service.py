@@ -30,6 +30,8 @@ class Lobby:
         self.lock = asyncio.Lock()
         self.queues = {2: [], 3: []}
         self.members = {}
+        self.teams = {}
+        self.used_codes = {}
         self.limits = collections.defaultdict(collections.deque)
         self.games = {}
         self.last_start = {}
@@ -102,12 +104,39 @@ class Lobby:
                 if 'LOBBY_OK' not in result: raise web.HTTPConflict(text=result[:500])
                 self.db.execute('UPDATE characters SET prepared=? WHERE account=? AND name=?',(LOADOUT_VERSION,g['account'],c['name']));self.db.commit()
             return web.json_response({'ready':True})
+    def prune_teams(self):
+        now=time.time()
+        self.teams={code:[e for e in team if now-e['seen']<=20] for code,team in self.teams.items()}
+        self.teams={code:team for code,team in self.teams.items() if team}
+        self.used_codes={code:used for code,used in self.used_codes.items() if now-used<300}
+    def join_team(self,code,entry):
+        self.prune_teams()
+        if code in self.used_codes: raise web.HTTPConflict(text='Team code already used. Create a new code.')
+        if code in self.teams and self.teams[code][0]['size']!=entry['size']:
+            raise web.HTTPConflict(text='Choose the same match format as your teammate.')
+        self.cancel(entry['account']);self.teams.setdefault(code,[]).append(entry)
+    async def match_team(self,code):
+        self.prune_teams()
+        if len(self.teams.get(code,[]))!=2:return
+        team=self.teams.pop(code);self.used_codes[code]=time.time();size=team[0]['size']
+        match=None
+        try:
+            result=await self.soap(f"botarena lobby match {size} bots {team[0]['name']} {team[1]['name']}")
+            found=re.search(r'LOBBY_OK match (\d+)',result)
+            if found:match=int(found[1])
+        except (web.HTTPException, asyncio.TimeoutError):pass
+        for e in team:
+            self.games[e['account']]={'state':'playing','mode':'coop','size':size,'match':match} if match else {'state':'error','message':'Could not start the team match. Return to the lobby and create a new code.'}
     def cancel(self,account):
+        for team in self.teams.values():team[:]=[e for e in team if e['account']!=account]
+        self.teams={code:team for code,team in self.teams.items() if team}
         self.members.pop(account,None)
         for q in self.queues.values(): q[:]=[x for x in q if x['account']!=account]
     async def play(self,req):
         g=self.guest(req);d=await req.json();c=self.owned(g,d.get('name'),True);size=d.get('size');mode=d.get('mode')
-        if size not in (2,3) or mode not in ('watch','bots','players'): raise web.HTTPBadRequest(text='Choose 2v2 or 3v3 and a game mode.')
+        if size not in (2,3) or mode not in ('watch','bots','players','coop'): raise web.HTTPBadRequest(text='Choose 2v2 or 3v3 and a game mode.')
+        code=str(d.get('code','')).strip().upper()
+        if mode=='coop' and not re.fullmatch(r'[0-9A-F]{8}',code):raise web.HTTPBadRequest(text="Create a team code or enter your friend's eight-character code.")
         arena=d.get('arena','random')
         if mode=='watch' and arena not in ('random','na','be','rl'): raise web.HTTPBadRequest(text='Choose a supported arena.')
         async with self.lock:
@@ -116,6 +145,10 @@ class Lobby:
             self.cancel(g['account']);self.games.pop(g['account'],None)
             online=await self.online(g,c['name'])
             if not online or online[2]!='1': raise web.HTTPConflict(text='Character is not connected.')
+            if mode=='coop':
+                self.join_team(code,{'account':g['account'],'name':c['name'],'size':size,'seen':time.time(),'joined':time.time()})
+                await self.match_team(code)
+                return web.json_response(self.status(g['account']))
             if mode=='players':
                 entry={'account':g['account'],'name':c['name'],'size':size,'seen':time.time(),'joined':time.time()}
                 self.members[g['account']]=entry;self.queues[size].append(entry)
@@ -163,6 +196,9 @@ class Lobby:
         for x in selected:
             self.cancel(x['account']);self.games[x['account']]={'state':'playing','mode':'players','size':size,'match':match}
     def status(self,account):
+        for code,team in self.teams.items():
+            for e in team:
+                if e['account']==account:return {'state':'queued','mode':'coop','code':code,'size':e['size'],'waiting':len(team),'needed':2}
         if account in self.members:
             e=self.members[account];q=self.queues[e['size']]
             return {'state':'queued','size':e['size'],'waiting':len(q),'needed':2*e['size'],'seconds':int(time.time()-e['joined'])}
@@ -170,6 +206,11 @@ class Lobby:
     async def queue_status(self,req):
         g=self.guest(req)
         async with self.lock:
+            self.prune_teams()
+            for code,team in list(self.teams.items()):
+                for e in team:
+                    if e['account']==g['account']:
+                        e['seen']=time.time();await self.match_team(code)
             if g['account'] in self.members:
                 entry=self.members[g['account']];entry['seen']=time.time();await self.matchmake(entry['size'])
             return web.json_response(self.status(g['account']))

@@ -25,7 +25,7 @@ Read README.md and docs/ARCHITECTURE.md before changing setup. Maintain branch-s
 
 ## Arena branch handoff
 
-Current implementation: guest ownership checks, full-screen Lua lobby, level-80 Season 8 presets, graphical talent/glyph/gear inspection, spectators attached to a bot, preserved manual camera, three-map roster, player/bot queues, crash recovery. Headless benchmarks and tuning utilities are included; no private benchmark output is published. FIFO queues are not MMR. Native desktop supports stock UI and spectator addon; guest provisioning is hosted by the browser lobby.
+Current implementation: guest ownership checks, full-screen Lua lobby, level-80 Season 8 presets, graphical talent/glyph/gear inspection, spectators attached to a bot, preserved manual camera, three-map roster, player/bot queues, two-player friend codes against varied bot compositions, crash recovery. Headless benchmarks and tuning utilities are included; no private benchmark output is published. FIFO queues are not MMR. Native desktop supports stock UI and spectator addon; guest provisioning is hosted by the browser lobby.
 
 Validate Python service and tuner tests plus `npm run test:recovery`. Live tests need dedicated guests, initialized preset SQL and the compiled server/client. Check spawns, gate timing, weapon use and camera behavior in a rendered game before claiming visual fixes. Keep source patches, canonical Lua and generated loadout headers in sync.
 
@@ -40,3 +40,5 @@ Validate Python service and tuner tests plus `npm run test:recovery`. Live tests
 ## Dependency-aware PvP assets
 
 `tools/pvp-pack/dependency-profile.json` is opt-in; `profile.json` remains the conservative baseline. `dependencies.rs` owns scenery/audio dependency closure. Keep dynamic character/item/creature/spell families until their runtime filename rules have explicit coverage. Validate every packed byte, run `scripts/check-pvp-closure.py` against the previous pack and rendered request reports, and test all presets (`TEST_ALL_PRESETS=1`) and the three supported arena maps before switching the local preview. Retain the original and prior pack. Do not describe static battleground asset coverage as full battleground gameplay validation.
+
+For friend-team changes, run `client/check-coop.cjs` with two dedicated guest contexts. Keep Rust/Python invite semantics aligned; verify both humans share Gold, 2v2 has no allied filler, and 3v3 has exactly one. Preserve at-most-once match starts on SOAP failure.

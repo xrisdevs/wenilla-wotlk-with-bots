@@ -84,13 +84,17 @@ export async function connectLobby() {
             }
           }
           const request=await wenilla.lua('return ArenaLobbyTakeRequest()');
+          if(request[0]==='teamcode') {
+            const code=Array.from(crypto.getRandomValues(new Uint8Array(4)),b=>b.toString(16).padStart(2,'0')).join('').toUpperCase();
+            await wenilla.lua(`ArenaTeamCode:SetText(${lua(code)})`);
+          }
           if(request[0]==='play') {
-            const [,id,name,existing,mode,size,arena]=request;
+            const [,id,name,existing,mode,size,arena,code]=request;
             const build=session.builds.find(b=>b.id===id);
             if(!build)throw Error('Choose a champion.');
             const character=mode==='watch' && session.characters.length ? session.characters[0] : existing ? session.characters.find(c=>c.name===existing) : await api('characters',{build:id,name});
             if(!character)throw Error('Choose one of your saved characters.');
-            pending={character,build:session.builds.find(b=>b.id===character.build),mode,size,arena,created:false,entering:false,started:Date.now()};
+            pending={character,build:session.builds.find(b=>b.id===character.build),mode,size,arena,code,created:false,entering:false,started:Date.now()};
           }
         }
         if(pending && !pending.entering) {
@@ -116,7 +120,7 @@ export async function connectLobby() {
         }
       } else if(state==='inworld' && pending && !returning) {
         if(!worldInstalled) {
-          await wenilla.lua(`ArenaActiveBuild=${lua(catalog().builds.find(b=>b.id===pending.character.build))};ArenaActiveMode=${lua(pending.mode)};ArenaActiveName=${lua(pending.character.name)}`);
+          await wenilla.lua(`ArenaActiveBuild=${lua(catalog().builds.find(b=>b.id===pending.character.build))};ArenaActiveMode=${lua(pending.mode)};ArenaActiveName=${lua(pending.character.name)};ArenaActiveTeamCode=${lua(pending.code)}`);
           await wenilla.lua(inspectLua);await wenilla.lua(worldLua);worldInstalled=true;
           await wenilla.lua('if BotArenaPanel then BotArenaPanel:Hide() end');
         }
@@ -132,7 +136,7 @@ export async function connectLobby() {
           pending.prepared=true;
           await wenilla.lua(`SlashCmdList.BOTARENA(${lua(pending.mode==='watch'?'show':'hide')})`);
         }
-        if(!game)game=await api('play',{name:pending.character.name,mode:pending.mode,size:pending.size,arena:pending.arena});
+        if(!game)game=await api('play',{name:pending.character.name,mode:pending.mode,size:pending.size,arena:pending.arena,code:pending.code});
         if(game.state==='queued') {
           if(!await display('lobby'))return;
           await wenilla.lua(`ArenaQueueStatus(${game.waiting},${game.needed},${pending.size})`);
@@ -145,6 +149,7 @@ export async function connectLobby() {
             await worldStatus('',false);
           } else await worldStatus(pending.mode==='watch'?'Connecting spectator camera...':'Entering the arena...');
         } else if(game.state==='error')await worldStatus(game.message);
+        else if(game.state==='idle')await worldStatus('Your queue expired. Return to Lobby and join again.');
       }
     } catch(e) {
       if(/no VM|Lua bridge timed out/.test(e.message))return;

@@ -43,6 +43,29 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
     async def test_name_injection_is_rejected(self):
         with self.assertRaises(web.HTTPBadRequest):self.lobby.owned({'account':1},"x'; DROP TABLE characters")
 
+    async def test_friend_teams_are_isolated_and_consumed_once(self):
+        def entry(account,size=2):return {'account':account,'name':'Player'+chr(65+account),'size':size,'seen':time.time()}
+        self.lobby.join_team('1234ABCD',entry(0))
+        self.lobby.join_team('1234ABCD',entry(0))
+        await self.lobby.match_team('1234ABCD');self.assertEqual(self.calls,[])
+        with self.assertRaises(web.HTTPConflict):self.lobby.join_team('1234ABCD',entry(1,3))
+        self.lobby.join_team('ABCD1234',entry(2))
+        self.lobby.join_team('1234ABCD',entry(1))
+        await self.lobby.match_team('1234ABCD')
+        self.assertEqual(self.calls,['botarena lobby match 2 bots PlayerA PlayerB'])
+        self.assertEqual(self.lobby.status(0),self.lobby.status(1))
+        self.assertEqual(self.lobby.status(2)['waiting'],1)
+        with self.assertRaises(web.HTTPConflict):self.lobby.join_team('1234ABCD',entry(3))
+        await self.lobby.match_team('1234ABCD');self.assertEqual(len(self.calls),1)
+        self.lobby.cancel(2);self.assertEqual(self.lobby.status(2)['state'],'idle')
+    async def test_failed_friend_start_does_not_retry(self):
+        for i in range(2):self.lobby.join_team('1234ABCD',{'account':i,'name':'Player'+chr(65+i),'size':3,'seen':time.time()})
+        async def fail(_):raise web.HTTPServiceUnavailable()
+        self.lobby.soap=fail
+        await self.lobby.match_team('1234ABCD')
+        self.assertTrue(all(self.lobby.status(i)['state']=='error' for i in range(2)))
+        self.assertIn('1234ABCD',self.lobby.used_codes)
+
 class HttpTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         self.client=TestClient(TestServer(make_app(':memory:')),cookie_jar=CookieJar(unsafe=True));await self.client.start_server()

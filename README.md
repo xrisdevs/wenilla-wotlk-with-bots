@@ -9,7 +9,7 @@ This is an experimental development project. It builds on [Benilla-WotLK](https:
 | **main** | Standard game login/UI, browser + native clients, upstream NPCBots server. Shared rendering, protocol and model-preview fixes live here. |
 | [arena-with-bots](https://github.com/xrisdevs/wenilla-wotlk-with-bots/tree/arena-with-bots) | Custom in-game lobby, guest accounts, Season 8 presets, spectating, bot/human arenas, matchmaking and PvP bot experiments. |
 
-This branch includes the full-screen native WoW lobby, drag-to-rotate hero preview, graphical talent trees, equipment/glyph tooltips, Season 8 loadouts, bot-only spectating, human-versus-bot play, separate 2v2/3v3 player queues, and client-crash recovery back to the lobby. Camera selection preserves the view you leave it in. Nagrand, Blade’s Edge and Lordaeron are enabled in the random roster; Dalaran is excluded. Player matchmaking is currently unrated FIFO.
+This branch includes the full-screen native WoW lobby, drag-to-rotate hero preview, graphical talent trees, equipment/glyph tooltips, Season 8 loadouts, bot-only spectating, solo or two-friend human-versus-bot play, varied bot opponents, separate 2v2/3v3 player queues, and client-crash recovery back to the lobby. Camera selection preserves the view you leave it in. Nagrand, Blade’s Edge and Lordaeron are enabled in the random roster; Dalaran is excluded. Player matchmaking is currently unrated FIFO.
 
 No Blizzard game assets, account databases, credentials or build outputs are included. Supply your own English 3.3.5a `Data` directory; Docker fetches the pinned TrinityCore world database automatically. Upstream sources are pinned in `sources.json` and restored with patches; they are intentionally not copied into this Git history.
 
@@ -42,6 +42,10 @@ docker compose --profile browser up -d --build browser
 ```
 
 Open **http://localhost:8090**. The game loads first, then shows the custom lobby. Each browser receives its own guest identity. Choose **Watch**, **Bots**, or **Players**; select a prebuilt hero and an optional name for playable modes. A player-only 2v2/3v3 queue needs four/six humans; it never silently fills with bots.
+
+To team up, both players choose **Play with bots → With a friend** and the same format. One clicks **New code** and shares the eight-character code; the other enters it. Both choose a hero and click **Enter Arena**. The first waits for the second in the game UI. In 2v2, your two heroes face two bots; in 3v3, one allied bot fills your third slot. Create a fresh code for the next match. Codes are temporary and consumed when a match starts; leaving or disconnecting removes your waiting slot. Use separate browser profiles/devices for separate guest identities.
+
+Bot opponents rotate through four 2v2 and twelve 3v3 preset compositions, excluding the immediately previous lineup for that format. Solo play uses the same opponent pool. This is composition variety, not difficulty or skill-based matchmaking.
 
 `init-arena.py` creates/updates a separate private operator using `.env`, and imports the supplied gear preset tables. Run it after initial setup or intentional preset changes, not as an automatic migration against a populated production world. Do not use the operator to play. Guest identity persists in the `lobby-data` volume; clearing browser cookies loses access to that guest's heroes.
 

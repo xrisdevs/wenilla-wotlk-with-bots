@@ -89,16 +89,50 @@ struct Entry {
 struct Live {
     queues: HashMap<usize, Vec<Entry>>,
     games: HashMap<i64, Value>,
+    teams: HashMap<String, Vec<Entry>>,
+    used_codes: HashMap<String, f64>,
     limits: HashMap<String, VecDeque<f64>>,
     last_start: HashMap<i64, f64>,
 }
 impl Live {
+    fn prune_teams(&mut self) {
+        for team in self.teams.values_mut() {
+            team.retain(|e| now() - e.seen <= 20.0);
+        }
+        self.teams.retain(|_, team| !team.is_empty());
+        self.used_codes.retain(|_, used| now() - *used < 300.0);
+    }
+    fn join_team(&mut self, code: &str, entry: Entry) -> Result<()> {
+        self.prune_teams();
+        if self.used_codes.contains_key(code) {
+            return Err(conflict("Team code already used. Create a new code."));
+        }
+        if self
+            .teams
+            .get(code)
+            .is_some_and(|team| team[0].size != entry.size)
+        {
+            return Err(conflict("Choose the same match format as your teammate."));
+        }
+        self.cancel(entry.account);
+        self.teams.entry(code.into()).or_default().push(entry);
+        Ok(())
+    }
     fn cancel(&mut self, account: i64) {
+        for team in self.teams.values_mut() {
+            team.retain(|e| e.account != account);
+        }
+        self.teams.retain(|_, team| !team.is_empty());
         for q in self.queues.values_mut() {
             q.retain(|e| e.account != account);
         }
     }
     fn status(&self, account: i64) -> Value {
+        for (code, team) in &self.teams {
+            if let Some(e) = team.iter().find(|e| e.account == account) {
+                return json!({"state":"queued","mode":"coop","code":code,"size":e.size,"waiting":team.len(),"needed":2});
+            }
+        }
         for (size, q) in &self.queues {
             if let Some(e) = q.iter().find(|e| e.account == account) {
                 return json!({"state":"queued","size":size,"waiting":q.len(),"needed":size*2,"seconds":(now()-e.joined) as u64});
@@ -241,6 +275,29 @@ impl App {
                 "World server is unavailable",
             )
         })
+    }
+    async fn match_team(&self, live: &mut Live, code: &str) {
+        live.prune_teams();
+        let Some(team) = live.teams.get(code).filter(|t| t.len() == 2).cloned() else {
+            return;
+        };
+        let size = team[0].size;
+        // Consume before sending: a transport timeout must never start the team twice.
+        live.teams.remove(code);
+        live.used_codes.insert(code.into(), now());
+        let result = self
+            .command(&format!(
+                "botarena lobby match {size} bots {} {}",
+                team[0].name, team[1].name
+            ))
+            .await;
+        let id = result.as_ref().ok().and_then(|s| match_id(s));
+        for e in team {
+            live.games.insert(e.account, match id {
+                Some(id) => json!({"state":"playing","mode":"coop","size":size,"match":id}),
+                None => json!({"state":"error","message":"Could not start the team match. Return to the lobby and create a new code."}),
+            });
+        }
     }
     async fn matchmake(&self, live: &mut Live, size: usize) -> Result<()> {
         let q = live.queues.entry(size).or_default();
@@ -619,6 +676,15 @@ async fn prepare(
     }
     Ok(Json(json!({"ready":true})))
 }
+fn team_code(d: &Value) -> Result<String> {
+    let code = d["code"].as_str().unwrap_or("").trim().to_ascii_uppercase();
+    if code.len() != 8 || !code.bytes().all(|c| c.is_ascii_hexdigit()) {
+        return Err(invalid(
+            "Create a team code or enter your friend's eight-character code.",
+        ));
+    }
+    Ok(code)
+}
 async fn play(
     State(app): State<Arc<App>>,
     headers: HeaderMap,
@@ -631,7 +697,7 @@ async fn play(
         .ok_or_else(|| invalid("Choose 2v2 or 3v3 and a game mode."))? as usize;
     let mode = d["mode"]
         .as_str()
-        .filter(|s| matches!(*s, "watch" | "bots" | "players"))
+        .filter(|s| matches!(*s, "watch" | "bots" | "players" | "coop"))
         .ok_or_else(|| invalid("Choose a game mode."))?;
     let arena = d
         .get("arena")
@@ -640,6 +706,11 @@ async fn play(
     if mode == "watch" && !["random", "na", "be", "rl"].contains(&arena) {
         return Err(invalid("Choose a supported arena."));
     }
+    let code = if mode == "coop" {
+        Some(team_code(&d)?)
+    } else {
+        None
+    };
     let mut live = app.live.lock().await;
     let c = app.owned(&g, &d, true).await?;
     if now() - live.last_start.get(&g.account).copied().unwrap_or(0.0) < 5.0 {
@@ -652,7 +723,7 @@ async fn play(
     live.cancel(g.account);
     live.games.remove(&g.account);
     app.online(&g, &c).await?;
-    if mode == "players" {
+    if mode == "players" || mode == "coop" {
         let e = Entry {
             account: g.account,
             name: c.name,
@@ -661,6 +732,11 @@ async fn play(
             joined: now(),
             healer: app.build(c.build)?["role"] == "Healer",
         };
+        if let Some(code) = code {
+            live.join_team(&code, e)?;
+            app.match_team(&mut live, &code).await;
+            return Ok(Json(live.status(g.account)));
+        }
         live.queues.entry(size).or_default().push(e);
         app.matchmake(&mut live, size).await?;
         return Ok(Json(live.status(g.account)));
@@ -712,6 +788,17 @@ async fn play(
 async fn queue(State(app): State<Arc<App>>, headers: HeaderMap) -> Result<Json<Value>> {
     let g = app.guest(&headers).await?;
     let mut live = app.live.lock().await;
+    live.prune_teams();
+    let mut team_code = None;
+    for (code, team) in &mut live.teams {
+        if let Some(e) = team.iter_mut().find(|e| e.account == g.account) {
+            e.seen = now();
+            team_code = Some(code.clone());
+        }
+    }
+    if let Some(code) = team_code {
+        app.match_team(&mut live, &code).await;
+    }
     let mut size = None;
     for q in live.queues.values_mut() {
         if let Some(e) = q.iter_mut().find(|e| e.account == g.account) {
@@ -1102,6 +1189,73 @@ mod tests {
         app.matchmake(&mut live, 2).await.unwrap();
         assert_eq!(calls.load(std::sync::atomic::Ordering::SeqCst), 1);
         server.abort();
+    }
+    #[tokio::test]
+    async fn team_match_is_scoped_atomic_and_never_retried() {
+        let (_dir, mut app, _) = fixture().await;
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let addr = listener.local_addr().unwrap();
+        let calls = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let counter = calls.clone();
+        let mock = Router::new().route(
+            "/",
+            post(move |body: String| {
+                let counter = counter.clone();
+                async move {
+                    assert!(body.contains("botarena lobby match 3 bots PlayerA PlayerB"));
+                    counter.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                    "<Envelope><result>LOBBY_OK match 42</result></Envelope>"
+                }
+            }),
+        );
+        let server = tokio::spawn(async move {
+            axum::serve(listener, mock).await.unwrap();
+        });
+        Arc::get_mut(&mut app).unwrap().soap =
+            backend::Soap::configured(format!("http://{addr}/"), "test".into(), "test".into())
+                .unwrap();
+        let entry = |account, name: &str, size| Entry {
+            account,
+            name: name.into(),
+            size,
+            seen: now(),
+            joined: now(),
+            healer: false,
+        };
+        let mut live = Live::default();
+        live.join_team("1234ABCD", entry(1, "PlayerA", 3)).unwrap();
+        live.join_team("1234ABCD", entry(1, "PlayerA", 3)).unwrap();
+        app.match_team(&mut live, "1234ABCD").await;
+        assert_eq!(calls.load(std::sync::atomic::Ordering::SeqCst), 0);
+        assert!(live.join_team("1234ABCD", entry(2, "PlayerB", 2)).is_err());
+        live.join_team("ABCD1234", entry(3, "PlayerC", 3)).unwrap();
+        live.join_team("1234ABCD", entry(2, "PlayerB", 3)).unwrap();
+        app.match_team(&mut live, "1234ABCD").await;
+        assert_eq!(live.status(1)["match"], 42);
+        assert_eq!(live.status(1), live.status(2));
+        assert_eq!(live.status(3)["waiting"], 1);
+        assert!(live.join_team("1234ABCD", entry(4, "PlayerD", 3)).is_err());
+        app.match_team(&mut live, "1234ABCD").await;
+        assert_eq!(calls.load(std::sync::atomic::Ordering::SeqCst), 1);
+        // An unavailable transport is an uncertain start: consume both entries once.
+        server.abort();
+        live.join_team("DEADBEEF", entry(1, "PlayerA", 3)).unwrap();
+        live.join_team("DEADBEEF", entry(2, "PlayerB", 3)).unwrap();
+        app.match_team(&mut live, "DEADBEEF").await;
+        assert_eq!(live.status(1)["state"], "error");
+        assert_eq!(live.status(2)["state"], "error");
+        assert!(live.used_codes.contains_key("DEADBEEF"));
+        live.cancel(3);
+        assert_eq!(live.status(3), idle());
+        live.join_team("DEAD1234", entry(5, "PlayerE", 2)).unwrap();
+        live.teams.get_mut("DEAD1234").unwrap()[0].seen = now() - 21.0;
+        live.prune_teams();
+        assert_eq!(live.status(5), idle());
+        assert_eq!(
+            team_code(&json!({"code":" abcd1234 "})).unwrap(),
+            "ABCD1234"
+        );
+        assert!(team_code(&json!({"code":"abc;shutdown"})).is_err());
     }
     #[test]
     fn queues_balance_healers_and_cancel_only_owner() {

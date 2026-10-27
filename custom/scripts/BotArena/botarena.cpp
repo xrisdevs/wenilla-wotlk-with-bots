@@ -2265,7 +2265,7 @@ public:
         {
             auto size = Trinity::StringTo<uint8>(a[1]);
             bool bots = a[2] == "bots";
-            if (!size || (*size != 2 && *size != 3) || (!bots && a[2] != "players") || a.size() != (bots ? 4u : 3u + *size * 2)) return false;
+            if (!size || (*size != 2 && *size != 3) || (!bots && a[2] != "players") || (bots ? (a.size() < 4u || a.size() > 3u + *size) : a.size() != 3u + *size * 2)) return false;
             std::vector<Player*> pa, ph; std::set<ObjectGuid> seen;
             for (size_t i=3; i<a.size(); ++i)
             {
@@ -2275,13 +2275,31 @@ public:
                 (i < 3u + *size ? pa : ph).push_back(p);
             }
             std::vector<ClassSpec> ca, ch;
+            std::string opponent = "players";
+            static std::string previous[4];
             if (bots)
             {
-                ca = *size == 2 ? std::vector<ClassSpec>{{5,13}} : std::vector<ClassSpec>{{1,1},{5,13}};
-                ch = *size == 2 ? std::vector<ClassSpec>{{1,1},{2,4}} : std::vector<ClassSpec>{{1,1},{6,18},{2,4}};
+                // Fill only vacant allied slots; both invited humans stay on Gold.
+                bool healer = std::any_of(pa.begin(), pa.end(), [](Player* p) {
+                    uint8 group = p->GetActiveTalentGroup();
+                    return p->HasTalent(53563, group) || p->HasTalent(47540, group) ||
+                        p->HasTalent(48438, group) || p->HasTalent(61295, group) || p->HasTalent(34861, group);
+                });
+                while (ca.size() + pa.size() < *size)
+                {
+                    if (!healer) { ca.push_back({5,13}); healer = true; }
+                    else ca.push_back(ca.empty() ? ClassSpec{8,24} : ClassSpec{1,1});
+                }
+                auto choices = PresetsForSize(*size);
+                if (choices.size() > 1)
+                    choices.erase(std::remove_if(choices.begin(), choices.end(), [&](Preset const* p) { return previous[*size] == p->name; }), choices.end());
+                if (choices.empty()) { Msg(handler, "LOBBY_ERROR no opponent compositions"); return false; }
+                opponent = choices[urand(0, choices.size()-1)]->name;
+                if (!ParseComp(opponent, ch, err)) { Msg(handler, "LOBBY_ERROR {}", err); return false; }
             }
-            auto* m = sBotArenaMgr->Start(*size, BATTLEGROUND_AA, ca, ch, "lobby", "lobby", false, err, pa, ph);
+            auto* m = sBotArenaMgr->Start(*size, BATTLEGROUND_AA, ca, ch, "players-and-bots", opponent, false, err, pa, ph);
             if (!m) { Msg(handler, "LOBBY_ERROR {}", err); return false; }
+            if (bots) previous[*size] = opponent;
             Msg(handler, "LOBBY_OK match {}", m->id); return true;
         }
         Msg(handler, "LOBBY_ERROR invalid request"); return false;
